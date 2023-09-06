@@ -1,4 +1,15 @@
 {
+  "menu": [
+    {
+      "name": "Open project",
+      "translation": {
+        "de": "Project öffnen"
+      },
+      "icon": "folder_open",
+      "active": true,
+      "src": "plugins/oscd-open/oscd-open.js"
+    }
+  ],
   "editor": [
     {
       "name": "Start",

@@ -1065,7 +1065,66 @@ class mr extends lr{constructor(){super(...arguments),this.mdcFoundationClass=pr
       text-decoration: none;
     }
 
+    * {
+      --oscd-primary: var(--oscd-theme-primary, #2aa198);
+      --oscd-secondary: var(--oscd-theme-secondary, #6c71c4);
+      --oscd-error: var(--oscd-theme-error, #dc322f);
+
+      --oscd-base03: var(--oscd-theme-base03, #002b36);
+      --oscd-base02: var(--oscd-theme-base02, #073642);
+      --oscd-base01: var(--oscd-theme-base01, #586e75);
+      --oscd-base00: var(--oscd-theme-base00, #657b83);
+      --oscd-base0: var(--oscd-theme-base0, #839496);
+      --oscd-base1: var(--oscd-theme-base1, #93a1a1);
+      --oscd-base2: var(--oscd-theme-base2, #eee8d5);
+      --oscd-base3: var(--oscd-theme-base3, #fdf6e3);
+
+      --oscd-text-font: var(--oscd-theme-text-font, 'Roboto');
+      --oscd-icon-font: var(--oscd-theme-icon-font, 'Material Icons');
+
+      --mdc-theme-primary: var(--oscd-primary);
+      --mdc-theme-secondary: var(--oscd-secondary);
+      --mdc-theme-background: var(--oscd-base3);
+      --mdc-theme-surface: var(--oscd-base3);
+      --mdc-theme-on-primary: var(--oscd-base2);
+      --mdc-theme-on-secondary: var(--oscd-base2);
+      --mdc-theme-on-background: var(--oscd-base00);
+      --mdc-theme-on-surface: var(--oscd-base00);
+      --mdc-theme-text-primary-on-background: var(--oscd-base01);
+      --mdc-theme-text-secondary-on-background: var(--oscd-base00);
+      --mdc-theme-text-icon-on-background: var(--oscd-base00);
+      --mdc-theme-error: var(--oscd-error);
+
+      --mdc-button-disabled-ink-color: var(--oscd-base1);
+
+      --mdc-drawer-heading-ink-color: var(--oscd-base00);
+
+      --mdc-text-field-fill-color: var(--oscd-base2);
+      --mdc-text-field-disabled-fill-color: var(--oscd-base3);
+      --mdc-text-field-ink-color: var(--oscd-base00);
+      --mdc-text-field-label-ink-color: var(--oscd-base00);
+
+      --mdc-select-fill-color: var(--oscd-base2);
+      --mdc-select-disabled-fill-color: var(--oscd-base3);
+      --mdc-select-ink-color: var(--oscd-base00);
+
+      --mdc-dialog-heading-ink-color: var(--oscd-base00);
+
+      --mdc-icon-font: var(--oscd-icon-font);
+
+      --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
+    }
+
     mwc-top-app-bar-fixed {
       --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
     } /* hack to fix disabled icon buttons rendering black */
-  `,o([ht("#log")],kr.prototype,"logUI",void 0),o([ht("#menu")],kr.prototype,"menuUI",void 0),o([ct({type:String,reflect:!0})],kr.prototype,"locale",null),o([lt()],kr.prototype,"editorIndex",void 0),o([lt()],kr.prototype,"editor",null),o([lt()],kr.prototype,"menu",null),o([lt()],kr.prototype,"editors",null),kr=o([st("open-scd"),Rt()],kr);const Nr=document.querySelector("open-scd"),Fr=new URL(document.location).searchParams;for(const[t,e]of Fr)Nr.setAttribute(t,e);
+
+    mwc-drawer {
+      background-color: var(--mdc-theme-on-primary);
+    }
+
+    mwc-tab {
+      background-color: var(--oscd-primary);
+      --mdc-theme-primary: var(--mdc-theme-on-primary);
+    }
+  `,o([ht("#log")],kr.prototype,"logUI",void 0),o([ht("#menu")],kr.prototype,"menuUI",void 0),o([ct({type:String,reflect:!0})],kr.prototype,"locale",null),o([lt()],kr.prototype,"editorIndex",void 0),o([lt()],kr.prototype,"editor",null),o([lt()],kr.prototype,"menu",null),o([lt()],kr.prototype,"editors",null),kr=o([st("open-scd"),Rt()],kr),fetch("./plugins.json").then((t=>t.text())).then((t=>{const e=document.querySelector("open-scd");e.setAttribute("plugins",t);const i=new URL(document.location).searchParams;for(const[t,o]of i)e.setAttribute(t,o)}));const Nr=document.querySelector("open-scd"),Fr=new URL(document.location).searchParams;for(const[t,e]of Fr)Nr.setAttribute(t,e);

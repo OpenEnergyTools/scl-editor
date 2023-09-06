@@ -1,0 +1,13 @@
+{
+  "editor": [
+    {
+      "name": "Start",
+      "translations": {
+        "de": "Start"
+      },
+      "icon": "start",
+      "active": true,
+      "src": "plugins/scl-editor-landing/scl-editor-landing.js"
+    }
+  ]
+}

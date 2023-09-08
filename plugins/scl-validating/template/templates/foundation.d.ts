@@ -1,0 +1,13 @@
+import { IssueDetail } from '../../foundation/utils.js';
+export declare const iec6185074: Promise<Document>;
+export declare const iec6185073: Promise<Document>;
+export declare const iec6185072: Promise<Document>;
+export declare const iec6185081: Promise<Document>;
+export declare const serviceCDCs: string[];
+export declare function isTypeMissing(element: Element): boolean;
+export declare function getTypeChild(element: Element): Element | null | undefined;
+export declare function getAdjacentClass(nsd: XMLDocument, base: string): Element[];
+export declare function validateChildren(element: Element): Promise<IssueDetail[]>;
+type ValidationFunction = (e: Element, r?: Element) => Promise<IssueDetail[]>;
+export declare const tagValidator: Partial<Record<string, ValidationFunction>>;
+export {};

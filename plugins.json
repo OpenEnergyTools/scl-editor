@@ -8,6 +8,24 @@
       "icon": "folder_open",
       "active": true,
       "src": "plugins/oscd-open/oscd-open.js"
+    },
+    {
+      "name": "Save project",
+      "translation": {
+        "de": "Projekt speichern"
+      },
+      "icon": "save",
+      "active": true,
+      "src": "plugins/oscd-save/oscd-save.js"
+    },
+    {
+      "name": "Validating",
+      "translation": {
+        "de": "Validieren"
+      },
+      "icon": "rule_folder",
+      "active": true,
+      "src": "plugins/scl-validating/scl-validating.js"
     }
   ],
   "editor": [

@@ -47,6 +47,13 @@
       "active": true,
       "requireDoc": true,
       "src": "plugins/subscriber-later-binding/oscd-subscriber-later-binding.js"
+    },
+    {
+      "name": "Publisher",
+      "icon": "publish",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/oscd-publisher/oscd-publisher.js"
     }
   ]
 }

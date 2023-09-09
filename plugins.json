@@ -37,6 +37,16 @@
       "icon": "start",
       "active": true,
       "src": "plugins/scl-editor-landing/scl-editor-landing.js"
+    },
+    {
+      "name": "Subscriber (Later Binding)",
+      "translations": {
+        "de": "Subscriber (Later Binding)"
+      },
+      "icon": "link",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/subscriber-later-binding/oscd-subscriber-later-binding.js"
     }
   ]
 }

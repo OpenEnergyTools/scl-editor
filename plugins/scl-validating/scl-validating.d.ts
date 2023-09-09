@@ -10,7 +10,7 @@ import '@material/mwc-switch';
 import type { Dialog } from '@material/mwc-dialog';
 import type { IconButtonToggle } from '@material/mwc-icon-button-toggle';
 import type { Snackbar } from '@material/mwc-snackbar';
-import { IssueDetail } from './foundation/utils.js';
+import { Issue } from '@openenergytools/xml-schema-validator';
 /** An editor [[`plugin`]] to configure validators and display their issue centrally */
 export default class SclValidatingPlugin extends LitElement {
     /** The document being edited as provided to plugins by [[`OpenSCD`]]. */
@@ -20,9 +20,9 @@ export default class SclValidatingPlugin extends LitElement {
     /** SCL change indicator */
     editCount: number;
     /** Issues return by the schema validator */
-    schemaIssues: IssueDetail[];
+    schemaIssues: Issue[];
     /** Issues returned by the template validator */
-    templateIssues: IssueDetail[];
+    templateIssues: Issue[];
     /** Whether schema validator has had the initial run */
     waitForSchemaRun: boolean;
     /** Whether template validator has had the initial run */
@@ -40,6 +40,7 @@ export default class SclValidatingPlugin extends LitElement {
     private validateSchema;
     private validateTemplates;
     private autoValidate;
+    private resetValidation;
     performUpdate(): Promise<void>;
     constructor();
     private renderValidatorsIssues;

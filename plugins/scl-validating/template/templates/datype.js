@@ -1,5 +1,4 @@
-import { validateChildren, iec6185073, iec6185081 } from './foundation.js';
-
+import { iec6185073, iec6185081, validateChildren } from './foundation.js';
 async function getChildren(cdc, daName) {
     var _a;
     const nsd73 = await iec6185073;
@@ -35,7 +34,7 @@ async function missingMandatoryChildren(datype) {
         message: `${datype.getAttribute('id')}`,
     }));
 }
-async function dATypeValidator(datype) {
+export async function dATypeValidator(datype) {
     const errors = [];
     if (datype.tagName !== 'DAType')
         return [];
@@ -43,6 +42,4 @@ async function dATypeValidator(datype) {
     const issuesChildren = await validateChildren(datype);
     return errors.concat(missingChildren, issuesChildren);
 }
-
-export { dATypeValidator };
 //# sourceMappingURL=datype.js.map

@@ -1,5 +1,4 @@
-import { validateChildren, getAdjacentClass, iec6185074 } from './foundation.js';
-
+import { getAdjacentClass, iec6185074, validateChildren, } from './foundation.js';
 async function getMandatoryDataObject(base) {
     const lnodeclasses = getAdjacentClass(await iec6185074, base);
     return lnodeclasses.flatMap(lnodeclass => Array.from(lnodeclass.querySelectorAll('DataObject[presCond="M"]')));
@@ -16,7 +15,7 @@ async function missingMandatoryChildren(lnodetype, lnClass) {
     });
     return errors;
 }
-async function lNodeTypeValidator(element) {
+export async function lNodeTypeValidator(element) {
     const errors = [];
     const lnClass = element.getAttribute('lnClass');
     if (!lnClass)
@@ -30,6 +29,4 @@ async function lNodeTypeValidator(element) {
     const issuesChildren = await validateChildren(element);
     return errors.concat(missingChildren, issuesChildren);
 }
-
-export { lNodeTypeValidator };
 //# sourceMappingURL=lnodetype.js.map

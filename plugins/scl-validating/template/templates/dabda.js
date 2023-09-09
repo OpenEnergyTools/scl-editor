@@ -1,6 +1,5 @@
-import { isTypeMissing, getTypeChild } from './foundation.js';
-
-async function dAValidator(element) {
+import { getTypeChild, isTypeMissing } from './foundation.js';
+export async function dAValidator(element) {
     if (isTypeMissing(element))
         return [
             {
@@ -18,6 +17,4 @@ async function dAValidator(element) {
         ];
     return [];
 }
-
-export { dAValidator };
 //# sourceMappingURL=dabda.js.map

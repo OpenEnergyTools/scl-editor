@@ -3,20 +3,29 @@ import { dATypeValidator } from './datype.js';
 import { dOValidator } from './dosdo.js';
 import { dOTypeValidator } from './dotype.js';
 import { lNodeTypeValidator } from './lnodetype.js';
-
-const iec6185074 = fetch(new URL('./IEC_61850-7-4_2007B3.nsd', import.meta.url))
+export const iec6185074 = fetch(new URL('../nsd/IEC_61850-7-4_2007B3.nsd', import.meta.url))
     .then(response => response.text())
     .then(str => new DOMParser().parseFromString(str, 'application/xml'));
-const iec6185073 = fetch(new URL('./IEC_61850-7-3_2007B3.nsd', import.meta.url))
+export const iec6185073 = fetch(new URL('../nsd/IEC_61850-7-3_2007B3.nsd', import.meta.url))
     .then(response => response.text())
     .then(str => new DOMParser().parseFromString(str, 'application/xml'));
-fetch(new URL('./IEC_61850-7-2_2007B3.nsd', import.meta.url))
+export const iec6185072 = fetch(new URL('../nsd/IEC_61850-7-2_2007B3.nsd', import.meta.url))
     .then(response => response.text())
     .then(str => new DOMParser().parseFromString(str, 'application/xml'));
-const iec6185081 = fetch(new URL('./IEC_61850-8-1_2003A2.nsd', import.meta.url))
+export const iec6185081 = fetch(new URL('../nsd/IEC_61850-8-1_2003A2.nsd', import.meta.url))
     .then(response => response.text())
     .then(str => new DOMParser().parseFromString(str, 'application/xml'));
-function isTypeMissing(element) {
+export const serviceCDCs = [
+    'SPC',
+    'DPC',
+    'INC',
+    'ENC',
+    'BSC',
+    'ISC',
+    'APC',
+    'BAC',
+];
+export function isTypeMissing(element) {
     const { tagName } = element;
     const isTypeMandatory = tagName === 'DO' ||
         tagName === 'SDO' ||
@@ -26,7 +35,7 @@ function isTypeMissing(element) {
     const isTypeMissing = !element.getAttribute('type');
     return isTypeMandatory && isTypeMissing;
 }
-function getTypeChild(element) {
+export function getTypeChild(element) {
     var _a, _b;
     const isStruct = element.getAttribute('bType') === 'Struct';
     const isEnum = element.getAttribute('bType') === 'Enum';
@@ -43,7 +52,7 @@ function getTypeChild(element) {
     return ((_b = (_a = element
         .closest('DataTypeTemplates')) === null || _a === void 0 ? void 0 : _a.querySelector(`${referenceTag}[id="${element.getAttribute('type')}"]`)) !== null && _b !== void 0 ? _b : null);
 }
-function getAdjacentClass(nsd, base) {
+export function getAdjacentClass(nsd, base) {
     var _a, _b;
     if (base === '')
         return [];
@@ -51,7 +60,7 @@ function getAdjacentClass(nsd, base) {
         .querySelector(`LNClass[name="${base}"], AbstractLNClass[name="${base}"]`)) === null || _a === void 0 ? void 0 : _a.getAttribute('base')) !== null && _b !== void 0 ? _b : '');
     return Array.from(nsd.querySelectorAll(`LNClass[name="${base}"], AbstractLNClass[name="${base}"]`)).concat(adjacents);
 }
-async function validateChildren(element) {
+export async function validateChildren(element) {
     const issues = [];
     const children = Array.from(element.children);
     for (const child of children) {
@@ -65,7 +74,7 @@ async function validateChildren(element) {
     }
     return issues;
 }
-const tagValidator = {
+export const tagValidator = {
     LNodeType: lNodeTypeValidator,
     DOType: dOTypeValidator,
     DAType: dATypeValidator,
@@ -74,6 +83,4 @@ const tagValidator = {
     DA: dAValidator,
     BDA: dAValidator,
 };
-
-export { getAdjacentClass, getTypeChild, iec6185073, iec6185074, iec6185081, isTypeMissing, tagValidator, validateChildren };
 //# sourceMappingURL=foundation.js.map

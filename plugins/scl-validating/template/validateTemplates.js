@@ -1,6 +1,5 @@
 import { tagValidator } from './templates/foundation.js';
-
-async function* validateTemplates(doc) {
+export async function* validateTemplates(doc) {
     /*
     const [version, revision, release] = [
       doc.documentElement.getAttribute('version') ?? '',
@@ -30,6 +29,4 @@ async function* validateTemplates(doc) {
         yield childIssues;
     }
 }
-
-export { validateTemplates };
 //# sourceMappingURL=validateTemplates.js.map

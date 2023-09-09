@@ -1,6 +1,5 @@
-import { validateChildren, iec6185073, iec6185081, getAdjacentClass, iec6185074 } from './foundation.js';
-
 /* eslint-disable no-promise-executor-return */
+import { getAdjacentClass, iec6185073, iec6185074, iec6185081, validateChildren, } from './foundation.js';
 async function getSpecificDataObject(lnClass, doName) {
     var _a;
     if (!lnClass || !doName)
@@ -65,7 +64,7 @@ async function missingMandatoryChildren(dotype, cdc) {
     });
     return errors;
 }
-async function dOTypeValidator(dotype) {
+export async function dOTypeValidator(dotype) {
     const errors = [];
     if (dotype.tagName !== 'DOType')
         return [];
@@ -82,6 +81,4 @@ async function dOTypeValidator(dotype) {
     const issuesChildren = await validateChildren(dotype);
     return errors.concat(missingChildren, issuesChildren, incorrectAttributes);
 }
-
-export { dOTypeValidator };
 //# sourceMappingURL=dotype.js.map

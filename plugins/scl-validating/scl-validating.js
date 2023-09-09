@@ -1,32 +1,27 @@
-import { __decorate } from './node_modules/tslib/tslib.es6.js';
-import './node_modules/@lit/reactive-element/reactive-element.js';
-import { html as x } from './node_modules/lit-html/lit-html.js';
-import { LitElement as s } from './node_modules/lit-element/lit-element.js';
-import { property as e } from './node_modules/@lit/reactive-element/decorators/property.js';
-import { state as t } from './node_modules/@lit/reactive-element/decorators/state.js';
-import { query as i$1 } from './node_modules/@lit/reactive-element/decorators/query.js';
-import './node_modules/@lit/reactive-element/decorators/query-assigned-elements.js';
-import './node_modules/@material/mwc-button/mwc-button.js';
-import './node_modules/@material/mwc-dialog/mwc-dialog.js';
-import './node_modules/@material/mwc-formfield/mwc-formfield.js';
-import './node_modules/@material/mwc-icon/mwc-icon.js';
-import './node_modules/@material/mwc-icon-button-toggle/mwc-icon-button-toggle.js';
-import './node_modules/@material/mwc-list/mwc-list.js';
-import './node_modules/@material/mwc-snackbar/mwc-snackbar.js';
-import './node_modules/@material/mwc-switch/mwc-switch.js';
+import { __decorate } from "tslib";
+/* eslint-disable import/no-extraneous-dependencies */
+import { LitElement, css, html } from 'lit';
+import { property, query, state } from 'lit/decorators.js';
+import '@material/mwc-button';
+import '@material/mwc-dialog';
+import '@material/mwc-formfield';
+import '@material/mwc-icon';
+import '@material/mwc-icon-button-toggle';
+import '@material/mwc-list';
+import '@material/mwc-snackbar';
+import '@material/mwc-switch';
 import { validateSchema } from './schema/validateSchema.js';
 import { validateTemplates } from './template/validateTemplates.js';
-import { css as i } from './node_modules/@lit/reactive-element/css-tag.js';
-
 /** An editor [[`plugin`]] to configure validators and display their issue centrally */
-class SclValidatingPlugin extends s {
+export default class SclValidatingPlugin extends LitElement {
     async run() {
         this.dialog.show();
     }
     async validateSchema() {
         this.schemaIssues.length = 0;
         await this.requestUpdate('schemaIssues');
-        this.schemaIssues = await validateSchema(this.doc, this.docName);
+        const result = await validateSchema(this.doc, this.docName);
+        this.schemaIssues = result || [{ title: 'Invalid Schema!' }];
         this.waitForSchemaRun = false;
         if (this.schemaIssues.length) {
             this.alertSchemaIssue.labelText =
@@ -84,10 +79,10 @@ class SclValidatingPlugin extends s {
     // eslint-disable-next-line class-methods-use-this
     renderValidatorsIssues(issues) {
         if (issues.length === 0)
-            return [x `<li divider padded role="separator"></li>`];
+            return [html `<li divider padded role="separator"></li>`];
         return [
-            x `<li divider padded role="separator"></li>`,
-            ...issues.map(issue => x ` <abbr title="${`${issue.title}\n${issue.message}`}"
+            html `<li divider padded role="separator"></li>`,
+            ...issues.map(issue => html ` <abbr title="${`${issue.title}\n${issue.message}`}"
           ><mwc-list-item ?twoline=${!!issue.message}>
             <span> ${issue.title}</span>
             <span slot="secondary">${issue.message}</span>
@@ -96,7 +91,7 @@ class SclValidatingPlugin extends s {
         ];
     }
     renderTemplateValidator() {
-        return x `<div style="display: flex; flex-direction: row">
+        return html `<div style="display: flex; flex-direction: row">
         <div style="display: flex; flex-direction: column; flex: auto;">
           <div style="display: flex; flex-direction: row">
             <h3 style="flex:auto">
@@ -132,15 +127,15 @@ class SclValidatingPlugin extends s {
         </div>
       </div>
       ${this.expandTemplate && this.expandTemplate.on
-            ? x `<mwc-list>
+            ? html `<mwc-list>
             <li divider padded role="separator"></li>
           </mwc-list>`
-            : x `<mwc-list id="content" wrapFocus
+            : html `<mwc-list id="content" wrapFocus
             >${this.renderValidatorsIssues(this.templateIssues)}</mwc-list
           >`}`;
     }
     renderSchemaValidator() {
-        return x `<div style="display: flex; flex-direction: row">
+        return html `<div style="display: flex; flex-direction: row">
         <div style="display: flex; flex-direction: column; flex: auto;">
           <div style="display: flex; flex-direction: row">
             <h3 style="flex:auto">
@@ -177,16 +172,16 @@ class SclValidatingPlugin extends s {
         </div>
       </div>
       ${this.expandSchema && this.expandSchema.on
-            ? x `<mwc-list>
+            ? html `<mwc-list>
             <li divider padded role="separator"></li>
           </mwc-list>`
-            : x `<mwc-list id="content" wrapFocus
+            : html `<mwc-list id="content" wrapFocus
             >${this.renderValidatorsIssues(this.schemaIssues)}</mwc-list
           >`}`;
     }
     render() {
         if (!this.doc)
-            return x `<mwc-dialog
+            return html `<mwc-dialog
         ><div>No SCL file loaded, yet!</div>
         <mwc-button
           label="Cancel"
@@ -194,7 +189,7 @@ class SclValidatingPlugin extends s {
           dialogAction="close"
         ></mwc-button>
       </mwc-dialog>`;
-        return x `<mwc-dialog>
+        return html `<mwc-dialog>
         ${this.renderSchemaValidator()}${this.renderTemplateValidator()}
         <mwc-button
           label="Cancel"
@@ -213,54 +208,52 @@ class SclValidatingPlugin extends s {
       </mwc-snackbar>`;
     }
 }
-SclValidatingPlugin.styles = i `
+SclValidatingPlugin.styles = css `
     mwc-dialog {
       --mdc-dialog-max-width: 90vw;
       --mdc-dialog-min-width: 50vw;
     }
   `;
 __decorate([
-    e({ attribute: false })
+    property({ attribute: false })
 ], SclValidatingPlugin.prototype, "doc", void 0);
 __decorate([
-    e()
+    property()
 ], SclValidatingPlugin.prototype, "docName", void 0);
 __decorate([
-    e({ type: Number })
+    property({ type: Number })
 ], SclValidatingPlugin.prototype, "editCount", void 0);
 __decorate([
-    t()
+    state()
 ], SclValidatingPlugin.prototype, "schemaIssues", void 0);
 __decorate([
-    t()
+    state()
 ], SclValidatingPlugin.prototype, "templateIssues", void 0);
 __decorate([
-    t()
+    state()
 ], SclValidatingPlugin.prototype, "waitForSchemaRun", void 0);
 __decorate([
-    t()
+    state()
 ], SclValidatingPlugin.prototype, "waitForTemplateRun", void 0);
 __decorate([
-    t()
+    state()
 ], SclValidatingPlugin.prototype, "autoValidateSchema", void 0);
 __decorate([
-    t()
+    state()
 ], SclValidatingPlugin.prototype, "autoValidateTemplate", void 0);
 __decorate([
-    i$1('mwc-dialog')
+    query('mwc-dialog')
 ], SclValidatingPlugin.prototype, "dialog", void 0);
 __decorate([
-    i$1('.expand.template')
+    query('.expand.template')
 ], SclValidatingPlugin.prototype, "expandTemplate", void 0);
 __decorate([
-    i$1('.expand.schema')
+    query('.expand.schema')
 ], SclValidatingPlugin.prototype, "expandSchema", void 0);
 __decorate([
-    i$1('#alertSchemaIssue')
+    query('#alertSchemaIssue')
 ], SclValidatingPlugin.prototype, "alertSchemaIssue", void 0);
 __decorate([
-    i$1('#alertTemplateIssue')
+    query('#alertTemplateIssue')
 ], SclValidatingPlugin.prototype, "alertTemplateIssue", void 0);
-
-export { SclValidatingPlugin as default };
 //# sourceMappingURL=scl-validating.js.map

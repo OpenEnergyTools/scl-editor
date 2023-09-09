@@ -9275,10 +9275,8 @@ const versionToSchema = {
     '2007B3': '2007B4',
     '2007B4': '2007B4',
 };
-function getSchema(version, revision, release) {
+export function getSchema(version, revision, release) {
     const schemaVersion = versionToSchema[version + revision + release];
     return schemas[schemaVersion !== null && schemaVersion !== void 0 ? schemaVersion : '2007B'];
 }
-
-export { getSchema, schemas };
 //# sourceMappingURL=schemas.js.map

@@ -1,6 +1,5 @@
-import { isTypeMissing, getTypeChild } from './foundation.js';
-
-async function dOValidator(element) {
+import { getTypeChild, isTypeMissing } from './foundation.js';
+export async function dOValidator(element) {
     if (isTypeMissing(element))
         return [
             {
@@ -18,6 +17,4 @@ async function dOValidator(element) {
         ];
     return [];
 }
-
-export { dOValidator };
 //# sourceMappingURL=dosdo.js.map

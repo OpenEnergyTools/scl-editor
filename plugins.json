@@ -16,7 +16,18 @@
       },
       "icon": "save",
       "active": true,
+      "requireDoc": true,
       "src": "plugins/oscd-save/oscd-save.js"
+    },
+    {
+      "name": "Import IED",
+      "translation": {
+        "de": "Projekt speichern"
+      },
+      "icon": "snippet_folder",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/scl-import-ied/scl-import-ied.js"
     },
     {
       "name": "Validating",
@@ -25,6 +36,7 @@
       },
       "icon": "rule_folder",
       "active": true,
+      "requireDoc": true,
       "src": "plugins/scl-validating/scl-validating.js"
     }
   ],
@@ -54,6 +66,13 @@
       "active": true,
       "requireDoc": true,
       "src": "plugins/oscd-publisher/oscd-publisher.js"
+    },
+    {
+      "name": "Substation",
+      "icon": "save",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/scl-substation-editor/scl-substation-editor.js"
     }
   ]
 }

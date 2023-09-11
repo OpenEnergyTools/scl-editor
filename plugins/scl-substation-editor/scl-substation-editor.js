@@ -147,7 +147,7 @@ function e$1(e){return o$2({descriptor:r=>({async get(){var r;return await this.
  * Copyright 2021 Google LLC
  * SPDX-LIcense-Identifier: Apache-2.0
  */
-const styles$3 = i$5 `.material-icons{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}.mdc-icon-button{font-size:24px;width:48px;height:48px;padding:12px}.mdc-icon-button .mdc-icon-button__focus-ring{display:none}.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{display:block;max-height:48px;max-width:48px}@media screen and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{pointer-events:none;border:2px solid transparent;border-radius:6px;box-sizing:content-box;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:100%;width:100%}}@media screen and (forced-colors: active)and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{border-color:CanvasText}}@media screen and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring::after,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring::after{content:"";border:2px solid transparent;border-radius:8px;display:block;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc(100% + 4px);width:calc(100% + 4px)}}@media screen and (forced-colors: active)and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring::after,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring::after{border-color:CanvasText}}.mdc-icon-button.mdc-icon-button--reduced-size .mdc-icon-button__ripple{width:40px;height:40px;margin-top:4px;margin-bottom:4px;margin-right:4px;margin-left:4px}.mdc-icon-button.mdc-icon-button--reduced-size.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button.mdc-icon-button--reduced-size:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{max-height:40px;max-width:40px}.mdc-icon-button .mdc-icon-button__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}.mdc-icon-button:disabled{color:rgba(0, 0, 0, 0.38);color:var(--mdc-theme-text-disabled-on-light, rgba(0, 0, 0, 0.38))}.mdc-icon-button svg,.mdc-icon-button img{width:24px;height:24px}.mdc-icon-button{display:inline-block;position:relative;box-sizing:border-box;border:none;outline:none;background-color:transparent;fill:currentColor;color:inherit;text-decoration:none;cursor:pointer;user-select:none;z-index:0;overflow:visible}.mdc-icon-button .mdc-icon-button__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}.mdc-icon-button:disabled{cursor:default;pointer-events:none}.mdc-icon-button--display-flex{align-items:center;display:inline-flex;justify-content:center}.mdc-icon-button__icon{display:inline-block}.mdc-icon-button__icon.mdc-icon-button__icon--on{display:none}.mdc-icon-button--on .mdc-icon-button__icon{display:none}.mdc-icon-button--on .mdc-icon-button__icon.mdc-icon-button__icon--on{display:inline-block}.mdc-icon-button__link{height:100%;left:0;outline:none;position:absolute;top:0;width:100%}.mdc-icon-button{display:inline-block;position:relative;box-sizing:border-box;border:none;outline:none;background-color:transparent;fill:currentColor;color:inherit;text-decoration:none;cursor:pointer;user-select:none;z-index:0;overflow:visible}.mdc-icon-button .mdc-icon-button__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}.mdc-icon-button:disabled{cursor:default;pointer-events:none}.mdc-icon-button--display-flex{align-items:center;display:inline-flex;justify-content:center}.mdc-icon-button__icon{display:inline-block}.mdc-icon-button__icon.mdc-icon-button__icon--on{display:none}.mdc-icon-button--on .mdc-icon-button__icon{display:none}.mdc-icon-button--on .mdc-icon-button__icon.mdc-icon-button__icon--on{display:inline-block}.mdc-icon-button__link{height:100%;left:0;outline:none;position:absolute;top:0;width:100%}:host{display:inline-block;outline:none}:host([disabled]){pointer-events:none}.mdc-icon-button i,.mdc-icon-button svg,.mdc-icon-button img,.mdc-icon-button ::slotted(*){display:block}:host{--mdc-ripple-color: currentcolor;-webkit-tap-highlight-color:transparent}:host,.mdc-icon-button{vertical-align:top}.mdc-icon-button{width:var(--mdc-icon-button-size, 48px);height:var(--mdc-icon-button-size, 48px);padding:calc( (var(--mdc-icon-button-size, 48px) - var(--mdc-icon-size, 24px)) / 2 )}.mdc-icon-button i,.mdc-icon-button svg,.mdc-icon-button img,.mdc-icon-button ::slotted(*){display:block;width:var(--mdc-icon-size, 24px);height:var(--mdc-icon-size, 24px)}`;
+const styles$4 = i$5 `.material-icons{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}.mdc-icon-button{font-size:24px;width:48px;height:48px;padding:12px}.mdc-icon-button .mdc-icon-button__focus-ring{display:none}.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{display:block;max-height:48px;max-width:48px}@media screen and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{pointer-events:none;border:2px solid transparent;border-radius:6px;box-sizing:content-box;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:100%;width:100%}}@media screen and (forced-colors: active)and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{border-color:CanvasText}}@media screen and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring::after,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring::after{content:"";border:2px solid transparent;border-radius:8px;display:block;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc(100% + 4px);width:calc(100% + 4px)}}@media screen and (forced-colors: active)and (forced-colors: active){.mdc-icon-button.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring::after,.mdc-icon-button:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring::after{border-color:CanvasText}}.mdc-icon-button.mdc-icon-button--reduced-size .mdc-icon-button__ripple{width:40px;height:40px;margin-top:4px;margin-bottom:4px;margin-right:4px;margin-left:4px}.mdc-icon-button.mdc-icon-button--reduced-size.mdc-ripple-upgraded--background-focused .mdc-icon-button__focus-ring,.mdc-icon-button.mdc-icon-button--reduced-size:not(.mdc-ripple-upgraded):focus .mdc-icon-button__focus-ring{max-height:40px;max-width:40px}.mdc-icon-button .mdc-icon-button__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}.mdc-icon-button:disabled{color:rgba(0, 0, 0, 0.38);color:var(--mdc-theme-text-disabled-on-light, rgba(0, 0, 0, 0.38))}.mdc-icon-button svg,.mdc-icon-button img{width:24px;height:24px}.mdc-icon-button{display:inline-block;position:relative;box-sizing:border-box;border:none;outline:none;background-color:transparent;fill:currentColor;color:inherit;text-decoration:none;cursor:pointer;user-select:none;z-index:0;overflow:visible}.mdc-icon-button .mdc-icon-button__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}.mdc-icon-button:disabled{cursor:default;pointer-events:none}.mdc-icon-button--display-flex{align-items:center;display:inline-flex;justify-content:center}.mdc-icon-button__icon{display:inline-block}.mdc-icon-button__icon.mdc-icon-button__icon--on{display:none}.mdc-icon-button--on .mdc-icon-button__icon{display:none}.mdc-icon-button--on .mdc-icon-button__icon.mdc-icon-button__icon--on{display:inline-block}.mdc-icon-button__link{height:100%;left:0;outline:none;position:absolute;top:0;width:100%}.mdc-icon-button{display:inline-block;position:relative;box-sizing:border-box;border:none;outline:none;background-color:transparent;fill:currentColor;color:inherit;text-decoration:none;cursor:pointer;user-select:none;z-index:0;overflow:visible}.mdc-icon-button .mdc-icon-button__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}.mdc-icon-button:disabled{cursor:default;pointer-events:none}.mdc-icon-button--display-flex{align-items:center;display:inline-flex;justify-content:center}.mdc-icon-button__icon{display:inline-block}.mdc-icon-button__icon.mdc-icon-button__icon--on{display:none}.mdc-icon-button--on .mdc-icon-button__icon{display:none}.mdc-icon-button--on .mdc-icon-button__icon.mdc-icon-button__icon--on{display:inline-block}.mdc-icon-button__link{height:100%;left:0;outline:none;position:absolute;top:0;width:100%}:host{display:inline-block;outline:none}:host([disabled]){pointer-events:none}.mdc-icon-button i,.mdc-icon-button svg,.mdc-icon-button img,.mdc-icon-button ::slotted(*){display:block}:host{--mdc-ripple-color: currentcolor;-webkit-tap-highlight-color:transparent}:host,.mdc-icon-button{vertical-align:top}.mdc-icon-button{width:var(--mdc-icon-button-size, 48px);height:var(--mdc-icon-button-size, 48px);padding:calc( (var(--mdc-icon-button-size, 48px) - var(--mdc-icon-size, 24px)) / 2 )}.mdc-icon-button i,.mdc-icon-button svg,.mdc-icon-button img,.mdc-icon-button ::slotted(*){display:block;width:var(--mdc-icon-size, 24px);height:var(--mdc-icon-size, 24px)}`;
 
 /**
  * @license
@@ -1147,7 +1147,7 @@ __decorate([
  * Copyright 2021 Google LLC
  * SPDX-LIcense-Identifier: Apache-2.0
  */
-const styles$2 = i$5 `.mdc-ripple-surface{--mdc-ripple-fg-size: 0;--mdc-ripple-left: 0;--mdc-ripple-top: 0;--mdc-ripple-fg-scale: 1;--mdc-ripple-fg-translate-end: 0;--mdc-ripple-fg-translate-start: 0;-webkit-tap-highlight-color:rgba(0,0,0,0);will-change:transform,opacity;position:relative;outline:none;overflow:hidden}.mdc-ripple-surface::before,.mdc-ripple-surface::after{position:absolute;border-radius:50%;opacity:0;pointer-events:none;content:""}.mdc-ripple-surface::before{transition:opacity 15ms linear,background-color 15ms linear;z-index:1;z-index:var(--mdc-ripple-z-index, 1)}.mdc-ripple-surface::after{z-index:0;z-index:var(--mdc-ripple-z-index, 0)}.mdc-ripple-surface.mdc-ripple-upgraded::before{transform:scale(var(--mdc-ripple-fg-scale, 1))}.mdc-ripple-surface.mdc-ripple-upgraded::after{top:0;left:0;transform:scale(0);transform-origin:center center}.mdc-ripple-surface.mdc-ripple-upgraded--unbounded::after{top:var(--mdc-ripple-top, 0);left:var(--mdc-ripple-left, 0)}.mdc-ripple-surface.mdc-ripple-upgraded--foreground-activation::after{animation:mdc-ripple-fg-radius-in 225ms forwards,mdc-ripple-fg-opacity-in 75ms forwards}.mdc-ripple-surface.mdc-ripple-upgraded--foreground-deactivation::after{animation:mdc-ripple-fg-opacity-out 150ms;transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}.mdc-ripple-surface::before,.mdc-ripple-surface::after{top:calc(50% - 100%);left:calc(50% - 100%);width:200%;height:200%}.mdc-ripple-surface.mdc-ripple-upgraded::after{width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-ripple-surface[data-mdc-ripple-is-unbounded],.mdc-ripple-upgraded--unbounded{overflow:visible}.mdc-ripple-surface[data-mdc-ripple-is-unbounded]::before,.mdc-ripple-surface[data-mdc-ripple-is-unbounded]::after,.mdc-ripple-upgraded--unbounded::before,.mdc-ripple-upgraded--unbounded::after{top:calc(50% - 50%);left:calc(50% - 50%);width:100%;height:100%}.mdc-ripple-surface[data-mdc-ripple-is-unbounded].mdc-ripple-upgraded::before,.mdc-ripple-surface[data-mdc-ripple-is-unbounded].mdc-ripple-upgraded::after,.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded::before,.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded::after{top:var(--mdc-ripple-top, calc(50% - 50%));left:var(--mdc-ripple-left, calc(50% - 50%));width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-ripple-surface[data-mdc-ripple-is-unbounded].mdc-ripple-upgraded::after,.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded::after{width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-ripple-surface::before,.mdc-ripple-surface::after{background-color:#000;background-color:var(--mdc-ripple-color, #000)}.mdc-ripple-surface:hover::before,.mdc-ripple-surface.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-ripple-surface.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-ripple-surface:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}@keyframes mdc-ripple-fg-radius-in{from{animation-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transform:translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1)}to{transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}}@keyframes mdc-ripple-fg-opacity-in{from{animation-timing-function:linear;opacity:0}to{opacity:var(--mdc-ripple-fg-opacity, 0)}}@keyframes mdc-ripple-fg-opacity-out{from{animation-timing-function:linear;opacity:var(--mdc-ripple-fg-opacity, 0)}to{opacity:0}}:host{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:block}:host .mdc-ripple-surface{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;will-change:unset}.mdc-ripple-surface--primary::before,.mdc-ripple-surface--primary::after{background-color:#6200ee;background-color:var(--mdc-ripple-color, var(--mdc-theme-primary, #6200ee))}.mdc-ripple-surface--primary:hover::before,.mdc-ripple-surface--primary.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-ripple-surface--primary.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--primary:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-ripple-surface--primary:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--primary:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--primary.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--primary--activated::before{opacity:0.12;opacity:var(--mdc-ripple-activated-opacity, 0.12)}.mdc-ripple-surface--primary--activated::before,.mdc-ripple-surface--primary--activated::after{background-color:#6200ee;background-color:var(--mdc-ripple-color, var(--mdc-theme-primary, #6200ee))}.mdc-ripple-surface--primary--activated:hover::before,.mdc-ripple-surface--primary--activated.mdc-ripple-surface--hover::before{opacity:0.16;opacity:var(--mdc-ripple-hover-opacity, 0.16)}.mdc-ripple-surface--primary--activated.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--primary--activated:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-focus-opacity, 0.24)}.mdc-ripple-surface--primary--activated:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--primary--activated:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--primary--activated.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--primary--selected::before{opacity:0.08;opacity:var(--mdc-ripple-selected-opacity, 0.08)}.mdc-ripple-surface--primary--selected::before,.mdc-ripple-surface--primary--selected::after{background-color:#6200ee;background-color:var(--mdc-ripple-color, var(--mdc-theme-primary, #6200ee))}.mdc-ripple-surface--primary--selected:hover::before,.mdc-ripple-surface--primary--selected.mdc-ripple-surface--hover::before{opacity:0.12;opacity:var(--mdc-ripple-hover-opacity, 0.12)}.mdc-ripple-surface--primary--selected.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--primary--selected:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-focus-opacity, 0.2)}.mdc-ripple-surface--primary--selected:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--primary--selected:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--primary--selected.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--accent::before,.mdc-ripple-surface--accent::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-ripple-surface--accent:hover::before,.mdc-ripple-surface--accent.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-ripple-surface--accent.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--accent:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-ripple-surface--accent:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--accent:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--accent.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--accent--activated::before{opacity:0.12;opacity:var(--mdc-ripple-activated-opacity, 0.12)}.mdc-ripple-surface--accent--activated::before,.mdc-ripple-surface--accent--activated::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-ripple-surface--accent--activated:hover::before,.mdc-ripple-surface--accent--activated.mdc-ripple-surface--hover::before{opacity:0.16;opacity:var(--mdc-ripple-hover-opacity, 0.16)}.mdc-ripple-surface--accent--activated.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--accent--activated:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-focus-opacity, 0.24)}.mdc-ripple-surface--accent--activated:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--accent--activated:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--accent--activated.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--accent--selected::before{opacity:0.08;opacity:var(--mdc-ripple-selected-opacity, 0.08)}.mdc-ripple-surface--accent--selected::before,.mdc-ripple-surface--accent--selected::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-ripple-surface--accent--selected:hover::before,.mdc-ripple-surface--accent--selected.mdc-ripple-surface--hover::before{opacity:0.12;opacity:var(--mdc-ripple-hover-opacity, 0.12)}.mdc-ripple-surface--accent--selected.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--accent--selected:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-focus-opacity, 0.2)}.mdc-ripple-surface--accent--selected:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--accent--selected:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--accent--selected.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--disabled{opacity:0}.mdc-ripple-surface--internal-use-state-layer-custom-properties::before,.mdc-ripple-surface--internal-use-state-layer-custom-properties::after{background-color:#000;background-color:var(--mdc-ripple-hover-state-layer-color, #000)}.mdc-ripple-surface--internal-use-state-layer-custom-properties:hover::before,.mdc-ripple-surface--internal-use-state-layer-custom-properties.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-state-layer-opacity, 0.04)}.mdc-ripple-surface--internal-use-state-layer-custom-properties.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--internal-use-state-layer-custom-properties:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-state-layer-opacity, 0.12)}.mdc-ripple-surface--internal-use-state-layer-custom-properties:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--internal-use-state-layer-custom-properties:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-pressed-state-layer-opacity, 0.12)}.mdc-ripple-surface--internal-use-state-layer-custom-properties.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-pressed-state-layer-opacity, 0.12)}`;
+const styles$3 = i$5 `.mdc-ripple-surface{--mdc-ripple-fg-size: 0;--mdc-ripple-left: 0;--mdc-ripple-top: 0;--mdc-ripple-fg-scale: 1;--mdc-ripple-fg-translate-end: 0;--mdc-ripple-fg-translate-start: 0;-webkit-tap-highlight-color:rgba(0,0,0,0);will-change:transform,opacity;position:relative;outline:none;overflow:hidden}.mdc-ripple-surface::before,.mdc-ripple-surface::after{position:absolute;border-radius:50%;opacity:0;pointer-events:none;content:""}.mdc-ripple-surface::before{transition:opacity 15ms linear,background-color 15ms linear;z-index:1;z-index:var(--mdc-ripple-z-index, 1)}.mdc-ripple-surface::after{z-index:0;z-index:var(--mdc-ripple-z-index, 0)}.mdc-ripple-surface.mdc-ripple-upgraded::before{transform:scale(var(--mdc-ripple-fg-scale, 1))}.mdc-ripple-surface.mdc-ripple-upgraded::after{top:0;left:0;transform:scale(0);transform-origin:center center}.mdc-ripple-surface.mdc-ripple-upgraded--unbounded::after{top:var(--mdc-ripple-top, 0);left:var(--mdc-ripple-left, 0)}.mdc-ripple-surface.mdc-ripple-upgraded--foreground-activation::after{animation:mdc-ripple-fg-radius-in 225ms forwards,mdc-ripple-fg-opacity-in 75ms forwards}.mdc-ripple-surface.mdc-ripple-upgraded--foreground-deactivation::after{animation:mdc-ripple-fg-opacity-out 150ms;transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}.mdc-ripple-surface::before,.mdc-ripple-surface::after{top:calc(50% - 100%);left:calc(50% - 100%);width:200%;height:200%}.mdc-ripple-surface.mdc-ripple-upgraded::after{width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-ripple-surface[data-mdc-ripple-is-unbounded],.mdc-ripple-upgraded--unbounded{overflow:visible}.mdc-ripple-surface[data-mdc-ripple-is-unbounded]::before,.mdc-ripple-surface[data-mdc-ripple-is-unbounded]::after,.mdc-ripple-upgraded--unbounded::before,.mdc-ripple-upgraded--unbounded::after{top:calc(50% - 50%);left:calc(50% - 50%);width:100%;height:100%}.mdc-ripple-surface[data-mdc-ripple-is-unbounded].mdc-ripple-upgraded::before,.mdc-ripple-surface[data-mdc-ripple-is-unbounded].mdc-ripple-upgraded::after,.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded::before,.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded::after{top:var(--mdc-ripple-top, calc(50% - 50%));left:var(--mdc-ripple-left, calc(50% - 50%));width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-ripple-surface[data-mdc-ripple-is-unbounded].mdc-ripple-upgraded::after,.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded::after{width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-ripple-surface::before,.mdc-ripple-surface::after{background-color:#000;background-color:var(--mdc-ripple-color, #000)}.mdc-ripple-surface:hover::before,.mdc-ripple-surface.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-ripple-surface.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-ripple-surface:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}@keyframes mdc-ripple-fg-radius-in{from{animation-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transform:translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1)}to{transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}}@keyframes mdc-ripple-fg-opacity-in{from{animation-timing-function:linear;opacity:0}to{opacity:var(--mdc-ripple-fg-opacity, 0)}}@keyframes mdc-ripple-fg-opacity-out{from{animation-timing-function:linear;opacity:var(--mdc-ripple-fg-opacity, 0)}to{opacity:0}}:host{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:block}:host .mdc-ripple-surface{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;will-change:unset}.mdc-ripple-surface--primary::before,.mdc-ripple-surface--primary::after{background-color:#6200ee;background-color:var(--mdc-ripple-color, var(--mdc-theme-primary, #6200ee))}.mdc-ripple-surface--primary:hover::before,.mdc-ripple-surface--primary.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-ripple-surface--primary.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--primary:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-ripple-surface--primary:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--primary:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--primary.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--primary--activated::before{opacity:0.12;opacity:var(--mdc-ripple-activated-opacity, 0.12)}.mdc-ripple-surface--primary--activated::before,.mdc-ripple-surface--primary--activated::after{background-color:#6200ee;background-color:var(--mdc-ripple-color, var(--mdc-theme-primary, #6200ee))}.mdc-ripple-surface--primary--activated:hover::before,.mdc-ripple-surface--primary--activated.mdc-ripple-surface--hover::before{opacity:0.16;opacity:var(--mdc-ripple-hover-opacity, 0.16)}.mdc-ripple-surface--primary--activated.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--primary--activated:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-focus-opacity, 0.24)}.mdc-ripple-surface--primary--activated:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--primary--activated:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--primary--activated.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--primary--selected::before{opacity:0.08;opacity:var(--mdc-ripple-selected-opacity, 0.08)}.mdc-ripple-surface--primary--selected::before,.mdc-ripple-surface--primary--selected::after{background-color:#6200ee;background-color:var(--mdc-ripple-color, var(--mdc-theme-primary, #6200ee))}.mdc-ripple-surface--primary--selected:hover::before,.mdc-ripple-surface--primary--selected.mdc-ripple-surface--hover::before{opacity:0.12;opacity:var(--mdc-ripple-hover-opacity, 0.12)}.mdc-ripple-surface--primary--selected.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--primary--selected:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-focus-opacity, 0.2)}.mdc-ripple-surface--primary--selected:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--primary--selected:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--primary--selected.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--accent::before,.mdc-ripple-surface--accent::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-ripple-surface--accent:hover::before,.mdc-ripple-surface--accent.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-ripple-surface--accent.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--accent:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-ripple-surface--accent:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--accent:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--accent.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-ripple-surface--accent--activated::before{opacity:0.12;opacity:var(--mdc-ripple-activated-opacity, 0.12)}.mdc-ripple-surface--accent--activated::before,.mdc-ripple-surface--accent--activated::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-ripple-surface--accent--activated:hover::before,.mdc-ripple-surface--accent--activated.mdc-ripple-surface--hover::before{opacity:0.16;opacity:var(--mdc-ripple-hover-opacity, 0.16)}.mdc-ripple-surface--accent--activated.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--accent--activated:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-focus-opacity, 0.24)}.mdc-ripple-surface--accent--activated:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--accent--activated:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.24;opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--accent--activated.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.24)}.mdc-ripple-surface--accent--selected::before{opacity:0.08;opacity:var(--mdc-ripple-selected-opacity, 0.08)}.mdc-ripple-surface--accent--selected::before,.mdc-ripple-surface--accent--selected::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-ripple-surface--accent--selected:hover::before,.mdc-ripple-surface--accent--selected.mdc-ripple-surface--hover::before{opacity:0.12;opacity:var(--mdc-ripple-hover-opacity, 0.12)}.mdc-ripple-surface--accent--selected.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--accent--selected:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-focus-opacity, 0.2)}.mdc-ripple-surface--accent--selected:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--accent--selected:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.2;opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--accent--selected.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.2)}.mdc-ripple-surface--disabled{opacity:0}.mdc-ripple-surface--internal-use-state-layer-custom-properties::before,.mdc-ripple-surface--internal-use-state-layer-custom-properties::after{background-color:#000;background-color:var(--mdc-ripple-hover-state-layer-color, #000)}.mdc-ripple-surface--internal-use-state-layer-custom-properties:hover::before,.mdc-ripple-surface--internal-use-state-layer-custom-properties.mdc-ripple-surface--hover::before{opacity:0.04;opacity:var(--mdc-ripple-hover-state-layer-opacity, 0.04)}.mdc-ripple-surface--internal-use-state-layer-custom-properties.mdc-ripple-upgraded--background-focused::before,.mdc-ripple-surface--internal-use-state-layer-custom-properties:not(.mdc-ripple-upgraded):focus::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-state-layer-opacity, 0.12)}.mdc-ripple-surface--internal-use-state-layer-custom-properties:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-ripple-surface--internal-use-state-layer-custom-properties:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-pressed-state-layer-opacity, 0.12)}.mdc-ripple-surface--internal-use-state-layer-custom-properties.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-pressed-state-layer-opacity, 0.12)}`;
 
 /**
  * @license
@@ -1157,7 +1157,7 @@ const styles$2 = i$5 `.mdc-ripple-surface{--mdc-ripple-fg-size: 0;--mdc-ripple-l
 /** @soyCompatible */
 let Ripple = class Ripple extends RippleBase {
 };
-Ripple.styles = [styles$2];
+Ripple.styles = [styles$3];
 Ripple = __decorate([
     e$4('mwc-ripple')
 ], Ripple);
@@ -1480,17 +1480,149 @@ __decorate([
  */
 let IconButtonToggle = class IconButtonToggle extends IconButtonToggleBase {
 };
-IconButtonToggle.styles = [styles$3];
+IconButtonToggle.styles = [styles$4];
 IconButtonToggle = __decorate([
     e$4('mwc-icon-button-toggle')
 ], IconButtonToggle);
 
 /**
  * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/** @soyCompatible */
+class IconButtonBase extends s {
+    constructor() {
+        super(...arguments);
+        this.disabled = false;
+        this.icon = '';
+        this.shouldRenderRipple = false;
+        this.rippleHandlers = new RippleHandlers(() => {
+            this.shouldRenderRipple = true;
+            return this.ripple;
+        });
+    }
+    /** @soyTemplate */
+    renderRipple() {
+        return this.shouldRenderRipple ? x `
+            <mwc-ripple
+                .disabled="${this.disabled}"
+                unbounded>
+            </mwc-ripple>` :
+            '';
+    }
+    focus() {
+        const buttonElement = this.buttonElement;
+        if (buttonElement) {
+            this.rippleHandlers.startFocus();
+            buttonElement.focus();
+        }
+    }
+    blur() {
+        const buttonElement = this.buttonElement;
+        if (buttonElement) {
+            this.rippleHandlers.endFocus();
+            buttonElement.blur();
+        }
+    }
+    /** @soyTemplate */
+    render() {
+        return x `<button
+        class="mdc-icon-button mdc-icon-button--display-flex"
+        aria-label="${this.ariaLabel || this.icon}"
+        aria-haspopup="${l(this.ariaHasPopup)}"
+        ?disabled="${this.disabled}"
+        @focus="${this.handleRippleFocus}"
+        @blur="${this.handleRippleBlur}"
+        @mousedown="${this.handleRippleMouseDown}"
+        @mouseenter="${this.handleRippleMouseEnter}"
+        @mouseleave="${this.handleRippleMouseLeave}"
+        @touchstart="${this.handleRippleTouchStart}"
+        @touchend="${this.handleRippleDeactivate}"
+        @touchcancel="${this.handleRippleDeactivate}"
+    >${this.renderRipple()}
+    ${this.icon ? x `<i class="material-icons">${this.icon}</i>` : ''}
+    <span
+      ><slot></slot
+    ></span>
+  </button>`;
+    }
+    handleRippleMouseDown(event) {
+        const onUp = () => {
+            window.removeEventListener('mouseup', onUp);
+            this.handleRippleDeactivate();
+        };
+        window.addEventListener('mouseup', onUp);
+        this.rippleHandlers.startPress(event);
+    }
+    handleRippleTouchStart(event) {
+        this.rippleHandlers.startPress(event);
+    }
+    handleRippleDeactivate() {
+        this.rippleHandlers.endPress();
+    }
+    handleRippleMouseEnter() {
+        this.rippleHandlers.startHover();
+    }
+    handleRippleMouseLeave() {
+        this.rippleHandlers.endHover();
+    }
+    handleRippleFocus() {
+        this.rippleHandlers.startFocus();
+    }
+    handleRippleBlur() {
+        this.rippleHandlers.endFocus();
+    }
+}
+__decorate([
+    n$2({ type: Boolean, reflect: true })
+], IconButtonBase.prototype, "disabled", void 0);
+__decorate([
+    n$2({ type: String })
+], IconButtonBase.prototype, "icon", void 0);
+__decorate([
+    ariaProperty,
+    n$2({ type: String, attribute: 'aria-label' })
+], IconButtonBase.prototype, "ariaLabel", void 0);
+__decorate([
+    ariaProperty,
+    n$2({ type: String, attribute: 'aria-haspopup' })
+], IconButtonBase.prototype, "ariaHasPopup", void 0);
+__decorate([
+    i$2('button')
+], IconButtonBase.prototype, "buttonElement", void 0);
+__decorate([
+    e$1('mwc-ripple')
+], IconButtonBase.prototype, "ripple", void 0);
+__decorate([
+    t$1()
+], IconButtonBase.prototype, "shouldRenderRipple", void 0);
+__decorate([
+    e$2({ passive: true })
+], IconButtonBase.prototype, "handleRippleMouseDown", null);
+__decorate([
+    e$2({ passive: true })
+], IconButtonBase.prototype, "handleRippleTouchStart", null);
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/** @soyCompatible */
+let IconButton = class IconButton extends IconButtonBase {
+};
+IconButton.styles = [styles$4];
+IconButton = __decorate([
+    e$4('mwc-icon-button')
+], IconButton);
+
+/**
+ * @license
  * Copyright 2021 Google LLC
  * SPDX-LIcense-Identifier: Apache-2.0
  */
-const styles$1 = i$5 `:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}`;
+const styles$2 = i$5 `:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}`;
 
 /**
  * @license
@@ -1504,7 +1636,7 @@ let Icon = class Icon extends s {
         return x `<span><slot></slot></span>`;
     }
 };
-Icon.styles = [styles$1];
+Icon.styles = [styles$2];
 Icon = __decorate([
     e$4('mwc-icon')
 ], Icon);
@@ -1700,6 +1832,186 @@ __decorate([
 ], OscdActionPane.prototype, "level", void 0);
 
 window.customElements.define('oscd-action-pane', OscdActionPane);
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * Fab Base class logic and template definition
+ * @soyCompatible
+ */
+class FabBase extends s {
+    constructor() {
+        super(...arguments);
+        this.mini = false;
+        this.exited = false;
+        this.disabled = false;
+        this.extended = false;
+        this.showIconAtEnd = false;
+        this.reducedTouchTarget = false;
+        this.icon = '';
+        this.label = '';
+        this.shouldRenderRipple = false;
+        this.useStateLayerCustomProperties = false;
+        this.rippleHandlers = new RippleHandlers(() => {
+            this.shouldRenderRipple = true;
+            return this.ripple;
+        });
+    }
+    /**
+     * @soyTemplate
+     * @soyClasses fabClasses: .mdc-fab
+     */
+    render() {
+        const hasTouchTarget = this.mini && !this.reducedTouchTarget;
+        /** @classMap */
+        const classes = {
+            'mdc-fab--mini': this.mini,
+            'mdc-fab--touch': hasTouchTarget,
+            'mdc-fab--exited': this.exited,
+            'mdc-fab--extended': this.extended,
+            'icon-end': this.showIconAtEnd,
+        };
+        const ariaLabel = this.label ? this.label : this.icon;
+        /*
+         * Some internal styling is sensitive to whitespace in this template, take
+         * care when modifying it.
+         */
+        return x `<button
+          class="mdc-fab ${o$1(classes)}"
+          ?disabled="${this.disabled}"
+          aria-label="${ariaLabel}"
+          @mouseenter=${this.handleRippleMouseEnter}
+          @mouseleave=${this.handleRippleMouseLeave}
+          @focus=${this.handleRippleFocus}
+          @blur=${this.handleRippleBlur}
+          @mousedown=${this.handleRippleActivate}
+          @touchstart=${this.handleRippleStartPress}
+          @touchend=${this.handleRippleDeactivate}
+          @touchcancel=${this.handleRippleDeactivate}><!--
+        -->${this.renderBeforeRipple()}<!--
+        -->${this.renderRipple()}<!--
+        -->${this.showIconAtEnd ? this.renderLabel() : ''}<!--
+        --><span class="material-icons mdc-fab__icon"><!--
+          --><slot name="icon">${this.icon}</slot><!--
+       --></span><!--
+        -->${!this.showIconAtEnd ? this.renderLabel() : ''}<!--
+        -->${this.renderTouchTarget()}<!--
+      --></button>`;
+    }
+    /** @soyTemplate */
+    renderIcon() {
+        // TODO(b/191914389): reimplement once Wit issue is resolved
+        return x ``;
+    }
+    /** @soyTemplate */
+    renderTouchTarget() {
+        const hasTouchTarget = this.mini && !this.reducedTouchTarget;
+        return x `${hasTouchTarget ? x `<div class="mdc-fab__touch"></div>` : ''}`;
+    }
+    /** @soyTemplate */
+    renderLabel() {
+        const showLabel = this.label !== '' && this.extended;
+        return x `${showLabel ? x `<span class="mdc-fab__label">${this.label}</span>` :
+            ''}`;
+    }
+    /** @soyTemplate */
+    renderBeforeRipple() {
+        return x ``;
+    }
+    /** @soyTemplate */
+    renderRipple() {
+        return this.shouldRenderRipple ? x `<mwc-ripple class="ripple"
+        .internalUseStateLayerCustomProperties="${this.useStateLayerCustomProperties}"
+         ></mwc-ripple>` :
+            '';
+    }
+    handleRippleActivate(event) {
+        const onUp = () => {
+            window.removeEventListener('mouseup', onUp);
+            this.handleRippleDeactivate();
+        };
+        window.addEventListener('mouseup', onUp);
+        this.handleRippleStartPress(event);
+    }
+    handleRippleStartPress(event) {
+        this.rippleHandlers.startPress(event);
+    }
+    handleRippleDeactivate() {
+        this.rippleHandlers.endPress();
+    }
+    handleRippleMouseEnter() {
+        this.rippleHandlers.startHover();
+    }
+    handleRippleMouseLeave() {
+        this.rippleHandlers.endHover();
+    }
+    handleRippleFocus() {
+        this.rippleHandlers.startFocus();
+    }
+    handleRippleBlur() {
+        this.rippleHandlers.endFocus();
+    }
+}
+FabBase.shadowRootOptions = { mode: 'open', delegatesFocus: true };
+__decorate([
+    e$1('mwc-ripple')
+], FabBase.prototype, "ripple", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], FabBase.prototype, "mini", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], FabBase.prototype, "exited", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], FabBase.prototype, "disabled", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], FabBase.prototype, "extended", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], FabBase.prototype, "showIconAtEnd", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], FabBase.prototype, "reducedTouchTarget", void 0);
+__decorate([
+    n$2()
+], FabBase.prototype, "icon", void 0);
+__decorate([
+    n$2()
+], FabBase.prototype, "label", void 0);
+__decorate([
+    t$1()
+], FabBase.prototype, "shouldRenderRipple", void 0);
+__decorate([
+    t$1()
+], FabBase.prototype, "useStateLayerCustomProperties", void 0);
+__decorate([
+    e$2({ passive: true })
+], FabBase.prototype, "handleRippleStartPress", null);
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-LIcense-Identifier: Apache-2.0
+ */
+const styles$1 = i$5 `:host .mdc-fab .material-icons{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}:host{outline:none;--mdc-ripple-color: currentcolor;user-select:none;-webkit-tap-highlight-color:transparent;display:inline-flex;-webkit-tap-highlight-color:transparent;display:inline-flex;outline:none;user-select:none}:host .mdc-touch-target-wrapper{display:inline}:host .mdc-elevation-overlay{position:absolute;border-radius:inherit;pointer-events:none;opacity:0;opacity:var(--mdc-elevation-overlay-opacity, 0);transition:opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);background-color:#fff;background-color:var(--mdc-elevation-overlay-color, #fff)}:host .mdc-fab{position:relative;display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:56px;height:56px;padding:0;border:none;fill:currentColor;text-decoration:none;cursor:pointer;user-select:none;-moz-appearance:none;-webkit-appearance:none;overflow:visible;transition:box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),opacity 15ms linear 30ms,transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1)}:host .mdc-fab .mdc-elevation-overlay{width:100%;height:100%;top:0;left:0}:host .mdc-fab::-moz-focus-inner{padding:0;border:0}:host .mdc-fab:hover{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2),0px 8px 10px 1px rgba(0, 0, 0, 0.14),0px 3px 14px 2px rgba(0,0,0,.12)}:host .mdc-fab.mdc-ripple-upgraded--background-focused,:host .mdc-fab:not(.mdc-ripple-upgraded):focus{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2),0px 8px 10px 1px rgba(0, 0, 0, 0.14),0px 3px 14px 2px rgba(0,0,0,.12)}:host .mdc-fab .mdc-fab__focus-ring{position:absolute}:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring{pointer-events:none;border:2px solid transparent;border-radius:6px;box-sizing:content-box;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc( 100% + 4px );width:calc( 100% + 4px )}@media screen and (forced-colors: active){:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring{border-color:CanvasText}}:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring::after,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring::after{content:"";border:2px solid transparent;border-radius:8px;display:block;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc(100% + 4px);width:calc(100% + 4px)}@media screen and (forced-colors: active){:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring::after,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring::after{border-color:CanvasText}}:host .mdc-fab:active,:host .mdc-fab:focus:active{box-shadow:0px 7px 8px -4px rgba(0, 0, 0, 0.2),0px 12px 17px 2px rgba(0, 0, 0, 0.14),0px 5px 22px 4px rgba(0,0,0,.12)}:host .mdc-fab:active,:host .mdc-fab:focus{outline:none}:host .mdc-fab:hover{cursor:pointer}:host .mdc-fab>svg{width:100%}:host .mdc-fab--mini{width:40px;height:40px}:host .mdc-fab--extended{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:Roboto, sans-serif;font-family:var(--mdc-typography-button-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));font-size:0.875rem;font-size:var(--mdc-typography-button-font-size, 0.875rem);line-height:2.25rem;line-height:var(--mdc-typography-button-line-height, 2.25rem);font-weight:500;font-weight:var(--mdc-typography-button-font-weight, 500);letter-spacing:0.0892857143em;letter-spacing:var(--mdc-typography-button-letter-spacing, 0.0892857143em);text-decoration:none;text-decoration:var(--mdc-typography-button-text-decoration, none);text-transform:uppercase;text-transform:var(--mdc-typography-button-text-transform, uppercase);border-radius:24px;padding-left:20px;padding-right:20px;width:auto;max-width:100%;height:48px;line-height:normal}:host .mdc-fab--extended .mdc-fab__ripple{border-radius:24px}:host .mdc-fab--extended .mdc-fab__icon{margin-left:calc(12px - 20px);margin-right:12px}[dir=rtl] :host .mdc-fab--extended .mdc-fab__icon,:host .mdc-fab--extended .mdc-fab__icon[dir=rtl]{margin-left:12px;margin-right:calc(12px - 20px)}:host .mdc-fab--extended .mdc-fab__label+.mdc-fab__icon{margin-left:12px;margin-right:calc(12px - 20px)}[dir=rtl] :host .mdc-fab--extended .mdc-fab__label+.mdc-fab__icon,:host .mdc-fab--extended .mdc-fab__label+.mdc-fab__icon[dir=rtl]{margin-left:calc(12px - 20px);margin-right:12px}:host .mdc-fab--touch{margin-top:4px;margin-bottom:4px;margin-right:4px;margin-left:4px}:host .mdc-fab--touch .mdc-fab__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}:host .mdc-fab::before{position:absolute;box-sizing:border-box;width:100%;height:100%;top:0;left:0;border:1px solid transparent;border-radius:inherit;content:"";pointer-events:none}@media screen and (forced-colors: active){:host .mdc-fab::before{border-color:CanvasText}}:host .mdc-fab__label{justify-content:flex-start;text-overflow:ellipsis;white-space:nowrap;overflow-x:hidden;overflow-y:visible}:host .mdc-fab__icon{transition:transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);fill:currentColor;will-change:transform}:host .mdc-fab .mdc-fab__icon{display:inline-flex;align-items:center;justify-content:center}:host .mdc-fab--exited{transform:scale(0);opacity:0;transition:opacity 15ms linear 150ms,transform 180ms 0ms cubic-bezier(0.4, 0, 1, 1)}:host .mdc-fab--exited .mdc-fab__icon{transform:scale(0);transition:transform 135ms 0ms cubic-bezier(0.4, 0, 1, 1)}:host .mdc-fab{background-color:#018786;background-color:var(--mdc-theme-secondary, #018786);box-shadow:0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 6px 10px 0px rgba(0, 0, 0, 0.14),0px 1px 18px 0px rgba(0,0,0,.12)}:host .mdc-fab .mdc-fab__icon{width:24px;height:24px;font-size:24px}:host .mdc-fab,:host .mdc-fab:not(:disabled) .mdc-fab__icon,:host .mdc-fab:not(:disabled) .mdc-fab__label,:host .mdc-fab:disabled .mdc-fab__icon,:host .mdc-fab:disabled .mdc-fab__label{color:#fff;color:var(--mdc-theme-on-secondary, #fff)}:host .mdc-fab:not(.mdc-fab--extended){border-radius:50%}:host .mdc-fab:not(.mdc-fab--extended) .mdc-fab__ripple{border-radius:50%}:host .mdc-fab{position:relative;display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:56px;height:56px;padding:0;border:none;fill:currentColor;text-decoration:none;cursor:pointer;user-select:none;-moz-appearance:none;-webkit-appearance:none;overflow:visible;transition:box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),opacity 15ms linear 30ms,transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1)}:host .mdc-fab .mdc-elevation-overlay{width:100%;height:100%;top:0;left:0}:host .mdc-fab::-moz-focus-inner{padding:0;border:0}:host .mdc-fab:hover{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2),0px 8px 10px 1px rgba(0, 0, 0, 0.14),0px 3px 14px 2px rgba(0,0,0,.12)}:host .mdc-fab.mdc-ripple-upgraded--background-focused,:host .mdc-fab:not(.mdc-ripple-upgraded):focus{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2),0px 8px 10px 1px rgba(0, 0, 0, 0.14),0px 3px 14px 2px rgba(0,0,0,.12)}:host .mdc-fab .mdc-fab__focus-ring{position:absolute}:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring{pointer-events:none;border:2px solid transparent;border-radius:6px;box-sizing:content-box;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc( 100% + 4px );width:calc( 100% + 4px )}@media screen and (forced-colors: active){:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring{border-color:CanvasText}}:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring::after,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring::after{content:"";border:2px solid transparent;border-radius:8px;display:block;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc(100% + 4px);width:calc(100% + 4px)}@media screen and (forced-colors: active){:host .mdc-fab.mdc-ripple-upgraded--background-focused .mdc-fab__focus-ring::after,:host .mdc-fab:not(.mdc-ripple-upgraded):focus .mdc-fab__focus-ring::after{border-color:CanvasText}}:host .mdc-fab:active,:host .mdc-fab:focus:active{box-shadow:0px 7px 8px -4px rgba(0, 0, 0, 0.2),0px 12px 17px 2px rgba(0, 0, 0, 0.14),0px 5px 22px 4px rgba(0,0,0,.12)}:host .mdc-fab:active,:host .mdc-fab:focus{outline:none}:host .mdc-fab:hover{cursor:pointer}:host .mdc-fab>svg{width:100%}:host .mdc-fab--mini{width:40px;height:40px}:host .mdc-fab--extended{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:Roboto, sans-serif;font-family:var(--mdc-typography-button-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));font-size:0.875rem;font-size:var(--mdc-typography-button-font-size, 0.875rem);line-height:2.25rem;line-height:var(--mdc-typography-button-line-height, 2.25rem);font-weight:500;font-weight:var(--mdc-typography-button-font-weight, 500);letter-spacing:0.0892857143em;letter-spacing:var(--mdc-typography-button-letter-spacing, 0.0892857143em);text-decoration:none;text-decoration:var(--mdc-typography-button-text-decoration, none);text-transform:uppercase;text-transform:var(--mdc-typography-button-text-transform, uppercase);border-radius:24px;padding-left:20px;padding-right:20px;width:auto;max-width:100%;height:48px;line-height:normal}:host .mdc-fab--extended .mdc-fab__ripple{border-radius:24px}:host .mdc-fab--extended .mdc-fab__icon{margin-left:calc(12px - 20px);margin-right:12px}[dir=rtl] :host .mdc-fab--extended .mdc-fab__icon,:host .mdc-fab--extended .mdc-fab__icon[dir=rtl]{margin-left:12px;margin-right:calc(12px - 20px)}:host .mdc-fab--extended .mdc-fab__label+.mdc-fab__icon{margin-left:12px;margin-right:calc(12px - 20px)}[dir=rtl] :host .mdc-fab--extended .mdc-fab__label+.mdc-fab__icon,:host .mdc-fab--extended .mdc-fab__label+.mdc-fab__icon[dir=rtl]{margin-left:calc(12px - 20px);margin-right:12px}:host .mdc-fab--touch{margin-top:4px;margin-bottom:4px;margin-right:4px;margin-left:4px}:host .mdc-fab--touch .mdc-fab__touch{position:absolute;top:50%;height:48px;left:50%;width:48px;transform:translate(-50%, -50%)}:host .mdc-fab::before{position:absolute;box-sizing:border-box;width:100%;height:100%;top:0;left:0;border:1px solid transparent;border-radius:inherit;content:"";pointer-events:none}@media screen and (forced-colors: active){:host .mdc-fab::before{border-color:CanvasText}}:host .mdc-fab__label{justify-content:flex-start;text-overflow:ellipsis;white-space:nowrap;overflow-x:hidden;overflow-y:visible}:host .mdc-fab__icon{transition:transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);fill:currentColor;will-change:transform}:host .mdc-fab .mdc-fab__icon{display:inline-flex;align-items:center;justify-content:center}:host .mdc-fab--exited{transform:scale(0);opacity:0;transition:opacity 15ms linear 150ms,transform 180ms 0ms cubic-bezier(0.4, 0, 1, 1)}:host .mdc-fab--exited .mdc-fab__icon{transform:scale(0);transition:transform 135ms 0ms cubic-bezier(0.4, 0, 1, 1)}:host .mdc-fab .ripple{overflow:hidden}:host .mdc-fab:not(.mdc-fab--extended) .ripple{border-radius:50%}:host .mdc-fab.mdc-fab--extended .ripple{border-radius:24px}:host .mdc-fab .mdc-fab__label{z-index:0}:host .mdc-fab .mdc-fab__icon ::slotted(*){width:inherit;height:inherit;font-size:inherit}:host .mdc-fab--extended.mdc-fab--exited .mdc-fab__icon ::slotted(*){transform:scale(0);transition:transform 135ms 0ms cubic-bezier(0.4, 0, 1, 1)}:host .mdc-fab{padding-top:0px;padding-top:max(0px, var(--mdc-fab-focus-outline-width, 0px));padding-right:0px;padding-right:max(0px, var(--mdc-fab-focus-outline-width, 0px));padding-bottom:0px;padding-bottom:max(0px, var(--mdc-fab-focus-outline-width, 0px));padding-left:0px;padding-left:max(0px, var(--mdc-fab-focus-outline-width, 0px));box-shadow:0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);box-shadow:var(--mdc-fab-box-shadow, 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12))}:host .mdc-fab:not(:disabled).mdc-ripple-upgraded--background-focused,:host .mdc-fab:not(:disabled):not(.mdc-ripple-upgraded):focus{border-color:initial;border-color:var(--mdc-fab-focus-outline-color, initial)}:host .mdc-fab:not(:disabled).mdc-ripple-upgraded--background-focused,:host .mdc-fab:not(:disabled):not(.mdc-ripple-upgraded):focus{border-style:solid;border-width:var(--mdc-fab-focus-outline-width, 0px);padding-top:0px;padding-top:max(calc(0px - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(0px - var(--mdc-fab-focus-outline-width, 0px)) * -1));padding-right:0px;padding-right:max(calc(0px - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(0px - var(--mdc-fab-focus-outline-width, 0px)) * -1));padding-bottom:0px;padding-bottom:max(calc(0px - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(0px - var(--mdc-fab-focus-outline-width, 0px)) * -1));padding-left:0px;padding-left:max(calc(0px - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(0px - var(--mdc-fab-focus-outline-width, 0px)) * -1))}:host .mdc-fab:hover,:host .mdc-fab:focus{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);box-shadow:var(--mdc-fab-box-shadow, 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12))}:host .mdc-fab:active{box-shadow:0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12);box-shadow:var(--mdc-fab-box-shadow, 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12))}:host .mdc-fab .ripple{overflow:hidden}:host .mdc-fab .mdc-fab__label{z-index:0}:host .mdc-fab:not(.mdc-fab--extended) .ripple{border-radius:50%}:host .mdc-fab.mdc-fab--extended .ripple{border-radius:24px}:host .mdc-fab .mdc-fab__icon{width:24px;width:var(--mdc-icon-size, 24px);height:24px;height:var(--mdc-icon-size, 24px);font-size:24px;font-size:var(--mdc-icon-size, 24px);transition:transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);fill:currentColor;will-change:transform;display:inline-flex;align-items:center;justify-content:center}:host .mdc-fab.mdc-fab--extended{padding-top:0px;padding-top:max(0px, var(--mdc-fab-focus-outline-width, 0px));padding-right:20px;padding-right:max(var(--mdc-fab-extended-label-padding, 20px), var(--mdc-fab-focus-outline-width, 0px));padding-bottom:0px;padding-bottom:max(0px, var(--mdc-fab-focus-outline-width, 0px));padding-left:20px;padding-left:max(var(--mdc-fab-extended-label-padding, 20px), var(--mdc-fab-focus-outline-width, 0px))}:host .mdc-fab.mdc-fab--extended:not(:disabled).mdc-ripple-upgraded--background-focused,:host .mdc-fab.mdc-fab--extended:not(:disabled):not(.mdc-ripple-upgraded):focus{border-style:solid;border-width:var(--mdc-fab-focus-outline-width, 0px);padding-top:0px;padding-top:max(calc(0px - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(0px - var(--mdc-fab-focus-outline-width, 0px)) * -1));padding-right:20px;padding-right:max(calc(var(--mdc-fab-extended-label-padding, 20px) - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(var(--mdc-fab-extended-label-padding, 20px) - var(--mdc-fab-focus-outline-width, 0px)) * -1));padding-bottom:0px;padding-bottom:max(calc(0px - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(0px - var(--mdc-fab-focus-outline-width, 0px)) * -1));padding-left:20px;padding-left:max(calc(var(--mdc-fab-extended-label-padding, 20px) - var(--mdc-fab-focus-outline-width, 0px)), calc(calc(var(--mdc-fab-extended-label-padding, 20px) - var(--mdc-fab-focus-outline-width, 0px)) * -1))}:host .mdc-fab.mdc-fab--extended.icon-end .mdc-fab__icon{margin-left:12px;margin-left:var(--mdc-fab-extended-icon-padding, 12px);margin-right:calc(12px - 20px);margin-right:calc(var(--mdc-fab-extended-icon-padding, 12px) - var(--mdc-fab-extended-label-padding, 20px))}[dir=rtl] :host .mdc-fab.mdc-fab--extended.icon-end .mdc-fab__icon,:host .mdc-fab.mdc-fab--extended.icon-end .mdc-fab__icon[dir=rtl]{margin-left:calc(12px - 20px);margin-left:calc(var(--mdc-fab-extended-icon-padding, 12px) - var(--mdc-fab-extended-label-padding, 20px));margin-right:12px;margin-right:var(--mdc-fab-extended-icon-padding, 12px)}`;
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/** @soyCompatible */
+let Fab = class Fab extends FabBase {
+};
+Fab.styles = [styles$1];
+Fab = __decorate([
+    e$4('mwc-fab')
+], Fab);
 
 /**
  * @slot action - May contain up to eight icon buttons.
@@ -1994,78 +2306,204 @@ const furtherPowerSystemEquipmentLogicalNode = b `<svg viewBox="0 0 24 24">
     <path fill="currentColor" d="M9,7H15V9L11,15H15V17H9V15L13,9H9V7M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />
 </svg>`;
 
-const lnClassIcons = {
-    L: systemLogicalNode,
-    A: automationLogicalNode,
-    C: controlLogicalNode,
-    F: functionalLogicalNode,
-    G: generalLogicalNode,
-    I: interfacingLogicalNode,
-    K: nonElectricalLogicalNode,
-    M: measurementLogicalNode,
-    P: protectionLogicalNode,
-    Q: qualityLogicalNode,
-    R: protectionRelatedLogicalNode,
-    S: supervisionLogicalNode,
-    T: transformerLogicalNode,
-    X: switchgearLogicalNode,
-    Y: powerTransformerLogicalNode,
-    Z: furtherPowerSystemEquipmentLogicalNode,
-};
-function getLNodeIcon(lNode) {
-    var _a, _b, _c;
-    const lnClassGroup = (_b = (_a = lNode.getAttribute('lnClass')) === null || _a === void 0 ? void 0 : _a.charAt(0)) !== null && _b !== void 0 ? _b : '';
-    return (_c = lnClassIcons[lnClassGroup]) !== null && _c !== void 0 ? _c : systemLogicalNode;
+function newEditEvent(edit) {
+    return new CustomEvent('oscd-edit', {
+        composed: true,
+        bubbles: true,
+        detail: edit,
+    });
 }
-/** Pane rendering `LNode` element with its children */
-let LNodeEditor = class LNodeEditor extends s {
-    get header() {
-        var _a;
-        const prefix = (_a = this.element.getAttribute('prefix')) !== null && _a !== void 0 ? _a : '';
-        const lnClass = this.element.getAttribute('lnClass');
-        const lnInst = this.element.getAttribute('lnInst');
-        const header = `${prefix} ${lnClass} ${lnInst}`;
-        return typeof header === 'string' ? header : '';
+
+/** base class hosting global properties and the remove method */
+class BaseSubstationElementEditor extends s {
+    constructor() {
+        super(...arguments);
+        /** indicator for changes element */
+        this.editCount = -1;
+        /** Whether function type element shall be shown */
+        this.showfunctions = false;
     }
-    get missingIedReference() {
-        var _a;
-        return (_a = this.element.getAttribute('iedName') === 'None') !== null && _a !== void 0 ? _a : false;
+    removeElement() {
+        this.dispatchEvent(newEditEvent({
+            node: this.element,
+        }));
+    }
+}
+__decorate([
+    n$2({ attribute: false })
+], BaseSubstationElementEditor.prototype, "element", void 0);
+__decorate([
+    n$2({ type: Number })
+], BaseSubstationElementEditor.prototype, "editCount", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], BaseSubstationElementEditor.prototype, "showfunctions", void 0);
+
+/** Pane rendering `EqSubFunction` element with its children */
+let EqSubFunctionEditor = class EqSubFunctionEditor extends BaseSubstationElementEditor {
+    get header() {
+        const name = this.element.getAttribute('name');
+        const desc = this.element.getAttribute('desc');
+        const type = this.element.getAttribute('type');
+        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
     }
     render() {
-        return x `<oscd-action-icon
+        return x `<oscd-action-pane
       label="${this.header}"
-      ?secondary=${this.missingIedReference}
-      ?highlighted=${this.missingIedReference}
-      ><mwc-icon slot="icon">${getLNodeIcon(this.element)}</mwc-icon>
+      icon="functions"
+      secondary
+      ><abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderEqSubFunctions(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+EqSubFunctionEditor.styles = i$5 `
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    .container.lnode {
+      display: grid;
+      grid-gap: 12px;
+      padding: 8px 12px 16px;
+      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
+    }
+  `;
+__decorate([
+    t$1()
+], EqSubFunctionEditor.prototype, "header", null);
+EqSubFunctionEditor = __decorate([
+    e$4('eq-sub-function-editor')
+], EqSubFunctionEditor);
+function renderEqSubFunctions(parent, editCount, showfunctions) {
+    const eqSubFunctions = getChildElementsByTagName(parent, 'EqSubFunction');
+    return x ` ${eqSubFunctions.map(eqSubFunction => x `<eq-sub-function-editor
+        .element=${eqSubFunction}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></eq-sub-function-editor>`)}`;
+}
+
+/** Pane rendering `EqFunction` element with its children */
+let EqFunctionEditor = class EqFunctionEditor extends BaseSubstationElementEditor {
+    get header() {
+        const name = this.element.getAttribute('name');
+        const desc = this.element.getAttribute('desc');
+        const type = this.element.getAttribute('type');
+        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
+    }
+    render() {
+        return x `<oscd-action-pane
+      label="${this.header}"
+      icon="functions"
+      secondary
+      highlighted
+      ><abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderEqSubFunctions(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+EqFunctionEditor.styles = i$5 `
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    .container.lnode {
+      display: grid;
+      grid-gap: 12px;
+      padding: 8px 12px 16px;
+      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
+    }
+  `;
+__decorate([
+    t$1()
+], EqFunctionEditor.prototype, "header", null);
+EqFunctionEditor = __decorate([
+    e$4('eq-function-editor')
+], EqFunctionEditor);
+function renderEqFunctions(parent, editCount, showfunctions) {
+    if (!showfunctions)
+        return x ``;
+    const eqFunctions = getChildElementsByTagName(parent, 'EqFunction');
+    return x ` ${eqFunctions.map(eqFunction => x `<eq-function-editor
+        .element=${eqFunction}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></eq-function-editor>`)}`;
+}
+
+let GeneralEquipmentEditor = class GeneralEquipmentEditor extends BaseSubstationElementEditor {
+    get header() {
+        var _a;
+        const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
+        const desc = this.element.getAttribute('desc');
+        if (!this.showfunctions)
+            return `${name}`;
+        return `${name} ${desc ? `—  ${desc}` : ''}`;
+    }
+    render() {
+        if (this.showfunctions)
+            return x `<oscd-action-pane label=${this.header}>
+        <abbr slot="action" title="Remove">
+          <mwc-icon-button
+            icon="delete"
+            @click=${() => this.removeElement()}
+          ></mwc-icon-button>
+        </abbr>
+        ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+        ${renderEqFunctions(this.element, this.editCount, this.showfunctions)}
+      </oscd-action-pane>`;
+        return x `<oscd-action-icon label=${this.header}>
+      <mwc-icon slot="icon">${generalConductingEquipmentIcon}</mwc-icon>
+      <mwc-fab
+        slot="action"
+        mini
+        icon="delete"
+        @click="${() => this.removeElement()}"
+      ></mwc-fab>
     </oscd-action-icon>`;
     }
 };
-__decorate([
-    n$2({ attribute: false })
-], LNodeEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ attribute: false })
-], LNodeEditor.prototype, "element", void 0);
-__decorate([
-    t$1()
-], LNodeEditor.prototype, "header", null);
-__decorate([
-    t$1()
-], LNodeEditor.prototype, "missingIedReference", null);
-__decorate([
-    t$1()
-], LNodeEditor.prototype, "render", null);
-LNodeEditor = __decorate([
-    e$4('l-node-editor')
-], LNodeEditor);
+GeneralEquipmentEditor.styles = i$5 `
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
 
-function getChildElementsByTagName(element, tag) {
-    if (!element || !tag)
-        return [];
-    return Array.from(element.children).filter(child => child.tagName === tag);
-}
-function renderGeneralEquipment(doc, element, showfunctions) {
-    const generalEquipment = getChildElementsByTagName(element, 'GeneralEquipment');
+    .container.lnode {
+      display: grid;
+      grid-gap: 12px;
+      padding: 8px 12px 16px;
+      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
+    }
+  `;
+__decorate([
+    t$1()
+], GeneralEquipmentEditor.prototype, "header", null);
+GeneralEquipmentEditor = __decorate([
+    e$4('general-equipment-editor')
+], GeneralEquipmentEditor);
+function renderGeneralEquipment(parent, editCount, showfunctions) {
+    const generalEquipment = getChildElementsByTagName(parent, 'GeneralEquipment');
     return generalEquipment.length
         ? x ` <div
         class="${o$1({
@@ -2074,12 +2512,18 @@ function renderGeneralEquipment(doc, element, showfunctions) {
         })}"
       >
         ${generalEquipment.map(gEquipment => x `<general-equipment-editor
-              .doc=${doc}
+              .editCount=${editCount}
               .element=${gEquipment}
               ?showfunctions=${showfunctions}
             ></general-equipment-editor>`)}
       </div>`
         : x ``;
+}
+
+function getChildElementsByTagName(element, tag) {
+    if (!element || !tag)
+        return [];
+    return Array.from(element.children).filter(child => child.tagName === tag);
 }
 /** Common `CSS` styles used by substation subeditors */
 const styles = i$5 `
@@ -2130,7 +2574,7 @@ const styles = i$5 `
     margin-top: 16px;
   }
 
-  powertransformer-editor[showfunctions] {
+  power-transformer-editor[showfunctions] {
     margin: 4px 8px 16px;
   }
 
@@ -2544,395 +2988,86 @@ function getIcon(condEq) {
     return (_a = typeIcons[typeStr(condEq)]) !== null && _a !== void 0 ? _a : generalConductingEquipmentIcon;
 }
 
-/** Pane rendering `EqSubFunction` element with its children */
-let EqSubFunctionEditor = class EqSubFunctionEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        this.showfunctions = false;
-    }
-    get header() {
-        const name = this.element.getAttribute('name');
-        const desc = this.element.getAttribute('desc');
-        const type = this.element.getAttribute('type');
-        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqSubFunctions() {
-        const eqSubFunctions = getChildElementsByTagName(this.element, 'EqSubFunction');
-        return x ` ${eqSubFunctions.map(eqSubFunction => x `<eq-sub-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${eqSubFunction}
-        ></eq-sub-function-editor>`)}`;
-    }
-    render() {
-        return x `<oscd-action-pane label="${this.header}" icon="functions" secondary>
-      ${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}
-      ${this.renderLNodes()}${this.renderEqSubFunctions()}</action-pane
-    >`;
-    }
+const lnClassIcons = {
+    L: systemLogicalNode,
+    A: automationLogicalNode,
+    C: controlLogicalNode,
+    F: functionalLogicalNode,
+    G: generalLogicalNode,
+    I: interfacingLogicalNode,
+    K: nonElectricalLogicalNode,
+    M: measurementLogicalNode,
+    P: protectionLogicalNode,
+    Q: qualityLogicalNode,
+    R: protectionRelatedLogicalNode,
+    S: supervisionLogicalNode,
+    T: transformerLogicalNode,
+    X: switchgearLogicalNode,
+    Y: powerTransformerLogicalNode,
+    Z: furtherPowerSystemEquipmentLogicalNode,
 };
-EqSubFunctionEditor.styles = i$5 `
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-
-    .container.lnode {
-      display: grid;
-      grid-gap: 12px;
-      padding: 8px 12px 16px;
-      box-sizing: border-box;
-      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], EqSubFunctionEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], EqSubFunctionEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], EqSubFunctionEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], EqSubFunctionEditor.prototype, "showfunctions", void 0);
-__decorate([
-    t$1()
-], EqSubFunctionEditor.prototype, "header", null);
-EqSubFunctionEditor = __decorate([
-    e$4('eq-sub-function-editor')
-], EqSubFunctionEditor);
-
-/** Pane rendering `EqFunction` element with its children */
-let EqFunctionEditor = class EqFunctionEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        this.showfunctions = false;
-    }
-    get header() {
-        const name = this.element.getAttribute('name');
-        const desc = this.element.getAttribute('desc');
-        const type = this.element.getAttribute('type');
-        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqSubFunctions() {
-        const eqSubFunctions = getChildElementsByTagName(this.element, 'EqSubFunction');
-        return x ` ${eqSubFunctions.map(eqSubFunction => x `<eq-sub-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${eqSubFunction}
-          ?showfunctions=${this.showfunctions}
-        ></eq-sub-function-editor>`)}`;
-    }
-    render() {
-        return x `<oscd-action-pane
-      label="${this.header}"
-      icon="functions"
-      secondary
-      highlighted
-    >
-      ${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}
-      ${this.renderLNodes()}${this.renderEqSubFunctions()}</action-pane
-    >`;
-    }
-};
-EqFunctionEditor.styles = i$5 `
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-
-    .container.lnode {
-      display: grid;
-      grid-gap: 12px;
-      padding: 8px 12px 16px;
-      box-sizing: border-box;
-      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], EqFunctionEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], EqFunctionEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], EqFunctionEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], EqFunctionEditor.prototype, "showfunctions", void 0);
-__decorate([
-    t$1()
-], EqFunctionEditor.prototype, "header", null);
-EqFunctionEditor = __decorate([
-    e$4('eq-function-editor')
-], EqFunctionEditor);
-
-let GeneralEquipmentEditor = class GeneralEquipmentEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `Function` and `SubFunction` are rendered */
-        this.showfunctions = false;
-    }
+function getLNodeIcon(lNode) {
+    var _a, _b, _c;
+    const lnClassGroup = (_b = (_a = lNode.getAttribute('lnClass')) === null || _a === void 0 ? void 0 : _a.charAt(0)) !== null && _b !== void 0 ? _b : '';
+    return (_c = lnClassIcons[lnClassGroup]) !== null && _c !== void 0 ? _c : systemLogicalNode;
+}
+/** Pane rendering `LNode` element with its children */
+let LNodeEditor = class LNodeEditor extends BaseSubstationElementEditor {
     get header() {
         var _a;
-        const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
-        const desc = this.element.getAttribute('desc');
-        if (!this.showfunctions)
-            return `${name}`;
-        return `${name} ${desc ? `—  ${desc}` : ''}`;
+        const prefix = (_a = this.element.getAttribute('prefix')) !== null && _a !== void 0 ? _a : '';
+        const lnClass = this.element.getAttribute('lnClass');
+        const lnInst = this.element.getAttribute('lnInst');
+        const header = `${prefix} ${lnClass} ${lnInst}`;
+        return typeof header === 'string' ? header : '';
     }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqFunctions() {
-        const eFunctions = getChildElementsByTagName(this.element, 'EqFunction');
-        return eFunctions.length
-            ? x `${eFunctions.map(eFunction => x ` <eq-function-editor
-              .editCount=${this.editCount}
-              .doc=${this.doc}
-              .element=${eFunction}
-            ></eq-function-editor>`)}`
-            : x ``;
+    get missingIedReference() {
+        var _a;
+        return (_a = this.element.getAttribute('iedName') === 'None') !== null && _a !== void 0 ? _a : false;
     }
     render() {
-        if (this.showfunctions)
-            return x `<oscd-action-pane label=${this.header}>
-        ${this.renderLNodes()} ${this.renderEqFunctions()}
-      </oscd-action-pane>`;
-        return x `<oscd-action-icon label=${this.header}>
-      <mwc-icon slot="icon">${generalConductingEquipmentIcon}</mwc-icon>
+        return x `<oscd-action-icon
+      label="${this.header}"
+      ?secondary=${this.missingIedReference}
+      ?highlighted=${this.missingIedReference}
+      ><mwc-icon slot="icon">${getLNodeIcon(this.element)}</mwc-icon>
+      <mwc-fab
+        slot="action"
+        mini
+        icon="delete"
+        @click="${() => this.removeElement()}"
+      ></mwc-fab>
     </oscd-action-icon>`;
     }
 };
-GeneralEquipmentEditor.styles = i$5 `
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-
-    .container.lnode {
-      display: grid;
-      grid-gap: 12px;
-      padding: 8px 12px 16px;
-      box-sizing: border-box;
-      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], GeneralEquipmentEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], GeneralEquipmentEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], GeneralEquipmentEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], GeneralEquipmentEditor.prototype, "showfunctions", void 0);
 __decorate([
     t$1()
-], GeneralEquipmentEditor.prototype, "header", null);
-GeneralEquipmentEditor = __decorate([
-    e$4('general-equipment-editor')
-], GeneralEquipmentEditor);
-
-/** Pane rendering `SubFunction` element with its children */
-let SubFunctionEditor = class SubFunctionEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        this.showfunctions = false;
-    }
-    get header() {
-        const name = this.element.getAttribute('name');
-        const desc = this.element.getAttribute('desc');
-        const type = this.element.getAttribute('type');
-        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderSubFunctions() {
-        const subfunctions = getChildElementsByTagName(this.element, 'SubFunction');
-        return x ` ${subfunctions.map(subFunction => x `<sub-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${subFunction}
-          ?showfunctions=${this.showfunctions}
-        ></sub-function-editor>`)}`;
-    }
-    render() {
-        return x `<oscd-action-pane label="${this.header}" icon="functions" secondary>
-      ${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}
-      ${this.renderLNodes()}${this.renderSubFunctions()}</action-pane
-    >`;
-    }
-};
-SubFunctionEditor.styles = i$5 `
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-
-    .container.lnode {
-      display: grid;
-      grid-gap: 12px;
-      padding: 8px 12px 16px;
-      box-sizing: border-box;
-      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], SubFunctionEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], SubFunctionEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], SubFunctionEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], SubFunctionEditor.prototype, "showfunctions", void 0);
+], LNodeEditor.prototype, "header", null);
 __decorate([
     t$1()
-], SubFunctionEditor.prototype, "header", null);
-SubFunctionEditor = __decorate([
-    e$4('sub-function-editor')
-], SubFunctionEditor);
-
-/** Pane rendering `Function` element with its children */
-let FunctionEditor = class FunctionEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        this.showfunctions = false;
-    }
-    get header() {
-        const name = this.element.getAttribute('name');
-        const desc = this.element.getAttribute('desc');
-        const type = this.element.getAttribute('type');
-        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderSubFunctions() {
-        const subfunctions = getChildElementsByTagName(this.element, 'SubFunction');
-        return x ` ${subfunctions.map(subFunction => x `<sub-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${subFunction}
-          ?showfunctions=${this.showfunctions}
-        ></sub-function-editor>`)}`;
-    }
-    render() {
-        return x `<oscd-action-pane
-      label="${this.header}"
-      icon="functions"
-      secondary
-      highlighted
-      >${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}${this.renderLNodes()}${this.renderSubFunctions()}</action-pane
-    >`;
-    }
-};
-FunctionEditor.styles = i$5 `
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-
-    .container.lnode {
-      display: grid;
-      grid-gap: 12px;
-      padding: 8px 12px 16px;
-      box-sizing: border-box;
-      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], FunctionEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], FunctionEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], FunctionEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], FunctionEditor.prototype, "showfunctions", void 0);
+], LNodeEditor.prototype, "missingIedReference", null);
 __decorate([
     t$1()
-], FunctionEditor.prototype, "header", null);
-FunctionEditor = __decorate([
-    e$4('function-editor')
-], FunctionEditor);
+], LNodeEditor.prototype, "render", null);
+LNodeEditor = __decorate([
+    e$4('l-node-editor')
+], LNodeEditor);
+function renderLNodes(parent, editCount, showfunctions) {
+    if (!showfunctions)
+        return x ``;
+    const lNodes = getChildElementsByTagName(parent, 'LNode');
+    return lNodes.length
+        ? x `<div class="container lnode">
+        ${lNodes.map(lNode => x `<l-node-editor
+              .editCount=${editCount}
+              .element=${lNode}
+            ></l-node-editor>`)}
+      </div>`
+        : x ``;
+}
 
 /** [[`SubstationEditor`]] subeditor for a child-less `SubEquipment` element. */
-let SubEquipmentEditor = class SubEquipmentEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-    }
+let SubEquipmentEditor = class SubEquipmentEditor extends BaseSubstationElementEditor {
     /** SubEquipment name attribute */
     get label() {
         const name = `${this.element.hasAttribute('name')
@@ -2946,31 +3081,16 @@ let SubEquipmentEditor = class SubEquipmentEditor extends s {
             : ''}`;
         return `${name}${description}${phase}`;
     }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqFunctions() {
-        const eqFunctions = getChildElementsByTagName(this.element, 'EqFunction');
-        return eqFunctions.length
-            ? x ` ${eqFunctions.map(eqFunction => x `<eq-function-editor
-              .editCount=${this.editCount}
-              .doc=${this.doc}
-              .element=${eqFunction}
-            ></eq-function-editor>`)}`
-            : x ``;
-    }
     render() {
         return x `<oscd-action-pane label="${this.label}">
-      ${this.renderLNodes()} ${this.renderEqFunctions()}
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderLNodes(this.element, this.editCount, false)}
+      ${renderEqFunctions(this.element, this.editCount, true)}
     </oscd-action-pane> `;
     }
 };
@@ -2989,359 +3109,27 @@ SubEquipmentEditor.styles = i$5 `
     }
   `;
 __decorate([
-    n$2({ attribute: false })
-], SubEquipmentEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], SubEquipmentEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], SubEquipmentEditor.prototype, "element", void 0);
-__decorate([
     n$2({ type: String })
 ], SubEquipmentEditor.prototype, "label", null);
 SubEquipmentEditor = __decorate([
     e$4('sub-equipment-editor')
 ], SubEquipmentEditor);
-
-let TapChangerEditor = class TapChangerEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `EqFunction` and `SubEquipment` are rendered */
-        this.showfunctions = false;
-    }
-    get header() {
-        var _a;
-        const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
-        const desc = this.element.getAttribute('desc');
-        return `${name} ${desc ? `—${desc}` : ''}`;
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const eqFunctions = getChildElementsByTagName(this.element, 'EqFunction');
-        return x ` ${eqFunctions.map(eqFunction => x `<eq-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${eqFunction}
-          ?showfunctions=${this.showfunctions}
-        ></eq-function-editor>`)}`;
-    }
-    renderSubEquipments() {
-        if (!this.showfunctions)
-            return x ``;
-        const subEquipments = getChildElementsByTagName(this.element, 'SubEquipment');
-        return x ` ${subEquipments.map(subEquipment => x `<sub-equipment-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${subEquipment}
-        ></sub-equipment-editor>`)}`;
-    }
-    render() {
-        return x `<oscd-action-pane label=${this.header}>
-      ${this.renderLNodes()} ${this.renderEqFunctions()}
-      ${this.renderSubEquipments()}
-    </oscd-action-pane>`;
-    }
-};
-TapChangerEditor.styles = i$5 `
-    ${styles}
-
-    :host(.moving) {
-      opacity: 0.3;
-    }
-
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], TapChangerEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], TapChangerEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], TapChangerEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], TapChangerEditor.prototype, "showfunctions", void 0);
-__decorate([
-    t$1()
-], TapChangerEditor.prototype, "header", null);
-TapChangerEditor = __decorate([
-    e$4('tapchanger-editor')
-], TapChangerEditor);
-
-let TransformerWindingEditor = class TransformerWindingEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `EqFunction` elements are rendered */
-        this.showfunctions = false;
-    }
-    /** TransformerWinding name attribute */
-    get label() {
-        const name = `${this.element.hasAttribute('name')
-            ? `${this.element.getAttribute('name')}`
-            : ''}`;
-        const description = `${this.element.hasAttribute('desc')
-            ? ` - ${this.element.getAttribute('desc')}`
-            : ''}`;
-        return `${name}${description}`;
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const eqFunctions = getChildElementsByTagName(this.element, 'EqFunction');
-        return eqFunctions.length
-            ? x ` ${eqFunctions.map(eqFunction => x `<eq-function-editor
-              .editCount=${this.editCount}
-              .doc=${this.doc}
-              .element=${eqFunction}
-              ?showfunctions=${this.showfunctions}
-            ></eq-function-editor>`)}`
-            : x ``;
-    }
-    renderTapChanger() {
-        if (!this.showfunctions)
-            return x ``;
-        const tapChangers = getChildElementsByTagName(this.element, 'TapChanger');
-        return tapChangers.length
-            ? x ` ${tapChangers.map(tapChanger => x `<tapchanger-editor
-              .editCount=${this.editCount}
-              .doc=${this.doc}
-              .element=${tapChanger}
-              ?showfunctions=${this.showfunctions}
-            ></tapchanger-editor>`)}`
-            : x ``;
-    }
-    render() {
-        return x `<oscd-action-pane label="${this.label}">
-      ${this.renderLNodes()} ${this.renderEqFunctions()}
-      ${this.renderTapChanger()}
-    </oscd-action-pane> `;
-    }
-};
-TransformerWindingEditor.styles = i$5 `
-    ${styles}
-
-    :host(.moving) {
-      opacity: 0.3;
-    }
-
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], TransformerWindingEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], TransformerWindingEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], TransformerWindingEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], TransformerWindingEditor.prototype, "showfunctions", void 0);
-__decorate([
-    n$2({ type: String })
-], TransformerWindingEditor.prototype, "label", null);
-TransformerWindingEditor = __decorate([
-    e$4('transformer-winding-editor')
-], TransformerWindingEditor);
-
-/** [[`SubstationEditor`]] subeditor for a child-less `PowerTransformer` element. */
-let PowerTransformerEditor = class PowerTransformerEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `EqFunction`, `SubEqFunction` and `SubEquipment` are rendered */
-        this.showfunctions = false;
-    }
-    /** PowerTransformer name attribute */
-    get name() {
-        var _a;
-        return (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : 'UNDEFINED';
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const eqFunctions = getChildElementsByTagName(this.element, 'EqFunction');
-        return x ` ${eqFunctions.map(eqFunction => x `<eq-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${eqFunction}
-          ?showfunctions=${this.showfunctions}
-        ></eq-function-editor>`)}`;
-    }
-    renderSubEquipments() {
-        if (!this.showfunctions)
-            return x ``;
-        const subEquipments = getChildElementsByTagName(this.element, 'SubEquipment');
-        return x ` ${subEquipments.map(subEquipment => x `<sub-equipment-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${subEquipment}
-        ></sub-equipment-editor>`)}`;
-    }
-    // eslint-disable-next-line class-methods-use-this
-    renderContentPane() {
-        return x `<mwc-icon slot="icon" style="width:24px;height:24px"
-      >${powerTransformerTwoWindingIcon}</mwc-icon
-    > `;
-    }
-    renderTransformerWinding() {
-        if (!this.showfunctions)
-            return x ``;
-        const transformerWindings = getChildElementsByTagName(this.element, 'TransformerWinding');
-        return transformerWindings.length
-            ? x `<div class="container">
-          ${transformerWindings.map(transformerWinding => x `<transformer-winding-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${transformerWinding}
-                ?showfunctions=${this.showfunctions}
-              ></transformer-winding-editor>`)}
-        </div>`
-            : x ``;
-    }
-    // eslint-disable-next-line class-methods-use-this
-    renderContentIcon() {
-        return x `<mwc-icon slot="icon"
-      >${powerTransformerTwoWindingIcon}</mwc-icon
-    > `;
-    }
-    render() {
-        if (this.showfunctions)
-            return x `<oscd-action-pane label="${this.name}">
-        ${this.renderContentPane()} ${this.renderLNodes()}
-        ${this.renderEqFunctions()} ${this.renderSubEquipments()}
-        ${this.renderTransformerWinding()}
-      </oscd-action-pane> `;
-        return x `<oscd-action-icon label="${this.name}"
-      >${this.renderContentIcon()}</action-icon
-    > `;
-    }
-};
-PowerTransformerEditor.styles = i$5 `
-    ${styles}
-
-    :host(.moving) {
-      opacity: 0.3;
-    }
-
-    abbr {
-      text-decoration: none;
-      border-bottom: none;
-    }
-  `;
-__decorate([
-    n$2({ attribute: false })
-], PowerTransformerEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], PowerTransformerEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], PowerTransformerEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: String })
-], PowerTransformerEditor.prototype, "name", null);
-__decorate([
-    n$2({ type: Boolean })
-], PowerTransformerEditor.prototype, "showfunctions", void 0);
-PowerTransformerEditor = __decorate([
-    e$4('powertransformer-editor')
-], PowerTransformerEditor);
+function renderSubEquipments(parent, editCount, showfunctions) {
+    if (!showfunctions)
+        return x ``;
+    const subEquipments = getChildElementsByTagName(parent, 'SubEquipment');
+    return x ` ${subEquipments.map(subEquipment => x `<sub-equipment-editor
+        .editCount=${editCount}
+        .element=${subEquipment}
+      ></sub-equipment-editor>`)}`;
+}
 
 /** [[`SubstationEditor`]] subeditor for a `ConductingEquipment` element. */
-let ConductingEquipmentEditor = class ConductingEquipmentEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `EqFunction`, `SubEqFunction` and `SubEquipment` are rendered */
-        this.showfunctions = false;
-    }
+let ConductingEquipmentEditor = class ConductingEquipmentEditor extends BaseSubstationElementEditor {
     /** ConductingEquipment name attribute */
     get name() {
         var _a;
         return (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
-    }
-    renderLNodes() {
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderEqFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const eqFunctions = getChildElementsByTagName(this.element, 'EqFunction');
-        return x ` ${eqFunctions.map(eqFunction => x `<eq-function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${eqFunction}
-          ?showfunctions=${this.showfunctions}
-        ></eq-function-editor>`)}`;
-    }
-    renderSubEquipments() {
-        if (!this.showfunctions)
-            return x ``;
-        const subEquipments = getChildElementsByTagName(this.element, 'SubEquipment');
-        return x ` ${subEquipments.map(subEquipment => x `<sub-equipment-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${subEquipment}
-        ></sub-equipment-editor>`)}`;
     }
     renderContentPane() {
         return x `<mwc-icon slot="icon" style="width:24px;height:24px"
@@ -3349,16 +3137,31 @@ let ConductingEquipmentEditor = class ConductingEquipmentEditor extends s {
     > `;
     }
     renderContentIcon() {
-        return x `<mwc-icon slot="icon">${getIcon(this.element)}</mwc-icon> `;
+        return x `<mwc-icon slot="icon">${getIcon(this.element)}</mwc-icon
+      ><mwc-fab
+        slot="action"
+        mini
+        icon="delete"
+        @click="${() => this.removeElement()}"
+      ></mwc-fab> `;
     }
     render() {
         if (this.showfunctions)
             return x `<oscd-action-pane label="${this.name}"
-        >${this.renderContentPane()}${this.renderLNodes()}${this.renderEqFunctions()}${this.renderSubEquipments()}</action-pane
-        ></action-pane
+        ><abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>${this.renderContentPane()}
+        ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+        ${renderEqFunctions(this.element, this.editCount, this.showfunctions)}
+        ${renderSubEquipments(this.element, this.editCount, this.showfunctions)}
+        </oscd-action-pane
+        ></oscd-action-pane
       >`;
-        return x `<oscd-action-icon label="${this.name}"
-      >${this.renderContentIcon()}</action-icon
+        return x `<oscd-action-icon label="${this.name}">
+      ${this.renderContentIcon()}</oscd-action-icon
     >`;
     }
 };
@@ -3375,85 +3178,374 @@ ConductingEquipmentEditor.styles = i$5 `
     }
   `;
 __decorate([
-    n$2({ attribute: false })
-], ConductingEquipmentEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], ConductingEquipmentEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], ConductingEquipmentEditor.prototype, "element", void 0);
-__decorate([
     n$2({ type: String })
 ], ConductingEquipmentEditor.prototype, "name", null);
-__decorate([
-    n$2({ type: Boolean })
-], ConductingEquipmentEditor.prototype, "showfunctions", void 0);
 ConductingEquipmentEditor = __decorate([
     e$4('conducting-equipment-editor')
 ], ConductingEquipmentEditor);
+function renderConductingEquipments(parent, editCount, showfunctions) {
+    const ConductingEquipments = getChildElementsByTagName(parent, 'ConductingEquipment');
+    return x ` ${ConductingEquipments.map(ConductingEquipment => x `<conducting-equipment-editor
+        .element=${ConductingEquipment}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></conducting-equipment-editor>`)}`;
+}
+
+/** Pane rendering `SubFunction` element with its children */
+let SubFunctionEditor = class SubFunctionEditor extends BaseSubstationElementEditor {
+    get header() {
+        const name = this.element.getAttribute('name');
+        const desc = this.element.getAttribute('desc');
+        const type = this.element.getAttribute('type');
+        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
+    }
+    render() {
+        return x `<oscd-action-pane
+      label="${this.header}"
+      icon="functions"
+      secondary
+      ><abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderSubFunctions(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+SubFunctionEditor.styles = i$5 `
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    .container.lnode {
+      display: grid;
+      grid-gap: 12px;
+      padding: 8px 12px 16px;
+      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
+    }
+  `;
+__decorate([
+    t$1()
+], SubFunctionEditor.prototype, "header", null);
+SubFunctionEditor = __decorate([
+    e$4('sub-function-editor')
+], SubFunctionEditor);
+function renderSubFunctions(parent, editCount, showfunctions) {
+    const subfunctions = getChildElementsByTagName(parent, 'SubFunction');
+    return x ` ${subfunctions.map(subFunction => x `<sub-function-editor
+        .element=${subFunction}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></sub-function-editor>`)}`;
+}
+
+/** Pane rendering `Function` element with its children */
+let FunctionEditor = class FunctionEditor extends BaseSubstationElementEditor {
+    get header() {
+        const name = this.element.getAttribute('name');
+        const desc = this.element.getAttribute('desc');
+        const type = this.element.getAttribute('type');
+        return `${name}${desc ? ` - ${desc}` : ''}${type ? ` (${type})` : ''}`;
+    }
+    render() {
+        return x `<oscd-action-pane
+      label="${this.header}"
+      icon="functions"
+      secondary
+      highlighted
+      ><abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderSubFunctions(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+FunctionEditor.styles = i$5 `
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    .container.lnode {
+      display: grid;
+      grid-gap: 12px;
+      padding: 8px 12px 16px;
+      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fit, minmax(64px, auto));
+    }
+  `;
+__decorate([
+    t$1()
+], FunctionEditor.prototype, "header", null);
+FunctionEditor = __decorate([
+    e$4('function-editor')
+], FunctionEditor);
+function renderFunctions(parent, editCount, showfunctions) {
+    if (!showfunctions)
+        return x ``;
+    const functions = getChildElementsByTagName(parent, 'Function');
+    return x ` ${functions.map(fUnction => x `<function-editor
+        .element=${fUnction}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></function-editor>`)}`;
+}
+
+let LineEditor = class LineEditor extends BaseSubstationElementEditor {
+    get header() {
+        var _a;
+        const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
+        const desc = this.element.getAttribute('desc');
+        return `${name} ${desc ? `—${desc}` : ''}`;
+    }
+    render() {
+        return x `<oscd-action-pane label=${this.header}>
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderConductingEquipments(this.element, this.editCount, this.showfunctions)}
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderFunctions(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+LineEditor.styles = i$5 `
+    ${styles}
+  `;
+__decorate([
+    t$1()
+], LineEditor.prototype, "header", null);
+LineEditor = __decorate([
+    e$4('line-editor')
+], LineEditor);
+function renderLines(parent, editCount, showfunctions) {
+    const Lines = getChildElementsByTagName(parent, 'Line');
+    return x ` ${Lines.map(Line => x `<line-editor
+        .element=${Line}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></line-editor>`)}`;
+}
+
+let TapChangerEditor = class TapChangerEditor extends BaseSubstationElementEditor {
+    get header() {
+        var _a;
+        const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
+        const desc = this.element.getAttribute('desc');
+        return `${name} ${desc ? `—${desc}` : ''}`;
+    }
+    render() {
+        return x `<oscd-action-pane label=${this.header}>
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderEqFunctions(this.element, this.editCount, this.showfunctions)}
+      ${renderSubEquipments(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+TapChangerEditor.styles = i$5 `
+    ${styles}
+  `;
+__decorate([
+    t$1()
+], TapChangerEditor.prototype, "header", null);
+TapChangerEditor = __decorate([
+    e$4('tapchanger-editor')
+], TapChangerEditor);
+
+let TransformerWindingEditor = class TransformerWindingEditor extends BaseSubstationElementEditor {
+    /** TransformerWinding name attribute */
+    get label() {
+        const name = `${this.element.hasAttribute('name')
+            ? `${this.element.getAttribute('name')}`
+            : ''}`;
+        const description = `${this.element.hasAttribute('desc')
+            ? ` - ${this.element.getAttribute('desc')}`
+            : ''}`;
+        return `${name}${description}`;
+    }
+    renderTapChanger() {
+        if (!this.showfunctions)
+            return x ``;
+        const tapChangers = getChildElementsByTagName(this.element, 'TapChanger');
+        return tapChangers.length
+            ? x ` ${tapChangers.map(tapChanger => x `<tapchanger-editor
+              .element=${tapChanger}
+              .editCount=${this.editCount}
+              ?showfunctions=${this.showfunctions}
+            ></tapchanger-editor>`)}`
+            : x ``;
+    }
+    render() {
+        return x `<oscd-action-pane label="${this.label}">
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderEqFunctions(this.element, this.editCount, this.showfunctions)}
+      ${this.renderTapChanger()}
+    </oscd-action-pane> `;
+    }
+};
+TransformerWindingEditor.styles = i$5 `
+    ${styles}
+  `;
+__decorate([
+    n$2({ type: String })
+], TransformerWindingEditor.prototype, "label", null);
+TransformerWindingEditor = __decorate([
+    e$4('transformer-winding-editor')
+], TransformerWindingEditor);
+
+/** [[`SubstationEditor`]] subeditor for a child-less `PowerTransformer` element. */
+let PowerTransformerEditor = class PowerTransformerEditor extends BaseSubstationElementEditor {
+    /** PowerTransformer name attribute */
+    get name() {
+        var _a;
+        return (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : 'UNDEFINED';
+    }
+    // eslint-disable-next-line class-methods-use-this
+    renderContentPane() {
+        return x `<mwc-icon slot="icon" style="width:24px;height:24px"
+      >${powerTransformerTwoWindingIcon}</mwc-icon
+    > `;
+    }
+    renderTransformerWinding() {
+        if (!this.showfunctions)
+            return x ``;
+        const transformerWindings = getChildElementsByTagName(this.element, 'TransformerWinding');
+        return transformerWindings.length
+            ? x `<div class="container">
+          ${transformerWindings.map(transformerWinding => x `<transformer-winding-editor
+                .element=${transformerWinding}
+                .editCount=${this.editCount}
+                ?showfunctions=${this.showfunctions}
+              ></transformer-winding-editor>`)}
+        </div>`
+            : x ``;
+    }
+    // eslint-disable-next-line class-methods-use-this
+    renderContentIcon() {
+        return x `<mwc-icon slot="icon"
+        >${powerTransformerTwoWindingIcon}</mwc-icon
+      ><mwc-fab
+        slot="action"
+        mini
+        icon="delete"
+        @click="${() => this.removeElement()}"
+      ></mwc-fab> `;
+    }
+    render() {
+        if (this.showfunctions)
+            return x `<oscd-action-pane label="${this.name}">
+        <abbr slot="action" title="Remove">
+          <mwc-icon-button
+            icon="delete"
+            @click=${() => this.removeElement()}
+          ></mwc-icon-button>
+        </abbr>
+        ${this.renderContentPane()}
+        ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+        ${renderEqFunctions(this.element, this.editCount, this.showfunctions)}
+        ${renderSubEquipments(this.element, this.editCount, this.showfunctions)}
+        ${this.renderTransformerWinding()}
+      </oscd-action-pane> `;
+        return x `<oscd-action-icon label="${this.name}"
+      >${this.renderContentIcon()}</oscd-action-icon
+    > `;
+    }
+};
+PowerTransformerEditor.styles = i$5 `
+    ${styles}
+
+    :host(.moving) {
+      opacity: 0.3;
+    }
+
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
+  `;
+__decorate([
+    n$2({ type: String })
+], PowerTransformerEditor.prototype, "name", null);
+PowerTransformerEditor = __decorate([
+    e$4('power-transformer-editor')
+], PowerTransformerEditor);
+function renderPowerTransformerContainer(parent, editCount, showfunctions) {
+    const pwts = getChildElementsByTagName(parent, 'PowerTransformer');
+    return (pwts === null || pwts === void 0 ? void 0 : pwts.length)
+        ? x `<div
+        class="${o$1({
+            ptrContent: true,
+            actionicon: !showfunctions,
+        })}"
+      >
+        ${pwts.map(pwt => x `<power-transformer-editor
+              .element=${pwt}
+              .editCount=${editCount}
+              ?showfunctions=${showfunctions}
+            ></power-transformer-editor>`)}
+      </div>`
+        : x ``;
+}
 
 /** [[`SubstationEditor`]] subeditor for a `Bay` element. */
-let BayEditor = class BayEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `Function` and `SubFunction` are rendered */
-        this.showfunctions = false;
-    }
+let BayEditor = class BayEditor extends BaseSubstationElementEditor {
     get header() {
         var _a;
         const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
         const desc = this.element.getAttribute('desc');
         return `${name} ${desc ? `- ${desc}` : ''}`;
     }
-    renderLNodes() {
-        if (!this.showfunctions)
-            return x ``;
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const functions = getChildElementsByTagName(this.element, 'Function');
-        return x ` ${functions.map(fUnction => x `<function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${fUnction}
-          ?showfunctions=${this.showfunctions}
-        ></function-editor>`)}`;
-    }
     render() {
-        return x `<oscd-action-pane label="${this.header}">
-      ${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}
-      ${this.renderLNodes()}${this.renderFunctions()}
+        return x `<oscd-action-pane label="${this.header}"
+      ><abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderFunctions(this.element, this.editCount, this.showfunctions)}
       <div
         class="${o$1({
             content: true,
             actionicon: !this.showfunctions,
         })}"
       >
-        ${Array.from(getChildElementsByTagName(this.element, 'PowerTransformer')).map(pwt => x `<powertransformer-editor
-              .editCount=${this.editCount}
-              .doc=${this.doc}
+        ${Array.from(getChildElementsByTagName(this.element, 'PowerTransformer')).map(pwt => x `<power-transformer-editor
               .element=${pwt}
-              ?showfunctions=${this.showfunctions}
-            ></powertransformer-editor>`)}
-        ${Array.from(getChildElementsByTagName(this.element, 'ConductingEquipment')).map(voltageLevel => x `<conducting-equipment-editor
               .editCount=${this.editCount}
-              .doc=${this.doc}
-              .element=${voltageLevel}
               ?showfunctions=${this.showfunctions}
-            ></conducting-equipment-editor>`)}
+            ></power-transformer-editor>`)}
+        ${renderConductingEquipments(this.element, this.editCount, this.showfunctions)}
       </div>
     </oscd-action-pane> `;
     }
@@ -3474,18 +3566,6 @@ BayEditor.styles = i$5 `
     }
   `;
 __decorate([
-    n$2({ attribute: false })
-], BayEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], BayEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], BayEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], BayEditor.prototype, "showfunctions", void 0);
-__decorate([
     n$2({ type: String })
 ], BayEditor.prototype, "header", null);
 BayEditor = __decorate([
@@ -3493,13 +3573,7 @@ BayEditor = __decorate([
 ], BayEditor);
 
 /** [[`Substation`]] subeditor for a `VoltageLevel` element. */
-let VoltageLevelEditor = class VoltageLevelEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `Function` and `SubFunction` are rendered */
-        this.showfunctions = false;
-    }
+let VoltageLevelEditor = class VoltageLevelEditor extends BaseSubstationElementEditor {
     get voltage() {
         var _a;
         const V = this.element.querySelector(`VoltageLevel > Voltage`);
@@ -3517,60 +3591,22 @@ let VoltageLevelEditor = class VoltageLevelEditor extends s {
         return `${name} ${desc ? `- ${desc}` : ''}
     ${this.voltage === null ? '' : `(${this.voltage})`}`;
     }
-    renderLNodes() {
-        if (!this.showfunctions)
-            return x ``;
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const functions = getChildElementsByTagName(this.element, 'Function');
-        return x ` ${functions.map(fUnction => x `<function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${fUnction}
-          ?showfunctions=${this.showfunctions}
-        ></function-editor>`)}`;
-    }
-    renderPowerTransformerContainer() {
-        var _a, _b;
-        const pwts = Array.from((_b = (_a = this.element) === null || _a === void 0 ? void 0 : _a.querySelectorAll('VoltageLevel > PowerTransformer')) !== null && _b !== void 0 ? _b : []);
-        return (pwts === null || pwts === void 0 ? void 0 : pwts.length)
-            ? x `<div
-          class="${o$1({
-                ptrContent: true,
-                actionicon: !this.showfunctions,
-            })}"
-        >
-          ${pwts.map(pwt => x `<powertransformer-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${pwt}
-                ?showfunctions=${this.showfunctions}
-              ></powertransformer-editor>`)}
-        </div>`
-            : x ``;
-    }
     render() {
         var _a, _b;
         return x `<oscd-action-pane label="${this.header}">
-      ${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}
-      ${this.renderLNodes()}${this.renderFunctions()}
-      ${this.renderPowerTransformerContainer()}
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderFunctions(this.element, this.editCount, this.showfunctions)}
+      ${renderPowerTransformerContainer(this.element, this.editCount, this.showfunctions)}
       <div id="bayContainer">
         ${Array.from((_b = (_a = this.element) === null || _a === void 0 ? void 0 : _a.querySelectorAll('Bay')) !== null && _b !== void 0 ? _b : []).map(bay => x `<bay-editor
             .editCount=${this.editCount}
-            .doc=${this.doc}
             .element=${bay}
             ?showfunctions=${this.showfunctions}
           ></bay-editor>`)}
@@ -3595,18 +3631,6 @@ VoltageLevelEditor.styles = i$5 `
     }
   `;
 __decorate([
-    n$2({ attribute: false })
-], VoltageLevelEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], VoltageLevelEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], VoltageLevelEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], VoltageLevelEditor.prototype, "showfunctions", void 0);
-__decorate([
     n$2()
 ], VoltageLevelEditor.prototype, "voltage", null);
 __decorate([
@@ -3617,74 +3641,30 @@ VoltageLevelEditor = __decorate([
 ], VoltageLevelEditor);
 
 /** [[`Substation`]] plugin subeditor for editing `Substation` sections. */
-let SubstationEditor = class SubstationEditor extends s {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        /** Whether `Function` and `SubFunction` are rendered */
-        this.showfunctions = false;
-    }
+let SubstationEditor = class SubstationEditor extends BaseSubstationElementEditor {
     get header() {
         var _a;
         const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
         const desc = this.element.getAttribute('desc');
         return `${name} ${desc ? `- ${desc}` : ''}`;
     }
-    renderLNodes() {
-        if (!this.showfunctions)
-            return x ``;
-        const lNodes = getChildElementsByTagName(this.element, 'LNode');
-        return lNodes.length
-            ? x `<div class="container lnode">
-          ${lNodes.map(lNode => x `<l-node-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${lNode}
-              ></l-node-editor>`)}
-        </div>`
-            : x ``;
-    }
-    renderFunctions() {
-        if (!this.showfunctions)
-            return x ``;
-        const functions = getChildElementsByTagName(this.element, 'Function');
-        return x ` ${functions.map(fUnction => x `<function-editor
-          .editCount=${this.editCount}
-          .doc=${this.doc}
-          .element=${fUnction}
-          ?showfunctions=${this.showfunctions}
-        ></function-editor>`)}`;
-    }
-    renderPowerTransformerContainer() {
-        var _a, _b;
-        const pwts = Array.from((_b = (_a = this.element) === null || _a === void 0 ? void 0 : _a.querySelectorAll('Substation > PowerTransformer')) !== null && _b !== void 0 ? _b : []);
-        return (pwts === null || pwts === void 0 ? void 0 : pwts.length)
-            ? x `<div
-          class="${o$1({
-                ptrContent: true,
-                actionicon: !this.showfunctions,
-            })}"
-        >
-          ${pwts.map(pwt => x `<powertransformer-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${pwt}
-                ?showfunctions=${this.showfunctions}
-              ></powertransformer-editor>`)}
-        </div>`
-            : x ``;
-    }
     render() {
         return x `<oscd-action-pane label="${this.header}">
-      ${renderGeneralEquipment(this.doc, this.element, this.showfunctions)}
-      ${this.renderLNodes()}${this.renderFunctions()}
-      ${this.renderPowerTransformerContainer()}
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button>
+      </abbr>
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderFunctions(this.element, this.editCount, this.showfunctions)}
+      ${renderPowerTransformerContainer(this.element, this.editCount, this.showfunctions)}
       ${Array.from(this.element.querySelectorAll('VoltageLevel')).map(voltageLevel => x `<voltage-level-editor
             .editCount=${this.editCount}
-            .doc=${this.doc}
             .element=${voltageLevel}
             ?showfunctions=${this.showfunctions}
-          ></voltage-level-editor>`)}</action-pane
+          ></voltage-level-editor>`)}</oscd-action-pane
     >`;
     }
 };
@@ -3692,23 +3672,73 @@ SubstationEditor.styles = i$5 `
     ${styles}
   `;
 __decorate([
-    n$2({ attribute: false })
-], SubstationEditor.prototype, "doc", void 0);
-__decorate([
-    n$2({ type: Number })
-], SubstationEditor.prototype, "editCount", void 0);
-__decorate([
-    n$2({ attribute: false })
-], SubstationEditor.prototype, "element", void 0);
-__decorate([
-    n$2({ type: Boolean })
-], SubstationEditor.prototype, "showfunctions", void 0);
-__decorate([
     n$2({ type: String })
 ], SubstationEditor.prototype, "header", null);
 SubstationEditor = __decorate([
     e$4('substation-editor')
 ], SubstationEditor);
+function renderSubstations(parent, editCount, showfunctions) {
+    const Substations = getChildElementsByTagName(parent, 'Substation');
+    return x ` ${Substations.map(Substation => x `<substation-editor
+        .element=${Substation}
+        .editCount=${editCount}
+        ?showfunctions=${showfunctions}
+      ></substation-editor>`)}`;
+}
+
+let ProcessEditor = class ProcessEditor extends BaseSubstationElementEditor {
+    get header() {
+        var _a;
+        const name = (_a = this.element.getAttribute('name')) !== null && _a !== void 0 ? _a : '';
+        const desc = this.element.getAttribute('desc');
+        return `${name} ${desc ? `—${desc}` : ''}`;
+    }
+    render() {
+        return x `<oscd-action-pane label=${this.header}>
+      <abbr slot="action" title="Remove">
+        <mwc-icon-button
+          icon="delete"
+          @click=${() => this.removeElement()}
+        ></mwc-icon-button
+      ></abbr>
+      ${renderConductingEquipments(this.element, this.editCount, this.showfunctions)}
+      ${renderGeneralEquipment(this.element, this.editCount, this.showfunctions)}
+      ${renderFunctions(this.element, this.editCount, this.showfunctions)}
+      ${renderLNodes(this.element, this.editCount, this.showfunctions)}
+      ${renderLines(this.element, this.editCount, this.showfunctions)}
+      ${renderSubstations(this.element, this.editCount, this.showfunctions)}
+      ${renderProcesses(this.element, this.editCount, this.showfunctions)}
+    </oscd-action-pane>`;
+    }
+};
+ProcessEditor.styles = i$5 `
+    ${styles}
+
+    :host(.moving) {
+      opacity: 0.3;
+    }
+
+    abbr {
+      text-decoration: none;
+      border-bottom: none;
+    }
+  `;
+__decorate([
+    t$1()
+], ProcessEditor.prototype, "header", null);
+ProcessEditor = __decorate([
+    e$4('process-editor')
+], ProcessEditor);
+function renderProcesses(parent, editCount, showfunctions) {
+    const processes = parent.querySelectorAll(':root > Process');
+    return processes.length
+        ? x ` ${Array.from(processes).map(process => x `<process-editor
+            .element=${process}
+            .editCount=${editCount}
+            ?showfunctions=${showfunctions}
+          ></process-editor>`)}`
+        : x ``;
+}
 
 function shouldShowFunctions() {
     return localStorage.getItem('showfunctions') === 'on';
@@ -3730,48 +3760,15 @@ let ZerolinePane = class ZerolinePane extends s {
         this.requestUpdate();
     }
     renderSubstation() {
-        var _a, _b, _c;
+        var _a, _b;
         // eslint-disable-next-line no-nested-ternary
         return ((_a = this.doc) === null || _a === void 0 ? void 0 : _a.querySelector(':root > Substation'))
-            ? x `<section>
-          ${Array.from((_b = this.doc.querySelectorAll(':root > Substation')) !== null && _b !== void 0 ? _b : []).map(substation => x `<substation-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${substation}
-                ?showfunctions=${shouldShowFunctions()}
-              ></substation-editor>`)}
-        </section>`
-            : !((_c = this.doc) === null || _c === void 0 ? void 0 : _c.querySelector(':root > Line, :root > Process'))
+            ? x ` ${renderSubstations(this.doc.querySelector('SCL'), this.editCount, shouldShowFunctions())}`
+            : !((_b = this.doc) === null || _b === void 0 ? void 0 : _b.querySelector(':root > Line, :root > Process'))
                 ? x `<h1>
-          <span style="color: var(--oscd-base1)">Substation Missing</span>
+          <span style="color: var(--oscd-theme-base1)">Substation Missing</span>
         </h1>`
                 : x ``;
-    }
-    renderLines() {
-        var _a, _b;
-        return ((_a = this.doc) === null || _a === void 0 ? void 0 : _a.querySelector(':root > Line'))
-            ? x `<section>
-          ${Array.from((_b = this.doc.querySelectorAll('Line')) !== null && _b !== void 0 ? _b : []).map(line => x `<line-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${line}
-                ?showfunctions=${shouldShowFunctions()}
-              ></line-editor>`)}
-        </section>`
-            : x ``;
-    }
-    renderProcesses() {
-        var _a, _b;
-        return ((_a = this.doc) === null || _a === void 0 ? void 0 : _a.querySelector(':root > Process'))
-            ? x `<section>
-          ${Array.from((_b = this.doc.querySelectorAll(':root > Process')) !== null && _b !== void 0 ? _b : []).map(process => x `<process-editor
-                .editCount=${this.editCount}
-                .doc=${this.doc}
-                .element=${process}
-                ?showfunctions=${shouldShowFunctions()}
-              ></process-editor>`)}
-        </section>`
-            : x ``;
     }
     render() {
         return x `<h1>
@@ -3787,7 +3784,15 @@ let ZerolinePane = class ZerolinePane extends s {
           </abbr>
         </nav>
       </h1>
-      ${this.renderSubstation()}${this.renderLines()}${this.renderProcesses()}`;
+      <section>
+        ${this.renderSubstation()}
+        ${this.doc.querySelector('SCL')
+            ? renderLines(this.doc.querySelector('SCL'), this.editCount, shouldShowFunctions())
+            : x ``}
+        ${this.doc.querySelector('SCL')
+            ? renderProcesses(this.doc.querySelector('SCL'), this.editCount, shouldShowFunctions())
+            : x ``}
+      </section>`;
     }
 };
 ZerolinePane.styles = i$5 `

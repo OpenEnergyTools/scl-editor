@@ -1,22 +1,10 @@
-import { LitElement, TemplateResult } from 'lit';
+import { TemplateResult } from 'lit';
+import '@material/mwc-icon-button';
 import '@openscd/oscd-action-pane';
-import './conducting-equipment-editor.js';
-import './function-editor.js';
-import './general-equipment-editor.js';
-import './l-node-editor.js';
-export declare class LineEditor extends LitElement {
-    /** The document being edited as provided to editor by [[`Zeroline`]]. */
-    doc: XMLDocument;
-    editCount: number;
-    /** SCL element Line */
-    element: Element;
-    /** Whether `Function` and `LNode` are rendered */
-    showfunctions: boolean;
+import BaseSubstationElementEditor from './base-substation-element-editor.js';
+export declare class LineEditor extends BaseSubstationElementEditor {
     get header(): string;
-    private renderConductingEquipments;
-    private renderGeneralEquipments;
-    private renderFunctions;
-    private renderLNodes;
     render(): TemplateResult;
     static styles: import("lit").CSSResult;
 }
+export declare function renderLines(parent: Element, editCount: number, showfunctions: boolean): TemplateResult;

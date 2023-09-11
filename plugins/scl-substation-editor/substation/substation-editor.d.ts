@@ -1,22 +1,12 @@
-import { LitElement, TemplateResult } from 'lit';
+import { TemplateResult } from 'lit';
+import '@material/mwc-icon-button';
 import '@openscd/oscd-action-pane';
-import './l-node-editor.js';
-import './function-editor.js';
-import './powertransformer-editor.js';
 import './voltage-level-editor.js';
+import BaseSubstationElementEditor from './base-substation-element-editor.js';
 /** [[`Substation`]] plugin subeditor for editing `Substation` sections. */
-export declare class SubstationEditor extends LitElement {
-    /** The document being edited as provided to editor by [[`Zeroline`]]. */
-    doc: XMLDocument;
-    editCount: number;
-    /** The edited `Element`, a common property of all Substation subeditors. */
-    element: Element;
-    /** Whether `Function` and `SubFunction` are rendered */
-    showfunctions: boolean;
+export declare class SubstationEditor extends BaseSubstationElementEditor {
     get header(): string;
-    private renderLNodes;
-    renderFunctions(): TemplateResult;
-    renderPowerTransformerContainer(): TemplateResult;
     render(): TemplateResult;
     static styles: import("lit").CSSResult;
 }
+export declare function renderSubstations(parent: Element, editCount: number, showfunctions: boolean): TemplateResult;

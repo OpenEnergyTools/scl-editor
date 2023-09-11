@@ -1,7 +1,6 @@
 import { TemplateResult } from 'lit';
 import './substation/general-equipment-editor.js';
 export declare function getChildElementsByTagName(element: Element | null | undefined, tag: string | null | undefined): Element[];
-export declare function renderGeneralEquipment(doc: XMLDocument, element: Element, showfunctions: boolean): TemplateResult;
 /** Common `CSS` styles used by substation subeditors */
 export declare const styles: import("lit").CSSResult;
 export declare const powerTransformerTwoWindingIcon: TemplateResult<1>;

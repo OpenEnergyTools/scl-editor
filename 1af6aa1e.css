@@ -6,7 +6,7 @@
   --oscd-theme-base03: #002b36;
   --oscd-theme-base02: #073642;
   --oscd-theme-base01: #586e75;
-  --oscd-theme-base00: #657b83;
+  --oscd-theme-base00: hsl(196, 13%, 45%);
   --oscd-theme-base0: #839496;
   --oscd-theme-base1: #93a1a1;
   --oscd-theme-base2: #eee8d5;

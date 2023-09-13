@@ -2323,6 +2323,9 @@ class BaseSubstationElementEditor extends s {
         /** Whether function type element shall be shown */
         this.showfunctions = false;
     }
+    openEditWizard() {
+        this.dispatchEvent(newEditWizardEvent(this.element));
+    }
     removeElement() {
         this.dispatchEvent(newEditEvent({
             node: this.element,
@@ -2352,6 +2355,12 @@ let EqSubFunctionEditor = class EqSubFunctionEditor extends BaseSubstationElemen
       label="${this.header}"
       icon="functions"
       secondary
+    >
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button> </abbr
       ><abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -2407,6 +2416,12 @@ let EqFunctionEditor = class EqFunctionEditor extends BaseSubstationElementEdito
       icon="functions"
       secondary
       highlighted
+    >
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button> </abbr
       ><abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -2462,6 +2477,12 @@ let GeneralEquipmentEditor = class GeneralEquipmentEditor extends BaseSubstation
     render() {
         if (this.showfunctions)
             return x `<oscd-action-pane label=${this.header}>
+        <abbr slot="action" title="Edit">
+          <mwc-icon-button
+            icon="edit"
+            @click=${() => this.openEditWizard()}
+          ></mwc-icon-button>
+        </abbr>
         <abbr slot="action" title="Remove">
           <mwc-icon-button
             icon="delete"
@@ -2473,6 +2494,12 @@ let GeneralEquipmentEditor = class GeneralEquipmentEditor extends BaseSubstation
       </oscd-action-pane>`;
         return x `<oscd-action-icon label=${this.header}>
       <mwc-icon slot="icon">${generalConductingEquipmentIcon}</mwc-icon>
+      <mwc-fab
+        slot="action"
+        mini
+        icon="edit"
+        @click="${() => this.openEditWizard()}"
+      ></mwc-fab>
       <mwc-fab
         slot="action"
         mini
@@ -2987,6 +3014,14 @@ function getIcon(condEq) {
     var _a;
     return (_a = typeIcons[typeStr(condEq)]) !== null && _a !== void 0 ? _a : generalConductingEquipmentIcon;
 }
+function newEditWizardEvent(element, subWizard, eventInitDict) {
+    return new CustomEvent('oscd-edit-wizard-request', {
+        bubbles: true,
+        composed: true,
+        ...eventInitDict,
+        detail: { element, subWizard, ...eventInitDict === null || eventInitDict === void 0 ? void 0 : eventInitDict.detail },
+    });
+}
 
 const lnClassIcons = {
     L: systemLogicalNode,
@@ -3031,6 +3066,12 @@ let LNodeEditor = class LNodeEditor extends BaseSubstationElementEditor {
       ?secondary=${this.missingIedReference}
       ?highlighted=${this.missingIedReference}
       ><mwc-icon slot="icon">${getLNodeIcon(this.element)}</mwc-icon>
+      <mwc-fab
+        slot="action"
+        mini
+        icon="delete"
+        @click="${() => this.openEditWizard()}"
+      ></mwc-fab>
       <mwc-fab
         slot="action"
         mini
@@ -3083,6 +3124,12 @@ let SubEquipmentEditor = class SubEquipmentEditor extends BaseSubstationElementE
     }
     render() {
         return x `<oscd-action-pane label="${this.label}">
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -3137,8 +3184,14 @@ let ConductingEquipmentEditor = class ConductingEquipmentEditor extends BaseSubs
     > `;
     }
     renderContentIcon() {
-        return x `<mwc-icon slot="icon">${getIcon(this.element)}</mwc-icon
-      ><mwc-fab
+        return x `<mwc-icon slot="icon">${getIcon(this.element)}</mwc-icon>
+      <mwc-fab
+        slot="action"
+        mini
+        icon="edit"
+        @click="${() => this.openEditWizard()}"
+      ></mwc-fab>
+      <mwc-fab
         slot="action"
         mini
         icon="delete"
@@ -3148,7 +3201,19 @@ let ConductingEquipmentEditor = class ConductingEquipmentEditor extends BaseSubs
     render() {
         if (this.showfunctions)
             return x `<oscd-action-pane label="${this.name}"
-        ><abbr slot="action" title="Remove">
+        ><abbr slot="action" title="Edit">
+          <mwc-icon-button
+            icon="edit"
+            @click=${() => this.openEditWizard()}
+          ></mwc-icon-button>
+        </abbr>
+        <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
+      <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
           @click=${() => this.removeElement()}
@@ -3205,7 +3270,13 @@ let SubFunctionEditor = class SubFunctionEditor extends BaseSubstationElementEdi
       label="${this.header}"
       icon="functions"
       secondary
-      ><abbr slot="action" title="Remove">
+      ><abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
+      <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
           @click=${() => this.removeElement()}
@@ -3260,6 +3331,12 @@ let FunctionEditor = class FunctionEditor extends BaseSubstationElementEditor {
       icon="functions"
       secondary
       highlighted
+    >
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button> </abbr
       ><abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -3312,6 +3389,12 @@ let LineEditor = class LineEditor extends BaseSubstationElementEditor {
     }
     render() {
         return x `<oscd-action-pane label=${this.header}>
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -3352,7 +3435,12 @@ let TapChangerEditor = class TapChangerEditor extends BaseSubstationElementEdito
     }
     render() {
         return x `<oscd-action-pane label=${this.header}>
-      <abbr slot="action" title="Remove">
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button> </abbr
+      ><abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
           @click=${() => this.removeElement()}
@@ -3399,6 +3487,12 @@ let TransformerWindingEditor = class TransformerWindingEditor extends BaseSubsta
     }
     render() {
         return x `<oscd-action-pane label="${this.label}">
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -3455,6 +3549,12 @@ let PowerTransformerEditor = class PowerTransformerEditor extends BaseSubstation
       ><mwc-fab
         slot="action"
         mini
+        icon="edit"
+        @click="${() => this.openEditWizard()}"
+      ></mwc-fab>
+      <mwc-fab
+        slot="action"
+        mini
         icon="delete"
         @click="${() => this.removeElement()}"
       ></mwc-fab> `;
@@ -3462,6 +3562,12 @@ let PowerTransformerEditor = class PowerTransformerEditor extends BaseSubstation
     render() {
         if (this.showfunctions)
             return x `<oscd-action-pane label="${this.name}">
+        <abbr slot="action" title="Edit">
+          <mwc-icon-button
+            icon="edit"
+            @click=${() => this.openEditWizard()}
+          ></mwc-icon-button>
+        </abbr>
         <abbr slot="action" title="Remove">
           <mwc-icon-button
             icon="delete"
@@ -3524,8 +3630,14 @@ let BayEditor = class BayEditor extends BaseSubstationElementEditor {
         return `${name} ${desc ? `- ${desc}` : ''}`;
     }
     render() {
-        return x `<oscd-action-pane label="${this.header}"
-      ><abbr slot="action" title="Remove">
+        return x `<oscd-action-pane label="${this.header}">
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
+      <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
           @click=${() => this.removeElement()}
@@ -3594,6 +3706,12 @@ let VoltageLevelEditor = class VoltageLevelEditor extends BaseSubstationElementE
     render() {
         var _a, _b;
         return x `<oscd-action-pane label="${this.header}">
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -3650,6 +3768,12 @@ let SubstationEditor = class SubstationEditor extends BaseSubstationElementEdito
     }
     render() {
         return x `<oscd-action-pane label="${this.header}">
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -3695,6 +3819,12 @@ let ProcessEditor = class ProcessEditor extends BaseSubstationElementEditor {
     }
     render() {
         return x `<oscd-action-pane label=${this.header}>
+      <abbr slot="action" title="Edit">
+        <mwc-icon-button
+          icon="edit"
+          @click=${() => this.openEditWizard()}
+        ></mwc-icon-button>
+      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"

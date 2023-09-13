@@ -38,6 +38,16 @@
       "active": true,
       "requireDoc": true,
       "src": "plugins/scl-validating/scl-validating.js"
+    },
+    {
+      "name": "Wiazrding",
+      "translation": {
+        "de": "Wizarding"
+      },
+      "icon": "edit",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/scl-wizarding/scl-wizarding.js"
     }
   ],
   "editor": [

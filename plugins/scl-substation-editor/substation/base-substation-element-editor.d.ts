@@ -7,5 +7,6 @@ export default class BaseSubstationElementEditor extends LitElement {
     editCount: number;
     /** Whether function type element shall be shown */
     showfunctions: boolean;
+    openEditWizard(): void;
     removeElement(): void;
 }

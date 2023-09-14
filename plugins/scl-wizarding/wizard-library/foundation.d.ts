@@ -5,6 +5,7 @@ import { TextField } from '@material/mwc-textfield';
 import { Edit } from '@openscd/open-scd-core';
 import { OscdTextfield } from '../foundation/components/oscd-textfield.js';
 import { OscdSelect } from '../foundation/components/oscd-select.js';
+import { OscdCheckbox } from '../foundation/components/oscd-checkbox.js';
 /** Throws an error bearing `message`, never returning. */
 export declare function unreachable(message: string): never;
 /** @returns the cartesian product of `arrays` */
@@ -13,12 +14,16 @@ export declare const wizardInputSelector = "oscd-textfield, mwc-textfield, ace-e
 export type WizardInputElement = OscdTextfield | TextField | Select | OscdSelect;
 /** @returns [[`EditorAction`]]s to dispatch on [[`WizardDialog`]] commit. */
 export type WizardActor = (inputs: WizardInputElement[], wizard: Element, list?: List | null) => Edit[];
+export declare function canCheckValidity(type: any): type is OscdTextfield | OscdSelect | TextField | Select;
 /** @returns the validity of `input` depending on type. */
 export declare function checkValidity(input: WizardInputElement): boolean;
+export declare function canReportValidity(type: any): type is OscdTextfield | OscdSelect | TextField | Select;
 /** reports the validity of `input` depending on type. */
 export declare function reportValidity(input: WizardInputElement): boolean;
+export declare function isOscdInput(type: any): type is OscdTextfield | OscdCheckbox | OscdSelect;
 /** @returns the `value` or `maybeValue` of `input` depending on type. */
 export declare function getValue(input: WizardInputElement): string | null;
+export declare function isOScdTextfield(type: any): type is OscdTextfield;
 /** @returns the `multiplier` of `input` if available. */
 export declare function getMultiplier(input: WizardInputElement): string | null;
 /** @returns [[`WizardAction`]]s to dispatch on [[`WizardDialog`]] menu action. */
@@ -66,3 +71,12 @@ export declare function isPublic(element: Element): boolean;
 /** @returns a new [[`tag`]] element owned by [[`doc`]]. */
 export declare function createElement(doc: Document, tag: string, attrs: Record<string, string | null>): Element;
 export declare function getChildElementsByTagName(element: Element | null | undefined, tag: string | null | undefined): Element[];
+export declare function getTypes(element: Element): string[];
+/** Patterns from IEC 61850-6 for all `P` elements */
+export declare const typePattern: Partial<Record<string, string>>;
+/** Whether `P` element is required within `Address` */
+export declare const typeNullable: Partial<Record<string, boolean>>;
+/** Max length definition for all `P` element */
+export declare const typeMaxLength: Partial<Record<string, number>>;
+/** Sorts selected `ListItem`s to the top and disabled ones to the bottom. */
+export declare function compareNames(a: Element | string, b: Element | string): number;

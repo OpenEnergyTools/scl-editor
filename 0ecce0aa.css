@@ -18,15 +18,6 @@
   --primary: var(--oscd-theme-primary);
   --secondary: var(--oscd-theme-secondary);
 
-  --oscd-action-pane-theme-surface: var(--oscd-theme-base3);
-  --oscd-theme-on-primary: var(--mdc-theme-on-primary);
-  --oscd-action-pane-theme-on-surface: var(--oscd-theme-base00);
-  --oscd-action-pane-theme-on-primary: var(--oscd-theme-base2);
-  --oscd-action-pane-theme-font: 'Roboto';
-
-  --oscd-action-icon-theme-on-surface: var(--oscd-theme-base00);
-  --oscd-action-icon-theme-on-primary: var(--oscd-theme-base2);
-  
   margin: 0px;
   padding: 0px;
 }

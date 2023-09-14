@@ -3160,7 +3160,7 @@ Array(maxLnInst)
     .fill(1)
     .map((_, i) => `${i + 1}`);
 
-await fetch(new URL("../foundation/nsd.json", import.meta.url)).then((res) => res.json());
+await fetch(new URL(new URL('assets/nsd-0a370a57.json', import.meta.url).href, import.meta.url)).then((res) => res.json());
 
 /** Returns SCL valid children from a given [[`parent`]]
  * > NOTE: !!only valid for 2007B4 (Ed2.1) projects
@@ -3985,7 +3985,7 @@ let LNodeEditor = class LNodeEditor extends BaseSubstationElementEditor {
       <mwc-fab
         slot="action"
         mini
-        icon="delete"
+        icon="edit"
         @click="${() => this.openEditWizard()}"
       ></mwc-fab>
       <mwc-fab
@@ -4117,19 +4117,13 @@ let ConductingEquipmentEditor = class ConductingEquipmentEditor extends BaseSubs
     }
     render() {
         if (this.showfunctions)
-            return x `<oscd-action-pane label="${this.name}"
-        ><abbr slot="action" title="Edit">
+            return x `<oscd-action-pane label="${this.name}">
+      <abbr slot="action" title="Edit">
           <mwc-icon-button
             icon="edit"
             @click=${() => this.openEditWizard()}
           ></mwc-icon-button>
         </abbr>
-        <abbr slot="action" title="Edit">
-        <mwc-icon-button
-          icon="edit"
-          @click=${() => this.openEditWizard()}
-        ></mwc-icon-button>
-      </abbr>
       <abbr slot="action" title="Remove">
         <mwc-icon-button
           icon="delete"
@@ -4909,10 +4903,18 @@ class SubstationEditorPlugin extends s {
     }
 }
 SubstationEditorPlugin.styles = i$5 `
+    * {
+      --oscd-action-pane-theme-surface: var(--oscd-theme-base3);
+      --oscd-action-pane-theme-on-surface: var(--oscd-theme-base00);
+      --oscd-action-pane-theme-on-primary: var(--oscd-theme-base2);
+      --oscd-action-pane-theme-font: 'Roboto';
+
+      --oscd-action-icon-theme-on-surface: var(--oscd-theme-base00);
+      --oscd-action-icon-theme-on-primary: var(--oscd-theme-base2);
+    }
+
     :host {
       width: 100vw;
-
-      --oscd-action-pane-theme-surface: var();
     }
   `;
 __decorate([

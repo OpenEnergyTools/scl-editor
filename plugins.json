@@ -61,6 +61,13 @@
       "src": "plugins/scl-editor-landing/scl-editor-landing.js"
     },
     {
+      "name": "Publisher",
+      "icon": "publish",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/oscd-publisher/oscd-publisher.js"
+    },
+    {
       "name": "Subscriber (Later Binding)",
       "translations": {
         "de": "Subscriber (Later Binding)"
@@ -71,15 +78,15 @@
       "src": "plugins/subscriber-later-binding/oscd-subscriber-later-binding.js"
     },
     {
-      "name": "Publisher",
-      "icon": "publish",
+      "name": "Communication",
+      "icon": "settings_ethernet",
       "active": true,
       "requireDoc": true,
-      "src": "plugins/oscd-publisher/oscd-publisher.js"
+      "src": "plugins/oscd-communication/oscd-communication.js"
     },
     {
       "name": "Substation",
-      "icon": "save",
+      "icon": "margin",
       "active": true,
       "requireDoc": true,
       "src": "plugins/scl-substation-editor/scl-substation-editor.js"

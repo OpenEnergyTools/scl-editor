@@ -90,6 +90,13 @@
       "active": true,
       "requireDoc": true,
       "src": "plugins/scl-substation-editor/scl-substation-editor.js"
+    },
+    {
+      "name": "Template Generator",
+      "icon": "copy_all",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/oscd-template-generator/oscd-template-generator.js"
     }
   ]
 }

@@ -40750,15 +40750,15 @@ function createTypeRestrictionCheckbox(element) {
   </mwc-formfield>`;
 }
 function createPTextField(element, pType) {
-    var _a, _b, _c, _d;
+    var _a, _b;
     const pValue = (_b = (_a = Array.from(element.querySelectorAll(':scope > Address > P')).find(p => p.getAttribute('type') === pType)) === null || _a === void 0 ? void 0 : _a.textContent) !== null && _b !== void 0 ? _b : null;
     return x `<oscd-textfield
     required
     label="${pType}"
-    pattern="${(_c = typePattern[pType]) !== null && _c !== void 0 ? _c : ''}"
+    pattern="${l$1(typePattern[pType])}"
     ?nullable=${typeNullable[pType]}
     .maybeValue=${pValue}
-    maxLength="${(_d = typeMaxLength[pType]) !== null && _d !== void 0 ? _d : ''}"
+    maxLength="${l$1(typeMaxLength[pType])}"
   ></oscd-textfield>`;
 }
 /** @returns single page  [[`Wizard`]] for creating SCL element ConnectedAP. */
@@ -42014,24 +42014,24 @@ const initial$1 = {
 };
 function contentSubNetwork(options) {
     return [
-        x `<wizard-textfield
+        x `<oscd-textfield
       label="name"
       .maybeValue=${options.name}
       required
       dialogInitialFocus
-    ></wizard-textfield>`,
-        x `<wizard-textfield
+    ></oscd-textfield>`,
+        x `<oscd-textfield
       label="desc"
       .maybeValue=${options.desc}
       nullable
-    ></wizard-textfield>`,
-        x `<wizard-textfield
+    ></oscd-textfield>`,
+        x `<oscd-textfield
       label="type"
       .maybeValue=${options.type}
       nullable
       pattern="${patterns.normalizedString}"
-    ></wizard-textfield>`,
-        x `<wizard-textfield
+    ></oscd-textfield>`,
+        x `<oscd-textfield
       label="BitRate"
       .maybeValue=${options.BitRate}
       nullable
@@ -42040,7 +42040,7 @@ function contentSubNetwork(options) {
       .multiplier=${options.multiplier}
       required
       pattern="${patterns.decimal}"
-    ></wizard-textfield>`,
+    ></oscd-textfield>`,
     ];
 }
 function createAction$4(parent) {

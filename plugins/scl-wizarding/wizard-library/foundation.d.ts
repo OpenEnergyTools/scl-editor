@@ -20,7 +20,7 @@ export declare function checkValidity(input: WizardInputElement): boolean;
 export declare function canReportValidity(type: any): type is OscdTextfield | OscdSelect | TextField | Select;
 /** reports the validity of `input` depending on type. */
 export declare function reportValidity(input: WizardInputElement): boolean;
-export declare function isOscdInput(type: any): type is OscdTextfield | OscdCheckbox | OscdSelect;
+export declare function isInputWithMaybeValue(type: any): type is OscdTextfield | OscdCheckbox | OscdSelect;
 /** @returns the `value` or `maybeValue` of `input` depending on type. */
 export declare function getValue(input: WizardInputElement): string | null;
 export declare function isOScdTextfield(type: any): type is OscdTextfield;

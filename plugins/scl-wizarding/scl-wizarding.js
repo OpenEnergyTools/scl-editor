@@ -25618,13 +25618,13 @@ function reportValidity(input) {
         return input.reportValidity();
     return true;
 }
-function isOscdInput(type) {
+function isInputWithMaybeValue(type) {
     return 'maybeValue' in type;
 }
 /** @returns the `value` or `maybeValue` of `input` depending on type. */
 function getValue(input) {
     var _a;
-    if (isOscdInput(input))
+    if (isInputWithMaybeValue(input))
         return input.maybeValue;
     return (_a = input.value) !== null && _a !== void 0 ? _a : null;
 }
@@ -25789,17 +25789,6 @@ const typeNullable = {
     'IPv6-IGMPv3Src': true,
     'IP-IGMPv3Sr': true,
     'IP-ClassOfTraffic': true,
-};
-/** Max length definition for all `P` element */
-const typeMaxLength = {
-    'OSI-TSEL': 8,
-    'OSI-SSEL': 16,
-    'OSI-PSEL': 16,
-    'OSI-AP-Invoke': 5,
-    'OSI-AE-Qualifier': 5,
-    'OSI-AE-Invoke': 5,
-    'OSI-NSAP': 40,
-    'IP-ClassOfTraffic': 2,
 };
 /** Sorts selected `ListItem`s to the top and disabled ones to the bottom. */
 function compareNames(a, b) {
@@ -33984,7 +33973,7 @@ function createBayWizard(parent) {
         },
     ];
 }
-function updateAction$f(element) {
+function updateAction$h(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue(inputs.find(i => i.label === 'desc'));
@@ -34001,7 +33990,7 @@ function editBayWizard(element) {
             primary: {
                 icon: 'edit',
                 label: 'save',
-                action: updateAction$f(element),
+                action: updateAction$h(element),
             },
             content: renderBayWizard(element.getAttribute('name'), element.getAttribute('desc')),
         },
@@ -35811,7 +35800,7 @@ function createConductingEquipmentWizard(parent) {
         },
     ];
 }
-function updateAction$e(element) {
+function updateAction$g(element) {
     return (inputs) => {
         const name = getValue(inputs.find(i => i.label === 'name'));
         const desc = getValue(inputs.find(i => i.label === 'desc'));
@@ -35830,7 +35819,7 @@ function editConductingEquipmentWizard(element) {
             primary: {
                 icon: 'edit',
                 label: 'save',
-                action: updateAction$e(element),
+                action: updateAction$g(element),
             },
             content: renderConductingEquipmentWizard(element.getAttribute('name'), element.getAttribute('desc'), 'edit', typeName(element), reservedNames),
         },
@@ -40490,12 +40479,82 @@ function idNamingIdentity(e) {
 }
 
 /* eslint-disable import/no-extraneous-dependencies */
-/** Sorts connected `AccessPoint`s to the bottom. */
-function compareAccessPointConnection(a, b) {
-    if (a.connected !== b.connected)
-        return b.connected ? -1 : 1;
-    return 0;
+function getPElement(parent, type) {
+    var _a;
+    return ((_a = Array.from(parent.querySelectorAll('Address > P')).find(p => p.getAttribute('type') === type)) !== null && _a !== void 0 ? _a : null);
 }
+function existDiff(oldAddr, newAddr) {
+    return Array.from(oldAddr.querySelectorAll('P')).some(pType => {
+        var _a;
+        return ((_a = getPElement(newAddr, pType.getAttribute('type'))) === null || _a === void 0 ? void 0 : _a.textContent) !==
+            pType.textContent;
+    });
+}
+function createAddressElement(parent, inputs, instType) {
+    const address = createElement(parent.ownerDocument, 'Address', {});
+    Object.entries(inputs)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .filter(([_, value]) => value !== null)
+        .forEach(([key, value]) => {
+        const type = key;
+        const child = createElement(parent.ownerDocument, 'P', { type });
+        if (instType)
+            child.setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', `tP_${key}`);
+        child.textContent = value;
+        address.appendChild(child);
+    });
+    return address;
+}
+function updateAddress(parent, inputs, instType) {
+    const actions = [];
+    const newAddress = createAddressElement(parent, inputs, instType);
+    const oldAddress = parent.querySelector('Address');
+    if (oldAddress !== null && existDiff(oldAddress, newAddress)) {
+        actions.push({
+            node: oldAddress,
+        });
+        actions.push({
+            parent,
+            node: newAddress,
+            reference: oldAddress.nextSibling,
+        });
+    }
+    else if (oldAddress === null)
+        actions.push({
+            parent,
+            node: newAddress,
+            reference: getReference(parent, 'Address'),
+        });
+    return actions;
+}
+function hasTypeRestriction(element) {
+    return Array.from(element.querySelectorAll('Address > P')).some(pType => pType.getAttribute('xsi:type'));
+}
+function contentAddress(content) {
+    const pChildren = {};
+    content.types.forEach(type => {
+        var _a, _b;
+        if (!pChildren[type])
+            pChildren[type] = (_b = (_a = getPElement(content.element, type)) === null || _a === void 0 ? void 0 : _a.textContent) !== null && _b !== void 0 ? _b : null;
+    });
+    return [
+        x `<mwc-formfield label="Add XMLSchema-instance type">
+      <mwc-checkbox
+        id="instType"
+        ?checked="${hasTypeRestriction(content.element)}"
+      ></mwc-checkbox>
+    </mwc-formfield>`,
+        x `${Object.entries(pChildren).map(([key, value]) => x `<oscd-textfield
+          label="${key}"
+          ?nullable=${typeNullable[key]}
+          .maybeValue=${value}
+          pattern="${l$1(typePattern[key])}"
+          required
+        ></oscd-textfield>`)}`,
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
 function initSMVElements(doc, connectedAp, options) {
     var _a;
     const actions = [];
@@ -40689,7 +40748,8 @@ function unconnectedSampledValueControls(doc) {
     return mySet;
 }
 function createConnectedApAction(parent) {
-    return (_, __, list) => {
+    return (_, wizard) => {
+        var _a;
         const doc = parent.ownerDocument;
         // generators ensure unique MAC-Address and APPID across the project
         const macGeneratorSmv = macAddressGenerator(doc, 'SMV');
@@ -40699,6 +40759,7 @@ function createConnectedApAction(parent) {
         // track GSE and SMV for multiselect access points connection
         const unconnectedGseControl = unconnectedGseControls(doc);
         const unconnectedSampledValueControl = unconnectedSampledValueControls(doc);
+        const list = (_a = wizard.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('#apList');
         if (!list)
             return [];
         const identities = list.selected.map(item => item.value);
@@ -40729,37 +40790,18 @@ function createConnectedApAction(parent) {
         return actions;
     };
 }
-function existConnectedAp(accesspoint) {
+/** Sorts connected `AccessPoint`s to the bottom. */
+function compareAccessPointConnection(a, b) {
+    if (a.connected !== b.connected)
+        return b.connected ? -1 : 1;
+    return 0;
+}
+function existConnectedAp(accessPoint) {
     var _a, _b;
-    const iedName = (_a = accesspoint.closest('IED')) === null || _a === void 0 ? void 0 : _a.getAttribute('name');
-    const apName = accesspoint.getAttribute('name');
-    const connAp = accesspoint.ownerDocument.querySelector(`ConnectedAP[iedName="${iedName}"][apName="${apName}"]`);
+    const iedName = (_a = accessPoint.closest('IED')) === null || _a === void 0 ? void 0 : _a.getAttribute('name');
+    const apName = accessPoint.getAttribute('name');
+    const connAp = accessPoint.ownerDocument.querySelector(`ConnectedAP[iedName="${iedName}"][apName="${apName}"]`);
     return (_b = (connAp && isPublic(connAp))) !== null && _b !== void 0 ? _b : false;
-}
-/**
- * Creates a TypeRestriction checkbox for a given ConnectedAP wizard.
- * @param element - The ConnectedAP of the wizard.
- * @returns The checkbox within a formfield.
- */
-function createTypeRestrictionCheckbox(element) {
-    return x `<mwc-formfield label="Add XMLSchema-instance type"
-    ><mwc-checkbox
-      id="typeRestriction"
-      ?checked=${hasTypeRestriction(element)}
-    ></mwc-checkbox>
-  </mwc-formfield>`;
-}
-function createPTextField(element, pType) {
-    var _a, _b;
-    const pValue = (_b = (_a = Array.from(element.querySelectorAll(':scope > Address > P')).find(p => p.getAttribute('type') === pType)) === null || _a === void 0 ? void 0 : _a.textContent) !== null && _b !== void 0 ? _b : null;
-    return x `<oscd-textfield
-    required
-    label="${pType}"
-    pattern="${l$1(typePattern[pType])}"
-    ?nullable=${typeNullable[pType]}
-    .maybeValue=${pValue}
-    maxLength="${l$1(typeMaxLength[pType])}"
-  ></oscd-textfield>`;
 }
 /** @returns single page  [[`Wizard`]] for creating SCL element ConnectedAP. */
 function createConnectedApWizard(element) {
@@ -40781,7 +40823,7 @@ function createConnectedApWizard(element) {
                 action: createConnectedApAction(element),
             },
             content: [
-                x ` <filtered-list id="apList" multi
+                x ` <oscd-filtered-list id="apList" multi
           >${accessPoints.map(accesspoint => {
                     const id = identity(accesspoint.element);
                     return x `<mwc-check-list-item
@@ -40790,61 +40832,23 @@ function createConnectedApWizard(element) {
               ><span>${id}</span></mwc-check-list-item
             >`;
                 })}
-        </filtered-list>`,
+        </oscd-filtered-list>`,
             ],
         },
     ];
 }
-function isEqualAddress(oldAddress, newAddress) {
-    return Array.from(oldAddress.querySelectorAll('Address > P')).every(pType => {
-        var _a;
-        return (_a = newAddress
-            .querySelector(`Address > P[type="${pType.getAttribute('type')}"]`)) === null || _a === void 0 ? void 0 : _a.isEqualNode(pType);
-    });
-}
-function createAddressElement(inputs, parent, typeRestriction) {
-    const element = createElement(parent.ownerDocument, 'Address', {});
-    inputs
-        .filter(input => getValue(input) !== null)
-        .forEach(validInput => {
-        const type = validInput.label;
-        const child = createElement(parent.ownerDocument, 'P', { type });
-        if (typeRestriction)
-            child.setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', `tP_${type}`);
-        child.textContent = getValue(validInput);
-        element.appendChild(child);
-    });
-    return element;
-}
-function updateAction$d(parent) {
+function updateAction$f(element) {
     return (inputs, wizard) => {
         var _a, _b, _c;
         const typeRestriction = (_c = (_b = (_a = wizard.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('#typeRestriction')) === null || _b === void 0 ? void 0 : _b.checked) !== null && _c !== void 0 ? _c : false;
-        const newAddress = createAddressElement(inputs, parent, typeRestriction);
-        const oldAddress = parent.querySelector('Address');
-        const complexAction = [];
-        if (oldAddress !== null && !isEqualAddress(oldAddress, newAddress)) {
-            // address & child elements P are changed: cannot use replace editor action
-            complexAction.push({ node: oldAddress });
-            complexAction.push({
-                parent,
-                node: newAddress,
-                reference: oldAddress.nextElementSibling,
-            });
-        }
-        else if (oldAddress === null)
-            complexAction.push({
-                parent,
-                node: newAddress,
-                reference: getReference(parent, 'Address'),
-            });
-        return complexAction;
+        const addressContent = {};
+        inputs.forEach(input => {
+            const key = input.label;
+            const value = getValue(input);
+            addressContent[key] = value;
+        });
+        return updateAddress(element, addressContent, typeRestriction);
     };
-}
-function hasTypeRestriction(element) {
-    return Array.from(element.querySelectorAll('Address > P'))
-        .filter(p => isPublic(p))
-        .some(pType => pType.getAttribute('xsi:type'));
 }
 /** @returns single page [[`Wizard`]] to edit SCL element ConnectedAP. */
 function editConnectedApWizard(element) {
@@ -40854,12 +40858,9 @@ function editConnectedApWizard(element) {
             primary: {
                 icon: 'save',
                 label: 'save',
-                action: updateAction$d(element),
+                action: updateAction$f(element),
             },
-            content: [
-                x `${createTypeRestrictionCheckbox(element)}
-        ${getTypes(element).map(pType => x `${createPTextField(element, pType)}`)}`,
-            ],
+            content: [...contentAddress({ element, types: getTypes(element) })],
         },
     ];
 }
@@ -41004,7 +41005,7 @@ function createEqFunctionWizard(parent) {
         },
     ];
 }
-function updateAction$c(element) {
+function updateAction$e(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -41030,7 +41031,7 @@ function editEqFunctionWizard(element) {
             primary: {
                 icon: 'save',
                 label: 'save',
-                action: updateAction$c(element),
+                action: updateAction$e(element),
             },
             content: [
                 ...contentFunctionWizard({
@@ -41085,7 +41086,7 @@ function createEqSubFunctionWizard(parent) {
         },
     ];
 }
-function updateAction$b(element) {
+function updateAction$d(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -41111,7 +41112,7 @@ function editEqSubFunctionWizard(element) {
             primary: {
                 icon: 'save',
                 label: 'save',
-                action: updateAction$b(element),
+                action: updateAction$d(element),
             },
             content: [
                 ...contentFunctionWizard({
@@ -41351,7 +41352,7 @@ function createGeneralEquipmentWizard(parent) {
         },
     ];
 }
-function updateAction$a(element) {
+function updateAction$c(element) {
     return (inputs) => {
         const attributes = {};
         const generalEquipmentKeys = ['name', 'desc', 'type', 'virtual'];
@@ -41378,7 +41379,7 @@ function editGeneralEquipmentWizard(element) {
             primary: {
                 icon: 'save',
                 label: 'save',
-                action: updateAction$a(element),
+                action: updateAction$c(element),
             },
             content: [
                 ...contentGeneralEquipmentWizard({
@@ -41388,6 +41389,100 @@ function editGeneralEquipmentWizard(element) {
                     virtual,
                     reservedNames,
                 }),
+            ],
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function mxxTimeUpdateAction(gse, oldMxxTime, newTimeValue, option) {
+    if (oldMxxTime === null) {
+        const newMxxTime = createElement(gse.ownerDocument, option.minOrMax, {
+            unit: 's',
+            multiplier: 'm',
+        });
+        newMxxTime.textContent = newTimeValue;
+        return [
+            {
+                parent: gse,
+                node: newMxxTime,
+                reference: getReference(gse, option.minOrMax),
+            },
+        ];
+    }
+    if (newTimeValue === null)
+        return [
+            {
+                node: oldMxxTime,
+            },
+        ];
+    const newMxxTime = oldMxxTime.cloneNode(false);
+    newMxxTime.textContent = newTimeValue;
+    return [
+        { node: oldMxxTime },
+        {
+            parent: gse,
+            node: newMxxTime,
+            reference: oldMxxTime.nextSibling,
+        },
+    ];
+}
+function updateAction$b(element) {
+    return (inputs, wizard) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        const action = [];
+        const instType = (_c = (_b = (_a = wizard.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('#instType')) === null || _b === void 0 ? void 0 : _b.checked) !== null && _c !== void 0 ? _c : false;
+        const addressContent = {};
+        addressContent['MAC-Address'] = getValue(inputs.find(i => i.label === 'MAC-Address'));
+        addressContent.APPID = getValue(inputs.find(i => i.label === 'APPID'));
+        addressContent['VLAN-ID'] = getValue(inputs.find(i => i.label === 'VLAN-ID'));
+        addressContent['VLAN-PRIORITY'] = getValue(inputs.find(i => i.label === 'VLAN-PRIORITY'));
+        const addressActions = updateAddress(element, addressContent, instType);
+        addressActions.forEach(addressAction => {
+            action.push(addressAction);
+        });
+        const minTime = getValue(inputs.find(i => i.label === 'MinTime'));
+        const MaxTime = getValue(inputs.find(i => i.label === 'MaxTime'));
+        if (minTime !==
+            ((_f = (_e = (_d = element.querySelector('MinTime')) === null || _d === void 0 ? void 0 : _d.textContent) === null || _e === void 0 ? void 0 : _e.trim()) !== null && _f !== void 0 ? _f : null)) {
+            action.push(...mxxTimeUpdateAction(element, element.querySelector('MinTime'), minTime, { minOrMax: 'MinTime' }));
+        }
+        if (MaxTime !==
+            ((_j = (_h = (_g = element.querySelector('MaxTime')) === null || _g === void 0 ? void 0 : _g.textContent) === null || _h === void 0 ? void 0 : _h.trim()) !== null && _j !== void 0 ? _j : null)) {
+            action.push(...mxxTimeUpdateAction(element, element.querySelector('MaxTime'), minTime, { minOrMax: 'MaxTime' }));
+        }
+        return [action];
+    };
+}
+function editGseWizard(element) {
+    var _a, _b, _c, _d;
+    const minTime = (_b = (_a = element.querySelector('MinTime')) === null || _a === void 0 ? void 0 : _a.innerHTML.trim()) !== null && _b !== void 0 ? _b : null;
+    const maxTime = (_d = (_c = element.querySelector('MaxTime')) === null || _c === void 0 ? void 0 : _c.innerHTML.trim()) !== null && _d !== void 0 ? _d : null;
+    const types = ['MAC-Address', 'APPID', 'VLAN-ID', 'VLAN-PRIORITY'];
+    return [
+        {
+            title: 'Edit GSE',
+            primary: {
+                label: 'save',
+                icon: 'save',
+                action: updateAction$b(element),
+            },
+            content: [
+                ...contentAddress({ element, types }),
+                x `<oscd-textfield
+          label="MinTime"
+          .maybeValue=${minTime}
+          nullable
+          suffix="ms"
+          type="number"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="MaxTime"
+          .maybeValue=${maxTime}
+          nullable
+          suffix="ms"
+          type="number"
+        ></oscd-textfield>`,
             ],
         },
     ];
@@ -41481,7 +41576,7 @@ function createLineWizard(parent) {
         },
     ];
 }
-function updateAction$9(element) {
+function updateAction$a(element) {
     return (inputs) => {
         const attributes = {};
         const lineKeys = ['name', 'desc', 'type', 'nomFreq', 'numPhases'];
@@ -41502,7 +41597,7 @@ function editLineWizard(element) {
             primary: {
                 icon: 'edit',
                 label: 'save',
-                action: updateAction$9(element),
+                action: updateAction$a(element),
             },
             content: renderContent((_a = element.getAttribute('name')) !== null && _a !== void 0 ? _a : '', element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('nomFreq'), element.getAttribute('numPhases')),
         },
@@ -41570,7 +41665,7 @@ function createPowerTransformerWizard(parent) {
         },
     ];
 }
-function updateAction$8(element) {
+function updateAction$9(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue(inputs.find(i => i.label === 'desc'));
@@ -41588,7 +41683,7 @@ function editPowerTransformerWizard(element) {
             primary: {
                 icon: 'edit',
                 label: 'save',
-                action: updateAction$8(element),
+                action: updateAction$9(element),
             },
             content: renderPowerTransformerWizard(element.getAttribute('name'), element.getAttribute('desc'), element.getAttribute('type'), reservedNames),
         },
@@ -41656,7 +41751,7 @@ function createProcessWizard(parent) {
         },
     ];
 }
-function updateAction$7(element) {
+function updateAction$8(element) {
     return (inputs) => {
         const attributes = {};
         const tapProcessKeys = ['name', 'desc', 'type'];
@@ -41682,7 +41777,7 @@ function editProcessWizard(element) {
             primary: {
                 icon: 'save',
                 label: 'save',
-                action: updateAction$7(element),
+                action: updateAction$8(element),
             },
             content: [
                 ...contentProcessWizard({
@@ -41692,6 +41787,40 @@ function editProcessWizard(element) {
                     reservedNames,
                 }),
             ],
+        },
+    ];
+}
+
+function updateAction$7(element) {
+    return (inputs, wizard) => {
+        var _a, _b;
+        const action = [];
+        const instType = (_b = (((_a = wizard.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('#instType')))) === null || _b === void 0 ? void 0 : _b.checked;
+        const addressContent = {};
+        addressContent['MAC-Address'] = getValue(inputs.find(i => i.label === 'MAC-Address'));
+        addressContent.APPID = getValue(inputs.find(i => i.label === 'APPID'));
+        addressContent['VLAN-ID'] = getValue(inputs.find(i => i.label === 'VLAN-ID'));
+        addressContent['VLAN-PRIORITY'] = getValue(inputs.find(i => i.label === 'VLAN-PRIORITY'));
+        const addressActions = updateAddress(element, addressContent, instType);
+        if (!addressActions.length)
+            return [];
+        addressActions.forEach(addressAction => {
+            action.push(addressAction);
+        });
+        return [action];
+    };
+}
+function editSMvWizard(element) {
+    const types = ['MAC-Address', 'APPID', 'VLAN-ID', 'VLAN-PRIORITY'];
+    return [
+        {
+            title: 'Edit SMV',
+            primary: {
+                label: 'save',
+                icon: 'edit',
+                action: updateAction$7(element),
+            },
+            content: [...contentAddress({ element, types })],
         },
     ];
 }
@@ -42846,7 +42975,7 @@ const wizards = {
         create: emptyWizard,
     },
     GSE: {
-        edit: emptyWizard,
+        edit: editGseWizard,
         create: emptyWizard,
     },
     GSEDir: {
@@ -43038,7 +43167,7 @@ const wizards = {
         create: emptyWizard,
     },
     SMV: {
-        edit: emptyWizard,
+        edit: editSMvWizard,
         create: emptyWizard,
     },
     SmvOpts: {

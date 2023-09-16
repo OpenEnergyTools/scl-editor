@@ -11601,33 +11601,35 @@ class TemplatesPlugin extends s$1 {
             </abbr>
           </nav>
         </h1>
-        <oscd-textfield
-          label="id"
-          .maybeValue=${(_b = (_a = this.selectedLNodeType) === null || _a === void 0 ? void 0 : _a.getAttribute('id')) !== null && _b !== void 0 ? _b : ''}
-          required
-          maxlength="127"
-          minlength="1"
-          dialogInitialFocus
-        ></oscd-textfield>
-        <oscd-textfield
-          label="desc"
-          .maybeValue=${(_d = (_c = this.selectedLNodeType) === null || _c === void 0 ? void 0 : _c.getAttribute('desc')) !== null && _d !== void 0 ? _d : null}
-          nullable
-        ></oscd-textfield>
-        <oscd-textfield
-          label="lnClass"
-          .maybeValue=${(_f = (_e = this.selectedLNodeType) === null || _e === void 0 ? void 0 : _e.getAttribute('lnClass')) !== null && _f !== void 0 ? _f : ''}
-          required
-        ></oscd-textfield>
-        <oscd-filtered-list>
-          ${Array.from((_h = (_g = this.selectedLNodeType) === null || _g === void 0 ? void 0 : _g.querySelectorAll(':scope > DO')) !== null && _h !== void 0 ? _h : []).map(dO => x `<mwc-list-item
-                value="#${dO.getAttribute('id')}"
-                tabindex="0"
-                @request-selected="${() => this.selectReferencedChild(dO)}"
-              >
-                <span>${dO.getAttribute('name')}</span>
-              </mwc-list-item>`)}
-        </oscd-filtered-list>
+        <div>
+          <oscd-textfield
+            label="id"
+            .maybeValue=${(_b = (_a = this.selectedLNodeType) === null || _a === void 0 ? void 0 : _a.getAttribute('id')) !== null && _b !== void 0 ? _b : ''}
+            required
+            maxlength="127"
+            minlength="1"
+            dialogInitialFocus
+          ></oscd-textfield>
+          <oscd-textfield
+            label="desc"
+            .maybeValue=${(_d = (_c = this.selectedLNodeType) === null || _c === void 0 ? void 0 : _c.getAttribute('desc')) !== null && _d !== void 0 ? _d : null}
+            nullable
+          ></oscd-textfield>
+          <oscd-textfield
+            label="lnClass"
+            .maybeValue=${(_f = (_e = this.selectedLNodeType) === null || _e === void 0 ? void 0 : _e.getAttribute('lnClass')) !== null && _f !== void 0 ? _f : ''}
+            required
+          ></oscd-textfield>
+          <oscd-filtered-list>
+            ${Array.from((_h = (_g = this.selectedLNodeType) === null || _g === void 0 ? void 0 : _g.querySelectorAll(':scope > DO')) !== null && _h !== void 0 ? _h : []).map(dO => x `<mwc-list-item
+                  value="#${dO.getAttribute('id')}"
+                  tabindex="0"
+                  @request-selected="${() => this.selectReferencedChild(dO)}"
+                >
+                  <span>${dO.getAttribute('name')}</span>
+                </mwc-list-item>`)}
+          </oscd-filtered-list>
+        </div>
       </section>
       <section
         class=${o$1({
@@ -11693,12 +11695,12 @@ TemplatesPlugin.styles = i$5 `
       display: none;
     }
 
-    section.edit {
-      padding: 5px;
-    }
-
     section.edit > div > * {
       width: 100%;
+    }
+
+    section.edit > div {
+      margin: 8px;
     }
 
     #containerTemplates {

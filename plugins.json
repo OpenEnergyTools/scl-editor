@@ -92,6 +92,13 @@
       "src": "plugins/scl-substation-editor/scl-substation-editor.js"
     },
     {
+      "name": "Template Editor",
+      "icon": "copy_all",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/scl-template/scl-template.js"
+    },
+    {
       "name": "Template Generator",
       "icon": "copy_all",
       "active": true,

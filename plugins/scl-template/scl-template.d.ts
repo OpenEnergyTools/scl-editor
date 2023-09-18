@@ -4,6 +4,7 @@ import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-icon-button';
 import '@openscd/oscd-filtered-list';
 import './foundation/components/oscd-textfield.js';
+import './foundation/components/action-filtered-list.js';
 /** An editor [[`plugin`]] for editing the `DataTypeTemplates` section. */
 export default class TemplatesPlugin extends LitElement {
     /** The document being edited as provided to plugins by [[`OpenSCD`]]. */
@@ -13,6 +14,7 @@ export default class TemplatesPlugin extends LitElement {
     selectedDOType: Element | null | undefined;
     selectedDAType: Element | null | undefined;
     selectedEnumType: Element | null | undefined;
+    onEscape(e: KeyboardEvent): void;
     private openEnumTypeWizard;
     private openDATypeWizard;
     private openDOTypeWizard;
@@ -22,6 +24,7 @@ export default class TemplatesPlugin extends LitElement {
     private renderDATypeList;
     private renderDOTypeList;
     private renderLNodeTypeList;
+    constructor();
     render(): TemplateResult;
     static styles: import("lit").CSSResult;
 }

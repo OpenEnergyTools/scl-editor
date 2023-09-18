@@ -8362,14 +8362,14 @@ CheckListItem = __decorate([
     e$6('mwc-check-list-item')
 ], CheckListItem);
 
-function slotItem(item) {
+function slotItem$1(item) {
     if (!item.closest('oscd-filtered-list') || !item.parentElement)
         return item;
     if (item.parentElement instanceof OscdFilteredList)
         return item;
-    return slotItem(item.parentElement);
+    return slotItem$1(item.parentElement);
 }
-function hideFiltered(item, searchText) {
+function hideFiltered$1(item, searchText) {
     const itemInnerText = item.innerText + '\n';
     const childInnerText = Array.from(item.children)
         .map(child => child.innerText)
@@ -8389,10 +8389,10 @@ function hideFiltered(item, searchText) {
             const reTerm = new RegExp(`*${term}*`.replace(/\*/g, '.*').replace(/\?/g, '.{1}'), 'i');
             return reTerm.test(filterTarget);
         })
-        ? slotItem(item).classList.remove('hidden')
-        : slotItem(item).classList.add('hidden');
+        ? slotItem$1(item).classList.remove('hidden')
+        : slotItem$1(item).classList.add('hidden');
 }
-function redispatchEvent(element, event) {
+function redispatchEvent$1(element, event) {
     element.requestUpdate();
     // For bubbling events in SSR light DOM (or composed), stop their propagation  // and dispatch the copy.
     const copy = Reflect.construct(event.constructor, [event.type, event]);
@@ -8443,7 +8443,7 @@ class OscdFilteredList extends LitElement {
             .forEach(item => (item.selected = select));
     }
     onFilterInput() {
-        Array.from(this.querySelectorAll('mwc-list-item, mwc-check-list-item, mwc-radio-list-item')).forEach(item => hideFiltered(item, this.searchField.value));
+        Array.from(this.querySelectorAll('mwc-list-item, mwc-check-list-item, mwc-radio-list-item')).forEach(item => hideFiltered$1(item, this.searchField.value));
     }
     firstUpdated() {
         var _a, _b;
@@ -8462,10 +8462,10 @@ class OscdFilteredList extends LitElement {
         /** All list items that are available for selection. Eligible items have the `[mwc-list-item]` attribute which `ListItemBase` applies automatically. */
         this.items = [];
         this.addEventListener('selected', event => {
-            redispatchEvent(this, event);
+            redispatchEvent$1(this, event);
         });
         this.addEventListener('action', event => {
-            redispatchEvent(this, event);
+            redispatchEvent$1(this, event);
         });
     }
     renderCheckAll() {
@@ -11178,6 +11178,231 @@ OscdTextfield = __decorate([
     e$6('oscd-textfield')
 ], OscdTextfield);
 
+function slotItem(item) {
+    if (!item.closest('action-filtered-list') || !item.parentElement)
+        return item;
+    if (item.parentElement instanceof ActionFilteredList)
+        return item;
+    return slotItem(item.parentElement);
+}
+function hideFiltered(item, searchText) {
+    const itemInnerText = `${item.innerText}\n`;
+    const childInnerText = Array.from(item.children)
+        .map(child => child.innerText)
+        .join('\n');
+    const { value } = item;
+    const filterTarget = (itemInnerText +
+        childInnerText +
+        value).toUpperCase();
+    const terms = searchText
+        .toUpperCase()
+        .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+        .trim()
+        .split(/\s+/g);
+    (terms.length === 1 && terms[0] === '') ||
+        terms.every(term => {
+            // regexp escape
+            const reTerm = new RegExp(`*${term}*`.replace(/\*/g, '.*').replace(/\?/g, '.{1}'), 'i');
+            return reTerm.test(filterTarget);
+        })
+        ? slotItem(item).classList.remove('hidden')
+        : slotItem(item).classList.add('hidden');
+}
+function redispatchEvent(element, event) {
+    element.requestUpdate();
+    // For bubbling events in SSR light DOM (or composed), stop their propagation  // and dispatch the copy.
+    const copy = Reflect.construct(event.constructor, [event.type, event]);
+    if (event.bubbles && (!element.shadowRoot || event.composed)) {
+        event.stopPropagation();
+        copy.stopPropagation();
+    }
+    const dispatched = element.dispatchEvent(copy);
+    if (!dispatched) {
+        event.preventDefault();
+    }
+    return dispatched;
+}
+/**
+ * @fires {ActionEvent} action - Fired when a selection has been made via click or keyboard action.
+ * @fires {SelectedEvent} selected - Fired when a selection has been made. `index` is the selected index (will be of type `Set<number>` if multi and `number` if single), and `diff` (of type `IndexDiff`\*\*) represents the diff of added and removed indices from previous selection.
+ * @summary A list with a textfield that filters the list items for given or separated terms.
+ * @tag action-filtered-list
+ */
+let ActionFilteredList = class ActionFilteredList extends s$1 {
+    /** Selected list item(s). When `true`, `selected` is of type `ListItemBase[]`
+     *  When `false`, `selected` is of type `ListItemBase`.
+     * `selected` is `null` when no item is selected. */
+    get selected() {
+        return this.list.selected;
+    }
+    /** Selected item(s) index. When `true`, `index` is of type `number`.
+     * When `false`, `index` is of type `Set<number>`. Unset indices are `-1` and
+     * empty `Set<number>` for single and multi selection respectively.
+     * */
+    get index() {
+        return this.list.index;
+    }
+    get existCheckListItem() {
+        return this.items.some(item => item instanceof CheckListItem);
+    }
+    get isAllSelected() {
+        return this.items
+            .filter(item => !item.disabled)
+            .filter(item => item instanceof CheckListItem)
+            .every(checkItem => checkItem.selected);
+    }
+    get isSomeSelected() {
+        return this.items
+            .filter(item => !item.disabled)
+            .filter(item => item instanceof CheckListItem)
+            .some(checkItem => checkItem.selected);
+    }
+    onCheckAll() {
+        const select = !this.isAllSelected;
+        this.items
+            .filter(item => !item.disabled && !item.classList.contains('hidden'))
+            .forEach(item => {
+            // eslint-disable-next-line no-param-reassign
+            item.selected = select;
+        });
+    }
+    onFilterInput() {
+        Array.from(this.querySelectorAll('mwc-list-item, mwc-check-list-item, mwc-radio-list-item')).forEach(item => hideFiltered(item, this.searchField.value));
+    }
+    firstUpdated() {
+        var _a, _b;
+        this.items = (_b = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('slot')) === null || _b === void 0 ? void 0 : _b.assignedElements({ flatten: true });
+    }
+    constructor() {
+        super();
+        /** Whether the check all option is available */
+        this.disableCheckAll = false;
+        /** Whether multiple selection is enabled. */
+        this.multi = false;
+        /** Sets activated attribute on selected items providing focus highlight. */
+        this.activatable = false;
+        /** All list items that are available for selection. Eligible items have the
+         * `[mwc-list-item]` attribute which `ListItemBase` applies automatically.
+         * */
+        this.items = [];
+        this.addEventListener('selected', event => {
+            redispatchEvent(this, event);
+        });
+        this.addEventListener('action', event => {
+            redispatchEvent(this, event);
+        });
+    }
+    renderCheckAll() {
+        return this.existCheckListItem && !this.disableCheckAll
+            ? x ` <mwc-formfield class="checkall">
+          <mwc-checkbox
+            ?indeterminate=${!this.isAllSelected && this.isSomeSelected}
+            ?checked=${this.isAllSelected}
+            @change=${() => {
+                this.onCheckAll();
+            }}
+          >
+          </mwc-checkbox>
+        </mwc-formfield>`
+            : x ``;
+    }
+    render() {
+        var _a;
+        return x `<div id="tfcontainer">
+        <abbr title="Filter">
+          <mwc-textfield
+            label="${(_a = this.searchFieldLabel) !== null && _a !== void 0 ? _a : ''}"
+            iconTrailing="search"
+            outlined
+            @input=${() => this.onFilterInput()}
+          >
+          </mwc-textfield>
+        </abbr>
+        ${this.renderCheckAll()}
+      </div>
+      <div style="display: flex; flex-direction: columns;">
+        <mwc-list
+          style="flex: auto"
+          .multi=${this.multi}
+          .activatable=${this.activatable}
+        >
+          <slot></slot>
+        </mwc-list>
+        <mwc-list><slot name="primaryAction"></slot></mwc-list>
+        <mwc-list><slot name="secondaryAction"></slot></mwc-list>
+      </div> `;
+    }
+};
+ActionFilteredList.styles = i$5 `
+    ${r$2(List.styles)}
+
+    #tfcontainer {
+      display: flex;
+      flex: auto;
+    }
+
+    ::slotted(.hidden) {
+      display: none;
+    }
+
+    abbr {
+      display: flex;
+      flex: auto;
+      margin: 8px;
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    mwc-textfield {
+      width: 100%;
+      --mdc-shape-small: 28px;
+    }
+
+    mwc-formfield.checkall {
+      padding-right: 8px;
+    }
+
+    .mdc-list {
+      padding-inline-start: 0px;
+    }
+  `;
+__decorate([
+    n$2({ type: String })
+], ActionFilteredList.prototype, "searchFieldLabel", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], ActionFilteredList.prototype, "disableCheckAll", void 0);
+__decorate([
+    n$2({ type: String })
+], ActionFilteredList.prototype, "filter", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], ActionFilteredList.prototype, "multi", void 0);
+__decorate([
+    n$2({ type: Boolean })
+], ActionFilteredList.prototype, "activatable", void 0);
+__decorate([
+    i$2('mwc-list')
+], ActionFilteredList.prototype, "list", void 0);
+__decorate([
+    n$2({ attribute: false })
+], ActionFilteredList.prototype, "items", void 0);
+__decorate([
+    t$1()
+], ActionFilteredList.prototype, "existCheckListItem", null);
+__decorate([
+    t$1()
+], ActionFilteredList.prototype, "isAllSelected", null);
+__decorate([
+    t$1()
+], ActionFilteredList.prototype, "isSomeSelected", null);
+__decorate([
+    i$2('mwc-textfield')
+], ActionFilteredList.prototype, "searchField", void 0);
+ActionFilteredList = __decorate([
+    e$6('action-filtered-list')
+], ActionFilteredList);
+
 /** Common `CSS` styles used by DataTypeTemplate subeditors */
 const styles = i$5 `
   :host(.moving) section {
@@ -11244,13 +11469,14 @@ const styles = i$5 `
 
 /** An editor [[`plugin`]] for editing the `DataTypeTemplates` section. */
 class TemplatesPlugin extends s$1 {
-    constructor() {
-        super(...arguments);
-        this.editCount = -1;
-        this.selectedLNodeType = undefined;
-        this.selectedDOType = undefined;
-        this.selectedDAType = undefined;
-        this.selectedEnumType = undefined;
+    onEscape(e) {
+        const { key } = e;
+        if (key === 'Backspace') {
+            this.selectedDAType = undefined;
+            this.selectedDOType = undefined;
+            this.selectedEnumType = undefined;
+            this.selectedLNodeType = undefined;
+        }
     }
     openEnumTypeWizard(id) {
         this.selectedEnumType = this.doc.querySelector(`EnumType[id="${id}"]`);
@@ -11430,18 +11656,30 @@ class TemplatesPlugin extends s$1 {
             .maybeValue=${(_d = (_c = this.selectedDAType) === null || _c === void 0 ? void 0 : _c.getAttribute('desc')) !== null && _d !== void 0 ? _d : null}
             nullable
           ></oscd-textfield>
-          <oscd-filtered-list>
+          <action-filtered-list>
             ${Array.from((_f = (_e = this.selectedDAType) === null || _e === void 0 ? void 0 : _e.querySelectorAll(':scope > BDA')) !== null && _f !== void 0 ? _f : []).map(dAorBda => {
             var _a;
             return x `<mwc-list-item
-                  value="${(_a = dAorBda.getAttribute('id')) !== null && _a !== void 0 ? _a : ''}"
-                  tabindex="0"
-                  @request-selected="${() => this.selectReferencedChild(dAorBda)}"
-                >
-                  <span>${dAorBda.getAttribute('name')}</span>
-                </mwc-list-item>`;
+                    value="${(_a = dAorBda.getAttribute('id')) !== null && _a !== void 0 ? _a : ''}"
+                    tabindex="0"
+                  >
+                    <span>${dAorBda.getAttribute('name')}</span>
+                  </mwc-list-item>
+                  <mwc-list-item
+                    slot="primaryAction"
+                    hasMeta
+                    ?noninteractive=${!dAorBda.getAttribute('type')}
+                    @request-selected="${() => this.selectReferencedChild(dAorBda)}"
+                    ><mwc-icon
+                      ><span class="material-symbols-outlined">
+                        ${dAorBda.getAttribute('type')
+                ? 'expand_circle_right'
+                : 'last_page'}
+                      </span></mwc-icon
+                    >
+                  </mwc-list-item>`;
         })}
-          </oscd-filtered-list>
+          </action-filtered-list>
         </div>
       </section>
       <section
@@ -11528,18 +11766,30 @@ class TemplatesPlugin extends s$1 {
             .maybeValue=${(_f = (_e = this.selectedDOType) === null || _e === void 0 ? void 0 : _e.getAttribute('cdc')) !== null && _f !== void 0 ? _f : ''}
             required
           ></oscd-textfield>
-          <oscd-filtered-list>
+          <action-filtered-list>
             ${Array.from((_h = (_g = this.selectedDOType) === null || _g === void 0 ? void 0 : _g.querySelectorAll(':scope > SDO, :scope > DA')) !== null && _h !== void 0 ? _h : []).map(sDOorDa => {
             var _a;
             return x `<mwc-list-item
-                  value="${(_a = sDOorDa.getAttribute('id')) !== null && _a !== void 0 ? _a : ''}"
-                  tabindex="0"
-                  @request-selected="${() => this.selectReferencedChild(sDOorDa)}"
-                >
-                  <span>${sDOorDa.getAttribute('name')}</span>
-                </mwc-list-item>`;
+                    value="${(_a = sDOorDa.getAttribute('id')) !== null && _a !== void 0 ? _a : ''}"
+                    tabindex="0"
+                  >
+                    <span>${sDOorDa.getAttribute('name')}</span>
+                  </mwc-list-item>
+                  <mwc-list-item
+                    slot="primaryAction"
+                    hasMeta
+                    ?noninteractive=${!sDOorDa.getAttribute('type')}
+                    @request-selected="${() => this.selectReferencedChild(sDOorDa)}"
+                    ><mwc-icon
+                      ><span class="material-symbols-outlined">
+                        ${sDOorDa.getAttribute('type')
+                ? 'expand_circle_right'
+                : 'last_page'}
+                      </span></mwc-icon
+                    ></mwc-list-item
+                  >`;
         })}
-          </oscd-filtered-list>
+          </action-filtered-list>
         </div>
       </section>
       <section
@@ -11620,15 +11870,23 @@ class TemplatesPlugin extends s$1 {
             .maybeValue=${(_f = (_e = this.selectedLNodeType) === null || _e === void 0 ? void 0 : _e.getAttribute('lnClass')) !== null && _f !== void 0 ? _f : ''}
             required
           ></oscd-textfield>
-          <oscd-filtered-list>
+          <action-filtered-list>
             ${Array.from((_h = (_g = this.selectedLNodeType) === null || _g === void 0 ? void 0 : _g.querySelectorAll(':scope > DO')) !== null && _h !== void 0 ? _h : []).map(dO => x `<mwc-list-item
-                  value="#${dO.getAttribute('id')}"
-                  tabindex="0"
-                  @request-selected="${() => this.selectReferencedChild(dO)}"
-                >
-                  <span>${dO.getAttribute('name')}</span>
-                </mwc-list-item>`)}
-          </oscd-filtered-list>
+                    value="#${dO.getAttribute('id')}"
+                    tabindex="0"
+                  >
+                    <span>${dO.getAttribute('name')}</span></mwc-list-item
+                  ><mwc-list-item
+                    slot="primaryAction"
+                    hasMeta
+                    @request-selected="${() => this.selectReferencedChild(dO)}"
+                    ><mwc-icon
+                      ><span class="material-symbols-outlined">
+                        expand_circle_right
+                      </span></mwc-icon
+                    ></mwc-list-item
+                  >`)}
+          </action-filtered-list>
         </div>
       </section>
       <section
@@ -11666,6 +11924,15 @@ class TemplatesPlugin extends s$1 {
         </oscd-filtered-list>
       </section>
     `;
+    }
+    constructor() {
+        super();
+        this.editCount = -1;
+        this.selectedLNodeType = undefined;
+        this.selectedDOType = undefined;
+        this.selectedDAType = undefined;
+        this.selectedEnumType = undefined;
+        this.addEventListener('keydown', this.onEscape, false);
     }
     render() {
         var _a;

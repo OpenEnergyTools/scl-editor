@@ -33944,7 +33944,7 @@ function renderBayWizard(name, desc) {
     ></oscd-textfield>`,
     ];
 }
-function createAction$d(parent) {
+function createAction$e(parent) {
     return (inputs) => {
         const name = getValue(inputs.find(i => i.label === 'name'));
         const desc = getValue(inputs.find(i => i.label === 'desc'));
@@ -33967,13 +33967,13 @@ function createBayWizard(parent) {
             primary: {
                 icon: '',
                 label: 'add',
-                action: createAction$d(parent),
+                action: createAction$e(parent),
             },
             content: renderBayWizard('', ''),
         },
     ];
 }
-function updateAction$h(element) {
+function updateAction$i(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue(inputs.find(i => i.label === 'desc'));
@@ -33990,7 +33990,7 @@ function editBayWizard(element) {
             primary: {
                 icon: 'edit',
                 label: 'save',
-                action: updateAction$h(element),
+                action: updateAction$i(element),
             },
             content: renderBayWizard(element.getAttribute('name'), element.getAttribute('desc')),
         },
@@ -35586,245 +35586,337 @@ Select = __decorate$1([
     e$7('mwc-select')
 ], Select);
 
-/* eslint-disable import/no-extraneous-dependencies */
-const types = {
-    // standard
-    CBR: 'Circuit Breaker',
-    DIS: 'Disconnector',
-    // custom
-    ERS: 'Earth Switch',
-    CTR: 'Current Transformer',
-    VTR: 'Voltage Transformer',
-    AXN: 'Auxiliary Network',
-    BAT: 'Battery',
-    BSH: 'Bushing',
-    CAP: 'Capacitor Bank',
-    CON: 'Converter',
-    EFN: 'Earth Fault Neutralizer',
-    FAN: 'Fan',
-    GIL: 'Gas Insulated Line',
-    GEN: 'Generator',
-    IFL: 'Infeeding Line',
-    MOT: 'Motor',
-    RES: 'Neutral Resistor',
-    REA: 'Reactor',
-    PSH: 'Power Shunt',
-    CAB: 'Power Cable',
-    PMP: 'Pump',
-    LIN: 'Power Overhead Line',
-    RRC: 'Rotating Reactive Component',
-    SCR: 'Semiconductor Controlled Rectifier',
-    SAR: 'Surge Arrester',
-    SMC: 'Synchronous Machine',
-    TCF: 'Thyristor Controlled Frequency Converter',
-    TCR: 'Thyristor Controlled Reactive Component',
-};
-function getLogicalNodeInstance(lNode) {
-    if (!lNode)
-        return null;
-    const [lnInst, lnClass, iedName, ldInst, prefix] = [
-        'lnInst',
-        'lnClass',
-        'iedName',
-        'ldInst',
-        'prefix',
-    ].map(attribute => lNode === null || lNode === void 0 ? void 0 : lNode.getAttribute(attribute));
-    const iedSelector = [`IED[name="${iedName}"]`, 'IED'];
-    const lDevicePath = ['AccessPoint > Server'];
-    const lNSelector = [
-        `LDevice[inst="${ldInst}"] > LN[inst="${lnInst}"][lnClass="${lnClass}"]`,
-    ];
-    const lNPrefixSelector = prefix && prefix !== ''
-        ? [`[prefix="${prefix}"]`]
-        : ['[prefix=""]', ':not(prefix)'];
-    return lNode.ownerDocument.querySelector(crossProduct$1(iedSelector, [' > '], lDevicePath, [' > '], lNSelector, lNPrefixSelector)
-        .map(strings => strings.join(''))
-        .join(','));
-}
-function getSwitchTypeValueFromDTT(lNorlNode) {
-    var _a;
-    const rootNode = lNorlNode === null || lNorlNode === void 0 ? void 0 : lNorlNode.ownerDocument;
-    const lNodeType = lNorlNode.getAttribute('lnType');
-    const lnClass = lNorlNode.getAttribute('lnClass');
-    const dObj = rootNode.querySelector(`DataTypeTemplates > LNodeType[id="${lNodeType}"][lnClass="${lnClass}"] > DO[name="SwTyp"]`);
-    if (dObj) {
-        const dORef = dObj.getAttribute('type');
-        return (_a = rootNode
-            .querySelector(`DataTypeTemplates > DOType[id="${dORef}"] > DA[name="stVal"] > Val`)) === null || _a === void 0 ? void 0 : _a.innerHTML.trim();
+/** A potentially `nullable` `Select`.
+ *
+ * NB: Use `maybeValue: string | null` instead of `value` if `nullable`! */
+let OscdSelect = class OscdSelect extends Select {
+    get null() {
+        return this.nullable && this.isNull;
     }
-    return undefined;
-}
-function getSwitchTypeValue(lN) {
-    var _a;
-    const daInstantiated = lN.querySelector('DOI[name="SwTyp"] > DAI[name="stVal"]');
-    if (daInstantiated)
-        return (_a = daInstantiated.querySelector('Val')) === null || _a === void 0 ? void 0 : _a.innerHTML.trim();
-    return getSwitchTypeValueFromDTT(lN);
-}
-function containsGroundedTerminal(condEq) {
-    return Array.from(condEq.querySelectorAll('Terminal')).some(t => t.getAttribute('cNodeName') === 'grounded');
-}
-function containsEarthSwitchDefinition(condEq) {
-    const lNodeXSWI = condEq.querySelector('LNode[lnClass="XSWI"]');
-    const lN = getLogicalNodeInstance(lNodeXSWI);
-    let swTypVal;
-    if (lN) {
-        swTypVal = getSwitchTypeValue(lN);
+    set null(value) {
+        if (!this.nullable || value === this.isNull)
+            return;
+        this.isNull = value;
+        if (this.null)
+            this.disable();
+        else
+            this.enable();
     }
-    else if (lNodeXSWI) {
-        swTypVal = getSwitchTypeValueFromDTT(lNodeXSWI);
+    /** Replacement for `value`, can only be `null` if [[`nullable`]]. */
+    get maybeValue() {
+        return this.null ? null : this.value;
     }
-    return swTypVal
-        ? ['Earthing Switch', 'High Speed Earthing Switch'].includes(swTypVal)
-        : false;
-}
-function typeStr(condEq) {
-    var _a;
-    if (condEq.getAttribute('type') === 'DIS' &&
-        (containsGroundedTerminal(condEq) || containsEarthSwitchDefinition(condEq))) {
-        return 'ERS';
-    }
-    return (_a = condEq.getAttribute('type')) !== null && _a !== void 0 ? _a : '';
-}
-function typeName(condEq) {
-    var _a;
-    return (_a = types[typeStr(condEq)]) !== null && _a !== void 0 ? _a : 'Unknown Type';
-}
-function renderTypeSelector(option, type) {
-    return option === 'create'
-        ? x `<mwc-select
-        style="--mdc-menu-max-height: 196px;"
-        required
-        label="type"
-      >
-        ${Object.keys(types).map(v => x `<mwc-list-item value="${v}">${types[v]}</mwc-list-item>`)}
-      </mwc-select>`
-        : x `<mwc-select label="type" disabled>
-        <mwc-list-item selected value="0">${type}</mwc-list-item>
-      </mwc-select>`;
-}
-function renderConductingEquipmentWizard(name, desc, option, type, reservedNames) {
-    return [
-        renderTypeSelector(option, type),
-        x `<oscd-textfield
-      label="name"
-      .maybeValue=${name}
-      required
-      dialogInitialFocus
-      .reservedValues=${reservedNames}
-    ></oscd-textfield>`,
-        x `<oscd-textfield
-      label="desc"
-      .maybeValue=${desc}
-      nullable
-    ></oscd-textfield>`,
-    ];
-}
-function createAction$c(parent) {
-    return (inputs) => {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
-        const name = getValue(inputs.find(i => i.label === 'name'));
-        const desc = getValue(inputs.find(i => i.label === 'desc'));
-        const proxyType = getValue(inputs.find(i => i.label === 'type'));
-        const type = proxyType === 'ERS' ? 'DIS' : proxyType;
-        const element = createElement(parent.ownerDocument, 'ConductingEquipment', {
-            name,
-            type,
-            desc,
-        });
-        const action = {
-            parent,
-            node: element,
-            reference: getReference(parent, 'ConductingEquipment'),
-        };
-        if (proxyType !== 'ERS')
-            return [action];
-        const groundNode = (_a = parent
-            .closest('VoltageLevel')) === null || _a === void 0 ? void 0 : _a.querySelector('ConnectivityNode[name="grounded"]');
-        const substationName = groundNode
-            ? (_c = (_b = groundNode.closest('Substation')) === null || _b === void 0 ? void 0 : _b.getAttribute('name')) !== null && _c !== void 0 ? _c : null
-            : (_e = (_d = parent.closest('Substation')) === null || _d === void 0 ? void 0 : _d.getAttribute('name')) !== null && _e !== void 0 ? _e : null;
-        const voltageLevelName = groundNode
-            ? (_g = (_f = groundNode.closest('VoltageLevel')) === null || _f === void 0 ? void 0 : _f.getAttribute('name')) !== null && _g !== void 0 ? _g : null
-            : (_j = (_h = parent.closest('VoltageLevel')) === null || _h === void 0 ? void 0 : _h.getAttribute('name')) !== null && _j !== void 0 ? _j : null;
-        const bayName = groundNode
-            ? (_l = (_k = groundNode.closest('Bay')) === null || _k === void 0 ? void 0 : _k.getAttribute('name')) !== null && _l !== void 0 ? _l : null
-            : (_o = (_m = parent.closest('Bay')) === null || _m === void 0 ? void 0 : _m.getAttribute('name')) !== null && _o !== void 0 ? _o : null;
-        const connectivityNode = bayName && voltageLevelName && substationName
-            ? `${substationName}/${voltageLevelName}/${bayName}/grounded`
-            : null;
-        const groundTerminal = createElement(parent.ownerDocument, 'Terminal', {
-            name: 'T1',
-            cNodeName: 'grounded',
-            substationName,
-            voltageLevelName,
-            bayName,
-            connectivityNode,
-        });
-        const terminalAction = {
-            parent: element,
-            node: groundTerminal,
-            reference: getReference(element, 'Terminal'),
-        };
-        if (groundNode)
-            return [action, terminalAction];
-        const cNodeElement = createElement(parent.ownerDocument, 'ConnectivityNode', {
-            name: 'grounded',
-            pathName: connectivityNode,
-        });
-        const cNodeAction = {
-            parent,
-            node: cNodeElement,
-            reference: getReference(parent, 'ConnectivityNode'),
-        };
-        return [action, terminalAction, cNodeAction];
-    };
-}
-function reservedNamesConductingEquipment(parent, currentName) {
-    return Array.from(parent.querySelectorAll('ConductingEquipment'))
-        .filter(isPublic)
-        .map(condEq => { var _a; return (_a = condEq.getAttribute('name')) !== null && _a !== void 0 ? _a : ''; })
-        .filter(name => currentName && name !== currentName);
-}
-function createConductingEquipmentWizard(parent) {
-    const reservedNames = reservedNamesConductingEquipment(parent);
-    return [
-        {
-            title: 'Add ConductingEquipment',
-            primary: {
-                icon: 'add',
-                label: 'add',
-                action: createAction$c(parent),
-            },
-            content: renderConductingEquipmentWizard('', '', 'create', '', reservedNames),
-        },
-    ];
-}
-function updateAction$g(element) {
-    return (inputs) => {
-        const name = getValue(inputs.find(i => i.label === 'name'));
-        const desc = getValue(inputs.find(i => i.label === 'desc'));
-        if (name === element.getAttribute('name') &&
-            desc === element.getAttribute('desc')) {
-            return [];
+    set maybeValue(value) {
+        if (value === null)
+            this.null = true;
+        else {
+            this.null = false;
+            this.value = value;
         }
-        return [{ element, attributes: { name, desc } }];
-    };
-}
-function editConductingEquipmentWizard(element) {
-    const reservedNames = reservedNamesConductingEquipment(element.parentNode, element.getAttribute('name'));
-    return [
-        {
-            title: 'Edit ConductingEquipment',
-            primary: {
-                icon: 'edit',
-                label: 'save',
-                action: updateAction$g(element),
-            },
-            content: renderConductingEquipmentWizard(element.getAttribute('name'), element.getAttribute('desc'), 'edit', typeName(element), reservedNames),
+    }
+    enable() {
+        if (this.nulled === null)
+            return;
+        this.value = this.nulled;
+        this.nulled = null;
+        this.disabled = false;
+    }
+    disable() {
+        if (this.nulled !== null)
+            return;
+        this.nulled = this.value;
+        this.value = this.defaultValue;
+        this.disabled = true;
+    }
+    async firstUpdated() {
+        await super.firstUpdated();
+    }
+    checkValidity() {
+        var _a;
+        if (this.nullable && !((_a = this.nullSwitch) === null || _a === void 0 ? void 0 : _a.selected))
+            return true;
+        return super.checkValidity();
+    }
+    constructor() {
+        super();
+        /** Whether [[`maybeValue`]] may be `null` */
+        this.nullable = false;
+        this.isNull = false;
+        /** The default `value` displayed if [[`maybeValue`]] is `null`. */
+        this.defaultValue = '';
+        /** Additional values that cause validation to fail. */
+        this.reservedValues = [];
+        // FIXME: workaround to allow disable of the whole component - need basic refactor
+        this.disabledSwitch = false;
+        this.nulled = null;
+        // eslint-disable-next-line wc/no-constructor-attributes
+        this.disabledSwitch = this.hasAttribute('disabled');
+    }
+    renderSwitch() {
+        if (this.nullable) {
+            return x `<mwc-switch
+        style="margin-left: 12px;"
+        ?selected=${!this.null}
+        ?disabled=${this.disabledSwitch}
+        @click=${() => {
+                this.null = !this.nullSwitch.selected;
+                this.dispatchEvent(new Event('selected'));
+            }}
+      ></mwc-switch>`;
+        }
+        return x ``;
+    }
+    render() {
+        return x `
+      <div style="display: flex; flex-direction: row;">
+        <div style="flex: auto;">${super.render()}</div>
+        <div style="display: flex; align-items: center; height: 56px;">
+          ${this.renderSwitch()}
+        </div>
+      </div>
+    `;
+    }
+};
+__decorate$1([
+    e$6({ type: Boolean })
+], OscdSelect.prototype, "nullable", void 0);
+__decorate$1([
+    t$1()
+], OscdSelect.prototype, "null", null);
+__decorate$1([
+    e$6({ type: String })
+], OscdSelect.prototype, "maybeValue", null);
+__decorate$1([
+    e$6({ type: String })
+], OscdSelect.prototype, "defaultValue", void 0);
+__decorate$1([
+    e$6({ type: Array })
+], OscdSelect.prototype, "reservedValues", void 0);
+__decorate$1([
+    i$2('mwc-switch')
+], OscdSelect.prototype, "nullSwitch", void 0);
+OscdSelect = __decorate$1([
+    e$7('oscd-select')
+], OscdSelect);
+
+/**
+ * @license
+ * Copyright 2017 Google Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+var cssClasses = {
+    ROOT: 'mdc-form-field',
+};
+var strings = {
+    LABEL_SELECTOR: '.mdc-form-field > label',
+};
+
+/**
+ * @license
+ * Copyright 2017 Google Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+var MDCFormFieldFoundation = /** @class */ (function (_super) {
+    __extends(MDCFormFieldFoundation, _super);
+    function MDCFormFieldFoundation(adapter) {
+        var _this = _super.call(this, __assign(__assign({}, MDCFormFieldFoundation.defaultAdapter), adapter)) || this;
+        _this.click = function () {
+            _this.handleClick();
+        };
+        return _this;
+    }
+    Object.defineProperty(MDCFormFieldFoundation, "cssClasses", {
+        get: function () {
+            return cssClasses;
         },
-    ];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MDCFormFieldFoundation, "strings", {
+        get: function () {
+            return strings;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MDCFormFieldFoundation, "defaultAdapter", {
+        get: function () {
+            return {
+                activateInputRipple: function () { return undefined; },
+                deactivateInputRipple: function () { return undefined; },
+                deregisterInteractionHandler: function () { return undefined; },
+                registerInteractionHandler: function () { return undefined; },
+            };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    MDCFormFieldFoundation.prototype.init = function () {
+        this.adapter.registerInteractionHandler('click', this.click);
+    };
+    MDCFormFieldFoundation.prototype.destroy = function () {
+        this.adapter.deregisterInteractionHandler('click', this.click);
+    };
+    MDCFormFieldFoundation.prototype.handleClick = function () {
+        var _this = this;
+        this.adapter.activateInputRipple();
+        requestAnimationFrame(function () {
+            _this.adapter.deactivateInputRipple();
+        });
+    };
+    return MDCFormFieldFoundation;
+}(MDCFoundation));
+// tslint:disable-next-line:no-default-export Needed for backward compatibility with MDC Web v0.44.0 and earlier.
+var MDCFormFieldFoundation$1 = MDCFormFieldFoundation;
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+class FormfieldBase extends BaseElement {
+    constructor() {
+        super(...arguments);
+        this.alignEnd = false;
+        this.spaceBetween = false;
+        this.nowrap = false;
+        this.label = '';
+        this.mdcFoundationClass = MDCFormFieldFoundation$1;
+    }
+    createAdapter() {
+        return {
+            registerInteractionHandler: (type, handler) => {
+                this.labelEl.addEventListener(type, handler);
+            },
+            deregisterInteractionHandler: (type, handler) => {
+                this.labelEl.removeEventListener(type, handler);
+            },
+            activateInputRipple: async () => {
+                const input = this.input;
+                if (input instanceof FormElement) {
+                    const ripple = await input.ripple;
+                    if (ripple) {
+                        ripple.startPress();
+                    }
+                }
+            },
+            deactivateInputRipple: async () => {
+                const input = this.input;
+                if (input instanceof FormElement) {
+                    const ripple = await input.ripple;
+                    if (ripple) {
+                        ripple.endPress();
+                    }
+                }
+            },
+        };
+    }
+    get input() {
+        var _a, _b;
+        return (_b = (_a = this.slottedInputs) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : null;
+    }
+    render() {
+        const classes = {
+            'mdc-form-field--align-end': this.alignEnd,
+            'mdc-form-field--space-between': this.spaceBetween,
+            'mdc-form-field--nowrap': this.nowrap
+        };
+        return x `
+      <div class="mdc-form-field ${o$1(classes)}">
+        <slot></slot>
+        <label class="mdc-label"
+               @click="${this._labelClick}">${this.label}</label>
+      </div>`;
+    }
+    click() {
+        this._labelClick();
+    }
+    _labelClick() {
+        const input = this.input;
+        if (input) {
+            input.focus();
+            input.click();
+        }
+    }
 }
+__decorate$1([
+    e$6({ type: Boolean })
+], FormfieldBase.prototype, "alignEnd", void 0);
+__decorate$1([
+    e$6({ type: Boolean })
+], FormfieldBase.prototype, "spaceBetween", void 0);
+__decorate$1([
+    e$6({ type: Boolean })
+], FormfieldBase.prototype, "nowrap", void 0);
+__decorate$1([
+    e$6({ type: String }),
+    observer(async function (label) {
+        var _a;
+        (_a = this.input) === null || _a === void 0 ? void 0 : _a.setAttribute('aria-label', label);
+    })
+], FormfieldBase.prototype, "label", void 0);
+__decorate$1([
+    i$2('.mdc-form-field')
+], FormfieldBase.prototype, "mdcRoot", void 0);
+__decorate$1([
+    o$2('', true, '*')
+], FormfieldBase.prototype, "slottedInputs", void 0);
+__decorate$1([
+    i$2('label')
+], FormfieldBase.prototype, "labelEl", void 0);
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-LIcense-Identifier: Apache-2.0
+ */
+const styles$2 = i$5 `.mdc-form-field{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:Roboto, sans-serif;font-family:var(--mdc-typography-body2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));font-size:0.875rem;font-size:var(--mdc-typography-body2-font-size, 0.875rem);line-height:1.25rem;line-height:var(--mdc-typography-body2-line-height, 1.25rem);font-weight:400;font-weight:var(--mdc-typography-body2-font-weight, 400);letter-spacing:0.0178571429em;letter-spacing:var(--mdc-typography-body2-letter-spacing, 0.0178571429em);text-decoration:inherit;text-decoration:var(--mdc-typography-body2-text-decoration, inherit);text-transform:inherit;text-transform:var(--mdc-typography-body2-text-transform, inherit);color:rgba(0, 0, 0, 0.87);color:var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));display:inline-flex;align-items:center;vertical-align:middle}.mdc-form-field>label{margin-left:0;margin-right:auto;padding-left:4px;padding-right:0;order:0}[dir=rtl] .mdc-form-field>label,.mdc-form-field>label[dir=rtl]{margin-left:auto;margin-right:0}[dir=rtl] .mdc-form-field>label,.mdc-form-field>label[dir=rtl]{padding-left:0;padding-right:4px}.mdc-form-field--nowrap>label{text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.mdc-form-field--align-end>label{margin-left:auto;margin-right:0;padding-left:0;padding-right:4px;order:-1}[dir=rtl] .mdc-form-field--align-end>label,.mdc-form-field--align-end>label[dir=rtl]{margin-left:0;margin-right:auto}[dir=rtl] .mdc-form-field--align-end>label,.mdc-form-field--align-end>label[dir=rtl]{padding-left:4px;padding-right:0}.mdc-form-field--space-between{justify-content:space-between}.mdc-form-field--space-between>label{margin:0}[dir=rtl] .mdc-form-field--space-between>label,.mdc-form-field--space-between>label[dir=rtl]{margin:0}:host{display:inline-flex}.mdc-form-field{width:100%}::slotted(*){-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:Roboto, sans-serif;font-family:var(--mdc-typography-body2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));font-size:0.875rem;font-size:var(--mdc-typography-body2-font-size, 0.875rem);line-height:1.25rem;line-height:var(--mdc-typography-body2-line-height, 1.25rem);font-weight:400;font-weight:var(--mdc-typography-body2-font-weight, 400);letter-spacing:0.0178571429em;letter-spacing:var(--mdc-typography-body2-letter-spacing, 0.0178571429em);text-decoration:inherit;text-decoration:var(--mdc-typography-body2-text-decoration, inherit);text-transform:inherit;text-transform:var(--mdc-typography-body2-text-transform, inherit);color:rgba(0, 0, 0, 0.87);color:var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87))}::slotted(mwc-switch){margin-right:10px}[dir=rtl] ::slotted(mwc-switch),::slotted(mwc-switch[dir=rtl]){margin-left:10px}`;
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+let Formfield = class Formfield extends FormfieldBase {
+};
+Formfield.styles = [styles$2];
+Formfield = __decorate$1([
+    e$7('mwc-formfield')
+], Formfield);
 
 /**
  * @license
@@ -36069,7 +36161,7 @@ __decorate$1([
  * Copyright 2021 Google LLC
  * SPDX-LIcense-Identifier: Apache-2.0
  */
-const styles$2 = i$5 `.mdc-checkbox{padding:calc((40px - 18px) / 2);padding:calc((var(--mdc-checkbox-ripple-size, 40px) - 18px) / 2);margin:calc((40px - 40px) / 2);margin:calc((var(--mdc-checkbox-touch-target-size, 40px) - 40px) / 2)}.mdc-checkbox .mdc-checkbox__ripple::before,.mdc-checkbox .mdc-checkbox__ripple::after{background-color:#000;background-color:var(--mdc-ripple-color, #000)}.mdc-checkbox:hover .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-ripple-surface--hover .mdc-checkbox__ripple::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__ripple::before,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__ripple::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-checkbox:not(.mdc-ripple-upgraded) .mdc-checkbox__ripple::after{transition:opacity 150ms linear}.mdc-checkbox:not(.mdc-ripple-upgraded):active .mdc-checkbox__ripple::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-checkbox--selected .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-checkbox--selected .mdc-checkbox__ripple::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-checkbox.mdc-checkbox--selected:hover .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-checkbox--selected.mdc-ripple-surface--hover .mdc-checkbox__ripple::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-checkbox.mdc-checkbox--selected.mdc-ripple-upgraded--background-focused .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-checkbox--selected:not(.mdc-ripple-upgraded):focus .mdc-checkbox__ripple::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-checkbox.mdc-checkbox--selected:not(.mdc-ripple-upgraded) .mdc-checkbox__ripple::after{transition:opacity 150ms linear}.mdc-checkbox.mdc-checkbox--selected:not(.mdc-ripple-upgraded):active .mdc-checkbox__ripple::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-checkbox--selected.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-ripple-upgraded--background-focused.mdc-checkbox--selected .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-ripple-upgraded--background-focused.mdc-checkbox--selected .mdc-checkbox__ripple::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-checkbox .mdc-checkbox__background{top:calc((40px - 18px) / 2);top:calc((var(--mdc-checkbox-ripple-size, 40px) - 18px) / 2);left:calc((40px - 18px) / 2);left:calc((var(--mdc-checkbox-ripple-size, 40px) - 18px) / 2)}.mdc-checkbox .mdc-checkbox__native-control{top:calc((40px - 40px) / 2);top:calc((40px - var(--mdc-checkbox-touch-target-size, 40px)) / 2);right:calc((40px - 40px) / 2);right:calc((40px - var(--mdc-checkbox-touch-target-size, 40px)) / 2);left:calc((40px - 40px) / 2);left:calc((40px - var(--mdc-checkbox-touch-target-size, 40px)) / 2);width:40px;width:var(--mdc-checkbox-touch-target-size, 40px);height:40px;height:var(--mdc-checkbox-touch-target-size, 40px)}.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background{border-color:rgba(0, 0, 0, 0.54);border-color:var(--mdc-checkbox-unchecked-color, rgba(0, 0, 0, 0.54));background-color:transparent}.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background{border-color:#018786;border-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786));background-color:#018786;background-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786))}@keyframes mdc-checkbox-fade-in-background-8A000000FF01878600000000FF018786{0%{border-color:rgba(0, 0, 0, 0.54);border-color:var(--mdc-checkbox-unchecked-color, rgba(0, 0, 0, 0.54));background-color:transparent}50%{border-color:#018786;border-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786));background-color:#018786;background-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786))}}@keyframes mdc-checkbox-fade-out-background-8A000000FF01878600000000FF018786{0%,80%{border-color:#018786;border-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786));background-color:#018786;background-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786))}100%{border-color:rgba(0, 0, 0, 0.54);border-color:var(--mdc-checkbox-unchecked-color, rgba(0, 0, 0, 0.54));background-color:transparent}}.mdc-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled~.mdc-checkbox__background,.mdc-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled~.mdc-checkbox__background{animation-name:mdc-checkbox-fade-in-background-8A000000FF01878600000000FF018786}.mdc-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled~.mdc-checkbox__background,.mdc-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled~.mdc-checkbox__background{animation-name:mdc-checkbox-fade-out-background-8A000000FF01878600000000FF018786}.mdc-checkbox .mdc-checkbox__native-control[disabled]:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background{border-color:rgba(0, 0, 0, 0.38);border-color:var(--mdc-checkbox-disabled-color, rgba(0, 0, 0, 0.38));background-color:transparent}.mdc-checkbox .mdc-checkbox__native-control[disabled]:checked~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control[disabled]:indeterminate~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true][disabled]~.mdc-checkbox__background{border-color:transparent;background-color:rgba(0, 0, 0, 0.38);background-color:var(--mdc-checkbox-disabled-color, rgba(0, 0, 0, 0.38))}.mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark{color:#fff;color:var(--mdc-checkbox-ink-color, #fff)}.mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__mixedmark{border-color:#fff;border-color:var(--mdc-checkbox-ink-color, #fff)}.mdc-checkbox .mdc-checkbox__native-control:disabled~.mdc-checkbox__background .mdc-checkbox__checkmark{color:#fff;color:var(--mdc-checkbox-ink-color, #fff)}.mdc-checkbox .mdc-checkbox__native-control:disabled~.mdc-checkbox__background .mdc-checkbox__mixedmark{border-color:#fff;border-color:var(--mdc-checkbox-ink-color, #fff)}.mdc-touch-target-wrapper{display:inline}@keyframes mdc-checkbox-unchecked-checked-checkmark-path{0%,50%{stroke-dashoffset:29.7833385}50%{animation-timing-function:cubic-bezier(0, 0, 0.2, 1)}100%{stroke-dashoffset:0}}@keyframes mdc-checkbox-unchecked-indeterminate-mixedmark{0%,68.2%{transform:scaleX(0)}68.2%{animation-timing-function:cubic-bezier(0, 0, 0, 1)}100%{transform:scaleX(1)}}@keyframes mdc-checkbox-checked-unchecked-checkmark-path{from{animation-timing-function:cubic-bezier(0.4, 0, 1, 1);opacity:1;stroke-dashoffset:0}to{opacity:0;stroke-dashoffset:-29.7833385}}@keyframes mdc-checkbox-checked-indeterminate-checkmark{from{animation-timing-function:cubic-bezier(0, 0, 0.2, 1);transform:rotate(0deg);opacity:1}to{transform:rotate(45deg);opacity:0}}@keyframes mdc-checkbox-indeterminate-checked-checkmark{from{animation-timing-function:cubic-bezier(0.14, 0, 0, 1);transform:rotate(45deg);opacity:0}to{transform:rotate(360deg);opacity:1}}@keyframes mdc-checkbox-checked-indeterminate-mixedmark{from{animation-timing-function:mdc-animation-deceleration-curve-timing-function;transform:rotate(-45deg);opacity:0}to{transform:rotate(0deg);opacity:1}}@keyframes mdc-checkbox-indeterminate-checked-mixedmark{from{animation-timing-function:cubic-bezier(0.14, 0, 0, 1);transform:rotate(0deg);opacity:1}to{transform:rotate(315deg);opacity:0}}@keyframes mdc-checkbox-indeterminate-unchecked-mixedmark{0%{animation-timing-function:linear;transform:scaleX(1);opacity:1}32.8%,100%{transform:scaleX(0);opacity:0}}.mdc-checkbox{display:inline-block;position:relative;flex:0 0 18px;box-sizing:content-box;width:18px;height:18px;line-height:0;white-space:nowrap;cursor:pointer;vertical-align:bottom}.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring{pointer-events:none;border:2px solid transparent;border-radius:6px;box-sizing:content-box;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:100%;width:100%}@media screen and (forced-colors: active){.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring{border-color:CanvasText}}.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring::after,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring::after{content:"";border:2px solid transparent;border-radius:8px;display:block;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc(100% + 4px);width:calc(100% + 4px)}@media screen and (forced-colors: active){.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring::after,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring::after{border-color:CanvasText}}@media all and (-ms-high-contrast: none){.mdc-checkbox .mdc-checkbox__focus-ring{display:none}}@media screen and (forced-colors: active),(-ms-high-contrast: active){.mdc-checkbox__mixedmark{margin:0 1px}}.mdc-checkbox--disabled{cursor:default;pointer-events:none}.mdc-checkbox__background{display:inline-flex;position:absolute;align-items:center;justify-content:center;box-sizing:border-box;width:18px;height:18px;border:2px solid currentColor;border-radius:2px;background-color:transparent;pointer-events:none;will-change:background-color,border-color;transition:background-color 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1),border-color 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox__checkmark{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;opacity:0;transition:opacity 180ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox--upgraded .mdc-checkbox__checkmark{opacity:1}.mdc-checkbox__checkmark-path{transition:stroke-dashoffset 180ms 0ms cubic-bezier(0.4, 0, 0.6, 1);stroke:currentColor;stroke-width:3.12px;stroke-dashoffset:29.7833385;stroke-dasharray:29.7833385}.mdc-checkbox__mixedmark{width:100%;height:0;transform:scaleX(0) rotate(0deg);border-width:1px;border-style:solid;opacity:0;transition:opacity 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1),transform 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__background,.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__background,.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__background,.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__background{animation-duration:180ms;animation-timing-function:linear}.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__checkmark-path{animation:mdc-checkbox-unchecked-checked-checkmark-path 180ms linear 0s;transition:none}.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__mixedmark{animation:mdc-checkbox-unchecked-indeterminate-mixedmark 90ms linear 0s;transition:none}.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__checkmark-path{animation:mdc-checkbox-checked-unchecked-checkmark-path 90ms linear 0s;transition:none}.mdc-checkbox--anim-checked-indeterminate .mdc-checkbox__checkmark{animation:mdc-checkbox-checked-indeterminate-checkmark 90ms linear 0s;transition:none}.mdc-checkbox--anim-checked-indeterminate .mdc-checkbox__mixedmark{animation:mdc-checkbox-checked-indeterminate-mixedmark 90ms linear 0s;transition:none}.mdc-checkbox--anim-indeterminate-checked .mdc-checkbox__checkmark{animation:mdc-checkbox-indeterminate-checked-checkmark 500ms linear 0s;transition:none}.mdc-checkbox--anim-indeterminate-checked .mdc-checkbox__mixedmark{animation:mdc-checkbox-indeterminate-checked-mixedmark 500ms linear 0s;transition:none}.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__mixedmark{animation:mdc-checkbox-indeterminate-unchecked-mixedmark 300ms linear 0s;transition:none}.mdc-checkbox__native-control:checked~.mdc-checkbox__background,.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background{transition:border-color 90ms 0ms cubic-bezier(0, 0, 0.2, 1),background-color 90ms 0ms cubic-bezier(0, 0, 0.2, 1)}.mdc-checkbox__native-control:checked~.mdc-checkbox__background .mdc-checkbox__checkmark-path,.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background .mdc-checkbox__checkmark-path,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background .mdc-checkbox__checkmark-path{stroke-dashoffset:0}.mdc-checkbox__native-control{position:absolute;margin:0;padding:0;opacity:0;cursor:inherit}.mdc-checkbox__native-control:disabled{cursor:default;pointer-events:none}.mdc-checkbox--touch{margin:calc((48px - 40px) / 2);margin:calc((var(--mdc-checkbox-state-layer-size, 48px) - var(--mdc-checkbox-state-layer-size, 40px)) / 2)}.mdc-checkbox--touch .mdc-checkbox__native-control{top:calc((40px - 48px) / 2);top:calc((var(--mdc-checkbox-state-layer-size, 40px) - var(--mdc-checkbox-state-layer-size, 48px)) / 2);right:calc((40px - 48px) / 2);right:calc((var(--mdc-checkbox-state-layer-size, 40px) - var(--mdc-checkbox-state-layer-size, 48px)) / 2);left:calc((40px - 48px) / 2);left:calc((var(--mdc-checkbox-state-layer-size, 40px) - var(--mdc-checkbox-state-layer-size, 48px)) / 2);width:48px;width:var(--mdc-checkbox-state-layer-size, 48px);height:48px;height:var(--mdc-checkbox-state-layer-size, 48px)}.mdc-checkbox__native-control:checked~.mdc-checkbox__background .mdc-checkbox__checkmark{transition:opacity 180ms 0ms cubic-bezier(0, 0, 0.2, 1),transform 180ms 0ms cubic-bezier(0, 0, 0.2, 1);opacity:1}.mdc-checkbox__native-control:checked~.mdc-checkbox__background .mdc-checkbox__mixedmark{transform:scaleX(1) rotate(-45deg)}.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background .mdc-checkbox__checkmark,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background .mdc-checkbox__checkmark{transform:rotate(45deg);opacity:0;transition:opacity 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1),transform 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background .mdc-checkbox__mixedmark,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background .mdc-checkbox__mixedmark{transform:scaleX(1) rotate(0deg);opacity:1}.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__background,.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__checkmark,.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__checkmark-path,.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__mixedmark{transition:none}:host{outline:none;display:inline-flex;-webkit-tap-highlight-color:transparent}:host([checked]),:host([indeterminate]){--mdc-ripple-color:var(--mdc-theme-secondary, #018786)}.mdc-checkbox .mdc-checkbox__background::before{content:none}`;
+const styles$1 = i$5 `.mdc-checkbox{padding:calc((40px - 18px) / 2);padding:calc((var(--mdc-checkbox-ripple-size, 40px) - 18px) / 2);margin:calc((40px - 40px) / 2);margin:calc((var(--mdc-checkbox-touch-target-size, 40px) - 40px) / 2)}.mdc-checkbox .mdc-checkbox__ripple::before,.mdc-checkbox .mdc-checkbox__ripple::after{background-color:#000;background-color:var(--mdc-ripple-color, #000)}.mdc-checkbox:hover .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-ripple-surface--hover .mdc-checkbox__ripple::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__ripple::before,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__ripple::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-checkbox:not(.mdc-ripple-upgraded) .mdc-checkbox__ripple::after{transition:opacity 150ms linear}.mdc-checkbox:not(.mdc-ripple-upgraded):active .mdc-checkbox__ripple::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-checkbox--selected .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-checkbox--selected .mdc-checkbox__ripple::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-checkbox.mdc-checkbox--selected:hover .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-checkbox--selected.mdc-ripple-surface--hover .mdc-checkbox__ripple::before{opacity:0.04;opacity:var(--mdc-ripple-hover-opacity, 0.04)}.mdc-checkbox.mdc-checkbox--selected.mdc-ripple-upgraded--background-focused .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-checkbox--selected:not(.mdc-ripple-upgraded):focus .mdc-checkbox__ripple::before{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-focus-opacity, 0.12)}.mdc-checkbox.mdc-checkbox--selected:not(.mdc-ripple-upgraded) .mdc-checkbox__ripple::after{transition:opacity 150ms linear}.mdc-checkbox.mdc-checkbox--selected:not(.mdc-ripple-upgraded):active .mdc-checkbox__ripple::after{transition-duration:75ms;opacity:0.12;opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-checkbox--selected.mdc-ripple-upgraded{--mdc-ripple-fg-opacity:var(--mdc-ripple-press-opacity, 0.12)}.mdc-checkbox.mdc-ripple-upgraded--background-focused.mdc-checkbox--selected .mdc-checkbox__ripple::before,.mdc-checkbox.mdc-ripple-upgraded--background-focused.mdc-checkbox--selected .mdc-checkbox__ripple::after{background-color:#018786;background-color:var(--mdc-ripple-color, var(--mdc-theme-secondary, #018786))}.mdc-checkbox .mdc-checkbox__background{top:calc((40px - 18px) / 2);top:calc((var(--mdc-checkbox-ripple-size, 40px) - 18px) / 2);left:calc((40px - 18px) / 2);left:calc((var(--mdc-checkbox-ripple-size, 40px) - 18px) / 2)}.mdc-checkbox .mdc-checkbox__native-control{top:calc((40px - 40px) / 2);top:calc((40px - var(--mdc-checkbox-touch-target-size, 40px)) / 2);right:calc((40px - 40px) / 2);right:calc((40px - var(--mdc-checkbox-touch-target-size, 40px)) / 2);left:calc((40px - 40px) / 2);left:calc((40px - var(--mdc-checkbox-touch-target-size, 40px)) / 2);width:40px;width:var(--mdc-checkbox-touch-target-size, 40px);height:40px;height:var(--mdc-checkbox-touch-target-size, 40px)}.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background{border-color:rgba(0, 0, 0, 0.54);border-color:var(--mdc-checkbox-unchecked-color, rgba(0, 0, 0, 0.54));background-color:transparent}.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background{border-color:#018786;border-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786));background-color:#018786;background-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786))}@keyframes mdc-checkbox-fade-in-background-8A000000FF01878600000000FF018786{0%{border-color:rgba(0, 0, 0, 0.54);border-color:var(--mdc-checkbox-unchecked-color, rgba(0, 0, 0, 0.54));background-color:transparent}50%{border-color:#018786;border-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786));background-color:#018786;background-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786))}}@keyframes mdc-checkbox-fade-out-background-8A000000FF01878600000000FF018786{0%,80%{border-color:#018786;border-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786));background-color:#018786;background-color:var(--mdc-checkbox-checked-color, var(--mdc-theme-secondary, #018786))}100%{border-color:rgba(0, 0, 0, 0.54);border-color:var(--mdc-checkbox-unchecked-color, rgba(0, 0, 0, 0.54));background-color:transparent}}.mdc-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled~.mdc-checkbox__background,.mdc-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled~.mdc-checkbox__background{animation-name:mdc-checkbox-fade-in-background-8A000000FF01878600000000FF018786}.mdc-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled~.mdc-checkbox__background,.mdc-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled~.mdc-checkbox__background{animation-name:mdc-checkbox-fade-out-background-8A000000FF01878600000000FF018786}.mdc-checkbox .mdc-checkbox__native-control[disabled]:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background{border-color:rgba(0, 0, 0, 0.38);border-color:var(--mdc-checkbox-disabled-color, rgba(0, 0, 0, 0.38));background-color:transparent}.mdc-checkbox .mdc-checkbox__native-control[disabled]:checked~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control[disabled]:indeterminate~.mdc-checkbox__background,.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true][disabled]~.mdc-checkbox__background{border-color:transparent;background-color:rgba(0, 0, 0, 0.38);background-color:var(--mdc-checkbox-disabled-color, rgba(0, 0, 0, 0.38))}.mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark{color:#fff;color:var(--mdc-checkbox-ink-color, #fff)}.mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__mixedmark{border-color:#fff;border-color:var(--mdc-checkbox-ink-color, #fff)}.mdc-checkbox .mdc-checkbox__native-control:disabled~.mdc-checkbox__background .mdc-checkbox__checkmark{color:#fff;color:var(--mdc-checkbox-ink-color, #fff)}.mdc-checkbox .mdc-checkbox__native-control:disabled~.mdc-checkbox__background .mdc-checkbox__mixedmark{border-color:#fff;border-color:var(--mdc-checkbox-ink-color, #fff)}.mdc-touch-target-wrapper{display:inline}@keyframes mdc-checkbox-unchecked-checked-checkmark-path{0%,50%{stroke-dashoffset:29.7833385}50%{animation-timing-function:cubic-bezier(0, 0, 0.2, 1)}100%{stroke-dashoffset:0}}@keyframes mdc-checkbox-unchecked-indeterminate-mixedmark{0%,68.2%{transform:scaleX(0)}68.2%{animation-timing-function:cubic-bezier(0, 0, 0, 1)}100%{transform:scaleX(1)}}@keyframes mdc-checkbox-checked-unchecked-checkmark-path{from{animation-timing-function:cubic-bezier(0.4, 0, 1, 1);opacity:1;stroke-dashoffset:0}to{opacity:0;stroke-dashoffset:-29.7833385}}@keyframes mdc-checkbox-checked-indeterminate-checkmark{from{animation-timing-function:cubic-bezier(0, 0, 0.2, 1);transform:rotate(0deg);opacity:1}to{transform:rotate(45deg);opacity:0}}@keyframes mdc-checkbox-indeterminate-checked-checkmark{from{animation-timing-function:cubic-bezier(0.14, 0, 0, 1);transform:rotate(45deg);opacity:0}to{transform:rotate(360deg);opacity:1}}@keyframes mdc-checkbox-checked-indeterminate-mixedmark{from{animation-timing-function:mdc-animation-deceleration-curve-timing-function;transform:rotate(-45deg);opacity:0}to{transform:rotate(0deg);opacity:1}}@keyframes mdc-checkbox-indeterminate-checked-mixedmark{from{animation-timing-function:cubic-bezier(0.14, 0, 0, 1);transform:rotate(0deg);opacity:1}to{transform:rotate(315deg);opacity:0}}@keyframes mdc-checkbox-indeterminate-unchecked-mixedmark{0%{animation-timing-function:linear;transform:scaleX(1);opacity:1}32.8%,100%{transform:scaleX(0);opacity:0}}.mdc-checkbox{display:inline-block;position:relative;flex:0 0 18px;box-sizing:content-box;width:18px;height:18px;line-height:0;white-space:nowrap;cursor:pointer;vertical-align:bottom}.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring{pointer-events:none;border:2px solid transparent;border-radius:6px;box-sizing:content-box;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:100%;width:100%}@media screen and (forced-colors: active){.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring{border-color:CanvasText}}.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring::after,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring::after{content:"";border:2px solid transparent;border-radius:8px;display:block;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:calc(100% + 4px);width:calc(100% + 4px)}@media screen and (forced-colors: active){.mdc-checkbox.mdc-ripple-upgraded--background-focused .mdc-checkbox__focus-ring::after,.mdc-checkbox:not(.mdc-ripple-upgraded):focus .mdc-checkbox__focus-ring::after{border-color:CanvasText}}@media all and (-ms-high-contrast: none){.mdc-checkbox .mdc-checkbox__focus-ring{display:none}}@media screen and (forced-colors: active),(-ms-high-contrast: active){.mdc-checkbox__mixedmark{margin:0 1px}}.mdc-checkbox--disabled{cursor:default;pointer-events:none}.mdc-checkbox__background{display:inline-flex;position:absolute;align-items:center;justify-content:center;box-sizing:border-box;width:18px;height:18px;border:2px solid currentColor;border-radius:2px;background-color:transparent;pointer-events:none;will-change:background-color,border-color;transition:background-color 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1),border-color 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox__checkmark{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;opacity:0;transition:opacity 180ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox--upgraded .mdc-checkbox__checkmark{opacity:1}.mdc-checkbox__checkmark-path{transition:stroke-dashoffset 180ms 0ms cubic-bezier(0.4, 0, 0.6, 1);stroke:currentColor;stroke-width:3.12px;stroke-dashoffset:29.7833385;stroke-dasharray:29.7833385}.mdc-checkbox__mixedmark{width:100%;height:0;transform:scaleX(0) rotate(0deg);border-width:1px;border-style:solid;opacity:0;transition:opacity 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1),transform 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__background,.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__background,.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__background,.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__background{animation-duration:180ms;animation-timing-function:linear}.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__checkmark-path{animation:mdc-checkbox-unchecked-checked-checkmark-path 180ms linear 0s;transition:none}.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__mixedmark{animation:mdc-checkbox-unchecked-indeterminate-mixedmark 90ms linear 0s;transition:none}.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__checkmark-path{animation:mdc-checkbox-checked-unchecked-checkmark-path 90ms linear 0s;transition:none}.mdc-checkbox--anim-checked-indeterminate .mdc-checkbox__checkmark{animation:mdc-checkbox-checked-indeterminate-checkmark 90ms linear 0s;transition:none}.mdc-checkbox--anim-checked-indeterminate .mdc-checkbox__mixedmark{animation:mdc-checkbox-checked-indeterminate-mixedmark 90ms linear 0s;transition:none}.mdc-checkbox--anim-indeterminate-checked .mdc-checkbox__checkmark{animation:mdc-checkbox-indeterminate-checked-checkmark 500ms linear 0s;transition:none}.mdc-checkbox--anim-indeterminate-checked .mdc-checkbox__mixedmark{animation:mdc-checkbox-indeterminate-checked-mixedmark 500ms linear 0s;transition:none}.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__mixedmark{animation:mdc-checkbox-indeterminate-unchecked-mixedmark 300ms linear 0s;transition:none}.mdc-checkbox__native-control:checked~.mdc-checkbox__background,.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background{transition:border-color 90ms 0ms cubic-bezier(0, 0, 0.2, 1),background-color 90ms 0ms cubic-bezier(0, 0, 0.2, 1)}.mdc-checkbox__native-control:checked~.mdc-checkbox__background .mdc-checkbox__checkmark-path,.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background .mdc-checkbox__checkmark-path,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background .mdc-checkbox__checkmark-path{stroke-dashoffset:0}.mdc-checkbox__native-control{position:absolute;margin:0;padding:0;opacity:0;cursor:inherit}.mdc-checkbox__native-control:disabled{cursor:default;pointer-events:none}.mdc-checkbox--touch{margin:calc((48px - 40px) / 2);margin:calc((var(--mdc-checkbox-state-layer-size, 48px) - var(--mdc-checkbox-state-layer-size, 40px)) / 2)}.mdc-checkbox--touch .mdc-checkbox__native-control{top:calc((40px - 48px) / 2);top:calc((var(--mdc-checkbox-state-layer-size, 40px) - var(--mdc-checkbox-state-layer-size, 48px)) / 2);right:calc((40px - 48px) / 2);right:calc((var(--mdc-checkbox-state-layer-size, 40px) - var(--mdc-checkbox-state-layer-size, 48px)) / 2);left:calc((40px - 48px) / 2);left:calc((var(--mdc-checkbox-state-layer-size, 40px) - var(--mdc-checkbox-state-layer-size, 48px)) / 2);width:48px;width:var(--mdc-checkbox-state-layer-size, 48px);height:48px;height:var(--mdc-checkbox-state-layer-size, 48px)}.mdc-checkbox__native-control:checked~.mdc-checkbox__background .mdc-checkbox__checkmark{transition:opacity 180ms 0ms cubic-bezier(0, 0, 0.2, 1),transform 180ms 0ms cubic-bezier(0, 0, 0.2, 1);opacity:1}.mdc-checkbox__native-control:checked~.mdc-checkbox__background .mdc-checkbox__mixedmark{transform:scaleX(1) rotate(-45deg)}.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background .mdc-checkbox__checkmark,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background .mdc-checkbox__checkmark{transform:rotate(45deg);opacity:0;transition:opacity 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1),transform 90ms 0ms cubic-bezier(0.4, 0, 0.6, 1)}.mdc-checkbox__native-control:indeterminate~.mdc-checkbox__background .mdc-checkbox__mixedmark,.mdc-checkbox__native-control[data-indeterminate=true]~.mdc-checkbox__background .mdc-checkbox__mixedmark{transform:scaleX(1) rotate(0deg);opacity:1}.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__background,.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__checkmark,.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__checkmark-path,.mdc-checkbox.mdc-checkbox--upgraded .mdc-checkbox__mixedmark{transition:none}:host{outline:none;display:inline-flex;-webkit-tap-highlight-color:transparent}:host([checked]),:host([indeterminate]){--mdc-ripple-color:var(--mdc-theme-secondary, #018786)}.mdc-checkbox .mdc-checkbox__background::before{content:none}`;
 
 /**
  * @license
@@ -36079,229 +36171,790 @@ const styles$2 = i$5 `.mdc-checkbox{padding:calc((40px - 18px) / 2);padding:calc
 /** @soyCompatible */
 let Checkbox = class Checkbox extends CheckboxBase {
 };
-Checkbox.styles = [styles$2];
+Checkbox.styles = [styles$1];
 Checkbox = __decorate$1([
     e$7('mwc-checkbox')
 ], Checkbox);
 
-/**
- * @license
- * Copyright 2017 Google Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-var cssClasses = {
-    ROOT: 'mdc-form-field',
-};
-var strings = {
-    LABEL_SELECTOR: '.mdc-form-field > label',
-};
-
-/**
- * @license
- * Copyright 2017 Google Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-var MDCFormFieldFoundation = /** @class */ (function (_super) {
-    __extends(MDCFormFieldFoundation, _super);
-    function MDCFormFieldFoundation(adapter) {
-        var _this = _super.call(this, __assign(__assign({}, MDCFormFieldFoundation.defaultAdapter), adapter)) || this;
-        _this.click = function () {
-            _this.handleClick();
-        };
-        return _this;
-    }
-    Object.defineProperty(MDCFormFieldFoundation, "cssClasses", {
-        get: function () {
-            return cssClasses;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MDCFormFieldFoundation, "strings", {
-        get: function () {
-            return strings;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(MDCFormFieldFoundation, "defaultAdapter", {
-        get: function () {
-            return {
-                activateInputRipple: function () { return undefined; },
-                deactivateInputRipple: function () { return undefined; },
-                deregisterInteractionHandler: function () { return undefined; },
-                registerInteractionHandler: function () { return undefined; },
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    MDCFormFieldFoundation.prototype.init = function () {
-        this.adapter.registerInteractionHandler('click', this.click);
-    };
-    MDCFormFieldFoundation.prototype.destroy = function () {
-        this.adapter.deregisterInteractionHandler('click', this.click);
-    };
-    MDCFormFieldFoundation.prototype.handleClick = function () {
-        var _this = this;
-        this.adapter.activateInputRipple();
-        requestAnimationFrame(function () {
-            _this.adapter.deactivateInputRipple();
-        });
-    };
-    return MDCFormFieldFoundation;
-}(MDCFoundation));
-// tslint:disable-next-line:no-default-export Needed for backward compatibility with MDC Web v0.44.0 and earlier.
-var MDCFormFieldFoundation$1 = MDCFormFieldFoundation;
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-class FormfieldBase extends BaseElement {
+/** A potentially `nullable` labelled checkbox. */
+let OscdCheckbox = class OscdCheckbox extends s$1 {
     constructor() {
         super(...arguments);
-        this.alignEnd = false;
-        this.spaceBetween = false;
-        this.nowrap = false;
         this.label = '';
-        this.mdcFoundationClass = MDCFormFieldFoundation$1;
+        /** Parenthetical information rendered after the label: `label (helper)` */
+        this.helper = '';
+        /** Whether [[`maybeValue`]] may be `null` */
+        this.nullable = false;
+        /** The default `checked` state while [[`maybeValue`]] is `null`. */
+        this.defaultChecked = false;
+        /** Disables component including null switch */
+        this.disabled = false;
+        this.isNull = false;
+        this.initChecked = false;
+        this.deactivateCheckbox = false;
+        this.nulled = null;
     }
-    createAdapter() {
-        return {
-            registerInteractionHandler: (type, handler) => {
-                this.labelEl.addEventListener(type, handler);
-            },
-            deregisterInteractionHandler: (type, handler) => {
-                this.labelEl.removeEventListener(type, handler);
-            },
-            activateInputRipple: async () => {
-                const input = this.input;
-                if (input instanceof FormElement) {
-                    const ripple = await input.ripple;
-                    if (ripple) {
-                        ripple.startPress();
-                    }
-                }
-            },
-            deactivateInputRipple: async () => {
-                const input = this.input;
-                if (input instanceof FormElement) {
-                    const ripple = await input.ripple;
-                    if (ripple) {
-                        ripple.endPress();
-                    }
-                }
-            },
-        };
+    /** Is `"true"` when checked, `"false"` un-checked, `null` if [[`nullable`]]. */
+    get maybeValue() {
+        // eslint-disable-next-line no-nested-ternary
+        return this.null ? null : this.checked ? 'true' : 'false';
     }
-    get input() {
-        var _a, _b;
-        return (_b = (_a = this.slottedInputs) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : null;
-    }
-    render() {
-        const classes = {
-            'mdc-form-field--align-end': this.alignEnd,
-            'mdc-form-field--space-between': this.spaceBetween,
-            'mdc-form-field--nowrap': this.nowrap
-        };
-        return x `
-      <div class="mdc-form-field ${o$1(classes)}">
-        <slot></slot>
-        <label class="mdc-label"
-               @click="${this._labelClick}">${this.label}</label>
-      </div>`;
-    }
-    click() {
-        this._labelClick();
-    }
-    _labelClick() {
-        const input = this.input;
-        if (input) {
-            input.focus();
-            input.click();
+    set maybeValue(check) {
+        if (check === null)
+            this.null = true;
+        else {
+            this.null = false;
+            this.checked = check === 'true';
         }
     }
-}
-__decorate$1([
-    e$6({ type: Boolean })
-], FormfieldBase.prototype, "alignEnd", void 0);
-__decorate$1([
-    e$6({ type: Boolean })
-], FormfieldBase.prototype, "spaceBetween", void 0);
-__decorate$1([
-    e$6({ type: Boolean })
-], FormfieldBase.prototype, "nowrap", void 0);
-__decorate$1([
-    e$6({ type: String }),
-    observer(async function (label) {
-        var _a;
-        (_a = this.input) === null || _a === void 0 ? void 0 : _a.setAttribute('aria-label', label);
-    })
-], FormfieldBase.prototype, "label", void 0);
-__decorate$1([
-    i$2('.mdc-form-field')
-], FormfieldBase.prototype, "mdcRoot", void 0);
-__decorate$1([
-    o$2('', true, '*')
-], FormfieldBase.prototype, "slottedInputs", void 0);
-__decorate$1([
-    i$2('label')
-], FormfieldBase.prototype, "labelEl", void 0);
-
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-LIcense-Identifier: Apache-2.0
- */
-const styles$1 = i$5 `.mdc-form-field{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:Roboto, sans-serif;font-family:var(--mdc-typography-body2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));font-size:0.875rem;font-size:var(--mdc-typography-body2-font-size, 0.875rem);line-height:1.25rem;line-height:var(--mdc-typography-body2-line-height, 1.25rem);font-weight:400;font-weight:var(--mdc-typography-body2-font-weight, 400);letter-spacing:0.0178571429em;letter-spacing:var(--mdc-typography-body2-letter-spacing, 0.0178571429em);text-decoration:inherit;text-decoration:var(--mdc-typography-body2-text-decoration, inherit);text-transform:inherit;text-transform:var(--mdc-typography-body2-text-transform, inherit);color:rgba(0, 0, 0, 0.87);color:var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));display:inline-flex;align-items:center;vertical-align:middle}.mdc-form-field>label{margin-left:0;margin-right:auto;padding-left:4px;padding-right:0;order:0}[dir=rtl] .mdc-form-field>label,.mdc-form-field>label[dir=rtl]{margin-left:auto;margin-right:0}[dir=rtl] .mdc-form-field>label,.mdc-form-field>label[dir=rtl]{padding-left:0;padding-right:4px}.mdc-form-field--nowrap>label{text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.mdc-form-field--align-end>label{margin-left:auto;margin-right:0;padding-left:0;padding-right:4px;order:-1}[dir=rtl] .mdc-form-field--align-end>label,.mdc-form-field--align-end>label[dir=rtl]{margin-left:0;margin-right:auto}[dir=rtl] .mdc-form-field--align-end>label,.mdc-form-field--align-end>label[dir=rtl]{padding-left:4px;padding-right:0}.mdc-form-field--space-between{justify-content:space-between}.mdc-form-field--space-between>label{margin:0}[dir=rtl] .mdc-form-field--space-between>label,.mdc-form-field--space-between>label[dir=rtl]{margin:0}:host{display:inline-flex}.mdc-form-field{width:100%}::slotted(*){-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:Roboto, sans-serif;font-family:var(--mdc-typography-body2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));font-size:0.875rem;font-size:var(--mdc-typography-body2-font-size, 0.875rem);line-height:1.25rem;line-height:var(--mdc-typography-body2-line-height, 1.25rem);font-weight:400;font-weight:var(--mdc-typography-body2-font-weight, 400);letter-spacing:0.0178571429em;letter-spacing:var(--mdc-typography-body2-letter-spacing, 0.0178571429em);text-decoration:inherit;text-decoration:var(--mdc-typography-body2-text-decoration, inherit);text-transform:inherit;text-transform:var(--mdc-typography-body2-text-transform, inherit);color:rgba(0, 0, 0, 0.87);color:var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87))}::slotted(mwc-switch){margin-right:10px}[dir=rtl] ::slotted(mwc-switch),::slotted(mwc-switch[dir=rtl]){margin-left:10px}`;
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-let Formfield = class Formfield extends FormfieldBase {
+    get null() {
+        return this.nullable && this.isNull;
+    }
+    set null(value) {
+        if (!this.nullable || value === this.isNull)
+            return;
+        this.isNull = value;
+        if (this.null)
+            this.disable();
+        else
+            this.enable();
+    }
+    get checked() {
+        var _a, _b;
+        return (_b = (_a = this.checkbox) === null || _a === void 0 ? void 0 : _a.checked) !== null && _b !== void 0 ? _b : this.initChecked;
+    }
+    set checked(value) {
+        if (this.checkbox)
+            this.checkbox.checked = value;
+        else
+            this.initChecked = value;
+    }
+    get formfieldLabel() {
+        return this.helper ? `${this.helper} (${this.label})` : this.label;
+    }
+    // eslint-disable-next-line class-methods-use-this
+    checkValidity() {
+        return true;
+    }
+    enable() {
+        if (this.nulled === null)
+            return;
+        this.checked = this.nulled;
+        this.nulled = null;
+        this.deactivateCheckbox = false;
+    }
+    disable() {
+        if (this.nulled !== null)
+            return;
+        this.nulled = this.checked;
+        this.checked = this.defaultChecked;
+        this.deactivateCheckbox = true;
+    }
+    firstUpdated() {
+        this.requestUpdate();
+    }
+    renderSwitch() {
+        if (this.nullable) {
+            return x `<mwc-switch
+        style="margin-left: 12px;"
+        ?selected=${!this.null}
+        ?disabled=${this.disabled}
+        @click=${() => {
+                this.null = !this.nullSwitch.selected;
+                this.dispatchEvent(new Event('input'));
+            }}
+      ></mwc-switch>`;
+        }
+        return x ``;
+    }
+    render() {
+        return x `
+      <div style="display: flex; flex-direction: row;">
+        <div style="flex: auto;">
+          <mwc-formfield
+            label="${this.formfieldLabel}"
+            style="${this.deactivateCheckbox || this.disabled
+            ? `--mdc-theme-text-primary-on-background:rgba(0, 0, 0, 0.38)`
+            : ``}"
+            ><mwc-checkbox
+              ?checked=${this.initChecked}
+              ?disabled=${this.deactivateCheckbox || this.disabled}
+              @change=${() => this.dispatchEvent(new Event('input'))}
+            ></mwc-checkbox
+          ></mwc-formfield>
+        </div>
+        <div style="display: flex; align-items: center;">
+          ${this.renderSwitch()}
+        </div>
+      </div>
+    `;
+    }
 };
-Formfield.styles = [styles$1];
-Formfield = __decorate$1([
-    e$7('mwc-formfield')
-], Formfield);
+__decorate$1([
+    e$6({ type: String })
+], OscdCheckbox.prototype, "label", void 0);
+__decorate$1([
+    e$6({ type: String })
+], OscdCheckbox.prototype, "helper", void 0);
+__decorate$1([
+    e$6({ type: Boolean })
+], OscdCheckbox.prototype, "nullable", void 0);
+__decorate$1([
+    e$6({ type: Boolean })
+], OscdCheckbox.prototype, "defaultChecked", void 0);
+__decorate$1([
+    e$6({ type: String })
+], OscdCheckbox.prototype, "maybeValue", null);
+__decorate$1([
+    e$6({ type: Boolean })
+], OscdCheckbox.prototype, "disabled", void 0);
+__decorate$1([
+    t$1()
+], OscdCheckbox.prototype, "null", null);
+__decorate$1([
+    t$1()
+], OscdCheckbox.prototype, "checked", null);
+__decorate$1([
+    t$1()
+], OscdCheckbox.prototype, "deactivateCheckbox", void 0);
+__decorate$1([
+    t$1()
+], OscdCheckbox.prototype, "formfieldLabel", null);
+__decorate$1([
+    i$2('mwc-switch')
+], OscdCheckbox.prototype, "nullSwitch", void 0);
+__decorate$1([
+    i$2('mwc-checkbox')
+], OscdCheckbox.prototype, "checkbox", void 0);
+OscdCheckbox = __decorate$1([
+    e$7('oscd-checkbox')
+], OscdCheckbox);
+
+const nameStartChar = '[:_A-Za-z]|[\u00C0-\u00D6]|[\u00D8-\u00F6]|[\u00F8-\u02FF]|[\u0370-\u037D]' +
+    '|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]' +
+    '|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]';
+const nameChar = `${nameStartChar}|[.0-9\\-]|\u00B7|[\u0300-\u036F]|[\u203F-\u2040]`;
+const name = `${nameStartChar}(${nameChar})*`;
+const nmToken = `(${nameChar})+`;
+const patterns = {
+    string: '([\u0009-\u000A]|[\u000D]|[\u0020-\u007E]|[\u0085]|[\u00A0-\uD7FF]' +
+        '|[\uE000-\uFFFD])*',
+    normalizedString: '([\u0020-\u007E]|[\u0085]|[\u00A0-\uD7FF]|[\uE000-\uFFFD])*',
+    name,
+    nmToken,
+    names: `${name}( ${name})*`,
+    nmTokens: `${nmToken}( ${nmToken})*`,
+    decimal: '[+\\-]?[0-9]+(([.][0-9]*)?|([.][0-9]+))',
+    unsigned: '[+]?[0-9]+(([.][0-9]*)?|([.][0-9]+))',
+    integer: '[+\\-]?[0-9]+([0-9]*)',
+    alphanumericFirstUpperCase: '[A-Z][0-9,A-Z,a-z]*',
+    alphanumericFirstLowerCase: '[a-z][0-9,A-Z,a-z]*',
+    lnClass: '(LLN0)|[A-Z]{4,4}',
+    abstractDataAttributeName: '((T)|(Test)|(Check)|(SIUnit)|(Oper)|(SBO)|(SBOw)|(Cancel)|[a-z][0-9A-Za-z]*)',
+};
+const maxLength = {
+    cbName: 32,
+    abstracDaName: 60,
+};
+const predefinedBasicTypeEnum = [
+    'BOOLEAN',
+    'INT8',
+    'INT16',
+    'INT24',
+    'INT32',
+    'INT64',
+    'INT128',
+    'INT8U',
+    'INT16U',
+    'INT24U',
+    'INT32U',
+    'FLOAT32',
+    'FLOAT64',
+    'Enum',
+    'Dbpos',
+    'Tcmd',
+    'Quality',
+    'Timestamp',
+    'VisString32',
+    'VisString64',
+    'VisString65',
+    'VisString129',
+    'VisString255',
+    'Octet64',
+    'Unicode255',
+    'Struct',
+    'EntryTime',
+    'Check',
+    'ObjRef',
+    'Currency',
+    'PhyComAddr',
+    'TrgOps',
+    'OptFlds',
+    'SvOptFlds',
+    'LogOptFlds',
+    'EntryID',
+    'Octet6',
+    'Octet16',
+];
+const valKindEnum = ['Spec', 'Conf', 'RO', 'Set'];
+const functionalConstraintEnum = [
+    'ST',
+    'MX',
+    'SP',
+    'SV',
+    'CF',
+    'DC',
+    'SG',
+    'SE',
+    'SR',
+    'OR',
+    'BL',
+    'EX',
+    'CO',
+];
+
+/* eslint-disable import/no-extraneous-dependencies */
+function selectType(e, data, Val) {
+    var _a;
+    if (!e.target || !e.target.parentElement)
+        return;
+    const typeSelected = (_a = e.target.selected) === null || _a === void 0 ? void 0 : _a.value;
+    const selectedBType = (e.target.parentElement.querySelector('oscd-select[label="bType"]')).value;
+    if (selectedBType !== 'Enum')
+        return;
+    const enumVals = Array.from(data.querySelectorAll(`EnumType[id="${typeSelected}"] > EnumVal`)).map(enumval => {
+        var _a, _b, _c, _d;
+        return x `<mwc-list-item
+        value="${(_b = (_a = enumval.textContent) === null || _a === void 0 ? void 0 : _a.trim()) !== null && _b !== void 0 ? _b : ''}"
+        ?selected=${((_c = enumval.textContent) === null || _c === void 0 ? void 0 : _c.trim()) === Val}
+        >${(_d = enumval.textContent) === null || _d === void 0 ? void 0 : _d.trim()}</mwc-list-item
+      >`;
+    });
+    const selectValOptionUI = (e.target.parentElement.querySelector('oscd-select[label="Val"]'));
+    B(x `${enumVals}`, selectValOptionUI);
+    selectValOptionUI.requestUpdate();
+}
+function selectBType(e, bType, type) {
+    const bTypeSelected = e.target.selected.value;
+    const typeUI = (e.target.parentElement.querySelector('oscd-select[label="type"]'));
+    typeUI.disabled = !(bTypeSelected === 'Enum' || bTypeSelected === 'Struct');
+    const enabledItems = [];
+    Array.from(typeUI.children).forEach(child => {
+        const childItem = child;
+        childItem.disabled = !child.classList.contains(bTypeSelected);
+        childItem.noninteractive = !child.classList.contains(bTypeSelected);
+        childItem.style.display = !child.classList.contains(bTypeSelected)
+            ? 'none'
+            : '';
+        if (!childItem.disabled)
+            enabledItems.push(childItem);
+    });
+    if (type && bType === bTypeSelected)
+        typeUI.value = type;
+    else
+        typeUI.value = enabledItems.length ? enabledItems[0].value : '';
+    const selectValOptionUI = (e.target.parentElement.querySelector('oscd-select[label="Val"]'));
+    if (bTypeSelected === 'Enum')
+        selectValOptionUI.style.display = '';
+    else
+        selectValOptionUI.style.display = 'none';
+    const textfieldValOptionUI = (e.target.parentElement.querySelector('oscd-textfield[label="Val"]'));
+    if (bTypeSelected === 'Enum' || bTypeSelected === 'Struct')
+        textfieldValOptionUI.style.display = 'none';
+    else
+        textfieldValOptionUI.style.display = '';
+    selectValOptionUI.requestUpdate();
+    textfieldValOptionUI.requestUpdate();
+    typeUI.requestUpdate();
+}
+function renderAbstractDataAttributeContent(name, desc, bType, types, type, sAddr, valKind, valImport, Val, data) {
+    return [
+        x `<oscd-textfield
+      label="name"
+      .maybeValue=${name}
+      required
+      pattern="${patterns.abstractDataAttributeName}"
+      maxLength="${maxLength.abstracDaName}"
+      dialogInitialFocus
+    >
+      ></oscd-textfield
+    >`,
+        x `<oscd-textfield
+      label="desc"
+      .maybeValue=${desc}
+      nullable
+      pattern="${patterns.normalizedString}"
+    ></oscd-textfield>`,
+        x `<oscd-select
+      fixedMenuPosition
+      label="bType"
+      .value=${bType}
+      required
+      @selected=${(e) => selectBType(e, bType, type)}
+      >${predefinedBasicTypeEnum.map(redefinedBType => x `<mwc-list-item value="${redefinedBType}"
+            >${redefinedBType}</mwc-list-item
+          >`)}</oscd-select
+    >`,
+        x `<oscd-select
+      label="type"
+      .maybeValue=${type}
+      fixedMenuPosition
+      @selected=${(e) => selectType(e, data, Val)}
+      >${types.map(dataType => x `<mwc-list-item
+            class="${dataType.tagName === 'EnumType' ? 'Enum' : 'Struct'}"
+            value=${dataType.id}
+            >${dataType.id}</mwc-list-item
+          >`)}</oscd-select
+    >`,
+        x `<oscd-textfield
+      label="sAddr"
+      .maybeValue=${sAddr}
+      nullable
+      pattern="${patterns.normalizedString}"
+    ></oscd-textfield>`,
+        x `<oscd-select
+      label="valKind"
+      .maybeValue=${valKind}
+      nullable
+      required
+      fixedMenuPosition
+      >${valKindEnum.map(valKindOption => x `<mwc-list-item value="${valKindOption}"
+            >${valKindOption}</mwc-list-item
+          >`)}</oscd-select
+    >`,
+        x `<oscd-checkbox
+      label="valImport"
+      .maybeValue=${valImport}
+      nullable
+      required
+    ></oscd-checkbox>`,
+        x `<oscd-select label="Val" .maybeValue=${Val} nullable
+      >${Array.from(data.querySelectorAll(`EnumType > EnumVal[id="${type}"]`)).map(enumVal => {
+            var _a, _b, _c;
+            return x `<mwc-list-item value="${(_b = (_a = enumVal.textContent) === null || _a === void 0 ? void 0 : _a.trim()) !== null && _b !== void 0 ? _b : ''}"
+            >${(_c = enumVal.textContent) === null || _c === void 0 ? void 0 : _c.trim()}</mwc-list-item
+          >`;
+        })}</oscd-select
+    >`,
+        x `<oscd-textfield
+      label="Val"
+      .maybeValue=${Val}
+      nullable
+    ></oscd-textfield>`,
+    ];
+}
+function getValAction(oldVal, Val, abstractda) {
+    if (oldVal === null) {
+        const element = createElement(abstractda.ownerDocument, 'Val', {});
+        element.textContent = Val;
+        return [
+            {
+                parent: abstractda,
+                node: element,
+                reference: abstractda.firstElementChild,
+            },
+        ];
+    }
+    if (Val === null)
+        return [{ node: oldVal }];
+    const newVal = oldVal.cloneNode(false);
+    newVal.textContent = Val;
+    return [
+        {
+            parent: oldVal.parentElement,
+            node: newVal,
+            reference: getReference(oldVal.parentElement, 'Val'),
+        },
+        { node: oldVal },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function createBDaAction(parent) {
+    return (inputs) => {
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const bType = getValue(inputs.find(i => i.label === 'bType'));
+        const type = bType === 'Enum' || bType === 'Struct'
+            ? getValue(inputs.find(i => i.label === 'type'))
+            : null;
+        const sAddr = getValue(inputs.find(i => i.label === 'sAddr'));
+        const valKind = getValue(inputs.find(i => i.label === 'valKind')) !== ''
+            ? getValue(inputs.find(i => i.label === 'valKind'))
+            : null;
+        const valImport = getValue(inputs.find(i => i.label === 'valImport')) !== ''
+            ? getValue(inputs.find(i => i.label === 'valImport'))
+            : null;
+        const valField = inputs.find(i => i.label === 'Val' && i.style.display !== 'none');
+        const Val = valField ? getValue(valField) : null;
+        const element = createElement(parent.ownerDocument, 'BDA', {
+            name,
+            desc,
+            bType,
+            type,
+            sAddr,
+            valKind,
+            valImport,
+        });
+        if (Val !== null) {
+            const valElement = createElement(parent.ownerDocument, 'Val', {});
+            valElement.textContent = Val;
+            element.appendChild(valElement);
+        }
+        return [
+            {
+                parent,
+                node: element,
+                reference: getReference(parent, 'BDA'),
+            },
+        ];
+    };
+}
+function createBDaWizard(element) {
+    const doc = element.ownerDocument;
+    const name = '';
+    const desc = null;
+    const bType = '';
+    const type = null;
+    const sAddr = null;
+    const Val = null;
+    const valKind = null;
+    const valImport = null;
+    const doOrEnumTypes = Array.from(doc.querySelectorAll('DAType, EnumType')).filter(doOrEnumType => doOrEnumType.getAttribute('id'));
+    const data = element.closest('DataTypeTemplates');
+    return [
+        {
+            title: 'Add BDA',
+            primary: {
+                icon: '',
+                label: 'save',
+                action: createBDaAction(element),
+            },
+            content: [
+                ...renderAbstractDataAttributeContent(name, desc, bType, doOrEnumTypes, type, sAddr, valKind, valImport, Val, data),
+            ],
+        },
+    ];
+}
+function updateBDaAction(element) {
+    return (inputs) => {
+        var _a, _b, _c, _d;
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const bType = getValue(inputs.find(i => i.label === 'bType'));
+        const type = bType === 'Enum' || bType === 'Struct'
+            ? getValue(inputs.find(i => i.label === 'type'))
+            : null;
+        const sAddr = getValue(inputs.find(i => i.label === 'sAddr'));
+        const valKind = getValue(inputs.find(i => i.label === 'valKind'));
+        const valImport = getValue(inputs.find(i => i.label === 'valImport'));
+        const valField = inputs.find(i => i.label === 'Val' && i.style.display !== 'none');
+        const Val = valField ? getValue(valField) : null;
+        let bdaAction;
+        const valAction = [];
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc') &&
+            bType === element.getAttribute('bType') &&
+            type === element.getAttribute('type') &&
+            sAddr === element.getAttribute('sAddr') &&
+            valKind === element.getAttribute('valKind') &&
+            valImport === element.getAttribute('valImprot')) {
+            bdaAction = null;
+        }
+        else {
+            bdaAction = {
+                element,
+                attributes: {
+                    name,
+                    desc,
+                    bType,
+                    type,
+                    sAddr,
+                    valKind,
+                    valImport,
+                },
+            };
+        }
+        if (Val !== ((_c = (_b = (_a = element.querySelector('Val')) === null || _a === void 0 ? void 0 : _a.textContent) === null || _b === void 0 ? void 0 : _b.trim()) !== null && _c !== void 0 ? _c : null)) {
+            valAction.push(getValAction(element.querySelector('Val'), Val, (_d = bdaAction === null || bdaAction === void 0 ? void 0 : bdaAction.element) !== null && _d !== void 0 ? _d : element));
+        }
+        const actions = [];
+        if (bdaAction)
+            actions.push(bdaAction);
+        if (valAction)
+            actions.push(...valAction);
+        return actions;
+    };
+}
+function editBDaWizard(element) {
+    var _a, _b, _c;
+    const doc = element.ownerDocument;
+    const type = element.getAttribute('type');
+    const name = element.getAttribute('name');
+    const desc = element.getAttribute('desc');
+    const bType = (_a = element.getAttribute('bType')) !== null && _a !== void 0 ? _a : '';
+    const sAddr = element.getAttribute('sAddr');
+    const Val = (_c = (_b = element.querySelector('Val')) === null || _b === void 0 ? void 0 : _b.innerHTML.trim()) !== null && _c !== void 0 ? _c : null;
+    const valKind = element.getAttribute('valKind');
+    const valImport = element.getAttribute('valImport');
+    const daOrEnumTypes = Array.from(doc.querySelectorAll('DAType, EnumType'))
+        .filter(isPublic)
+        .filter(daOrEnumType => daOrEnumType.getAttribute('id'));
+    const data = element.closest('DataTypeTemplates');
+    return [
+        {
+            title: 'Edit BDA',
+            primary: {
+                icon: '',
+                label: 'save',
+                action: updateBDaAction(element),
+            },
+            content: [
+                ...renderAbstractDataAttributeContent(name, desc, bType, daOrEnumTypes, type, sAddr, valKind, valImport, Val, data),
+            ],
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+const types = {
+    // standard
+    CBR: 'Circuit Breaker',
+    DIS: 'Disconnector',
+    // custom
+    ERS: 'Earth Switch',
+    CTR: 'Current Transformer',
+    VTR: 'Voltage Transformer',
+    AXN: 'Auxiliary Network',
+    BAT: 'Battery',
+    BSH: 'Bushing',
+    CAP: 'Capacitor Bank',
+    CON: 'Converter',
+    EFN: 'Earth Fault Neutralizer',
+    FAN: 'Fan',
+    GIL: 'Gas Insulated Line',
+    GEN: 'Generator',
+    IFL: 'Infeeding Line',
+    MOT: 'Motor',
+    RES: 'Neutral Resistor',
+    REA: 'Reactor',
+    PSH: 'Power Shunt',
+    CAB: 'Power Cable',
+    PMP: 'Pump',
+    LIN: 'Power Overhead Line',
+    RRC: 'Rotating Reactive Component',
+    SCR: 'Semiconductor Controlled Rectifier',
+    SAR: 'Surge Arrester',
+    SMC: 'Synchronous Machine',
+    TCF: 'Thyristor Controlled Frequency Converter',
+    TCR: 'Thyristor Controlled Reactive Component',
+};
+function getLogicalNodeInstance(lNode) {
+    if (!lNode)
+        return null;
+    const [lnInst, lnClass, iedName, ldInst, prefix] = [
+        'lnInst',
+        'lnClass',
+        'iedName',
+        'ldInst',
+        'prefix',
+    ].map(attribute => lNode === null || lNode === void 0 ? void 0 : lNode.getAttribute(attribute));
+    const iedSelector = [`IED[name="${iedName}"]`, 'IED'];
+    const lDevicePath = ['AccessPoint > Server'];
+    const lNSelector = [
+        `LDevice[inst="${ldInst}"] > LN[inst="${lnInst}"][lnClass="${lnClass}"]`,
+    ];
+    const lNPrefixSelector = prefix && prefix !== ''
+        ? [`[prefix="${prefix}"]`]
+        : ['[prefix=""]', ':not(prefix)'];
+    return lNode.ownerDocument.querySelector(crossProduct$1(iedSelector, [' > '], lDevicePath, [' > '], lNSelector, lNPrefixSelector)
+        .map(strings => strings.join(''))
+        .join(','));
+}
+function getSwitchTypeValueFromDTT(lNorlNode) {
+    var _a;
+    const rootNode = lNorlNode === null || lNorlNode === void 0 ? void 0 : lNorlNode.ownerDocument;
+    const lNodeType = lNorlNode.getAttribute('lnType');
+    const lnClass = lNorlNode.getAttribute('lnClass');
+    const dObj = rootNode.querySelector(`DataTypeTemplates > LNodeType[id="${lNodeType}"][lnClass="${lnClass}"] > DO[name="SwTyp"]`);
+    if (dObj) {
+        const dORef = dObj.getAttribute('type');
+        return (_a = rootNode
+            .querySelector(`DataTypeTemplates > DOType[id="${dORef}"] > DA[name="stVal"] > Val`)) === null || _a === void 0 ? void 0 : _a.innerHTML.trim();
+    }
+    return undefined;
+}
+function getSwitchTypeValue(lN) {
+    var _a;
+    const daInstantiated = lN.querySelector('DOI[name="SwTyp"] > DAI[name="stVal"]');
+    if (daInstantiated)
+        return (_a = daInstantiated.querySelector('Val')) === null || _a === void 0 ? void 0 : _a.innerHTML.trim();
+    return getSwitchTypeValueFromDTT(lN);
+}
+function containsGroundedTerminal(condEq) {
+    return Array.from(condEq.querySelectorAll('Terminal')).some(t => t.getAttribute('cNodeName') === 'grounded');
+}
+function containsEarthSwitchDefinition(condEq) {
+    const lNodeXSWI = condEq.querySelector('LNode[lnClass="XSWI"]');
+    const lN = getLogicalNodeInstance(lNodeXSWI);
+    let swTypVal;
+    if (lN) {
+        swTypVal = getSwitchTypeValue(lN);
+    }
+    else if (lNodeXSWI) {
+        swTypVal = getSwitchTypeValueFromDTT(lNodeXSWI);
+    }
+    return swTypVal
+        ? ['Earthing Switch', 'High Speed Earthing Switch'].includes(swTypVal)
+        : false;
+}
+function typeStr(condEq) {
+    var _a;
+    if (condEq.getAttribute('type') === 'DIS' &&
+        (containsGroundedTerminal(condEq) || containsEarthSwitchDefinition(condEq))) {
+        return 'ERS';
+    }
+    return (_a = condEq.getAttribute('type')) !== null && _a !== void 0 ? _a : '';
+}
+function typeName(condEq) {
+    var _a;
+    return (_a = types[typeStr(condEq)]) !== null && _a !== void 0 ? _a : 'Unknown Type';
+}
+function renderTypeSelector(option, type) {
+    return option === 'create'
+        ? x `<mwc-select
+        style="--mdc-menu-max-height: 196px;"
+        required
+        label="type"
+      >
+        ${Object.keys(types).map(v => x `<mwc-list-item value="${v}">${types[v]}</mwc-list-item>`)}
+      </mwc-select>`
+        : x `<mwc-select label="type" disabled>
+        <mwc-list-item selected value="0">${type}</mwc-list-item>
+      </mwc-select>`;
+}
+function renderConductingEquipmentWizard(name, desc, option, type, reservedNames) {
+    return [
+        renderTypeSelector(option, type),
+        x `<oscd-textfield
+      label="name"
+      .maybeValue=${name}
+      required
+      dialogInitialFocus
+      .reservedValues=${reservedNames}
+    ></oscd-textfield>`,
+        x `<oscd-textfield
+      label="desc"
+      .maybeValue=${desc}
+      nullable
+    ></oscd-textfield>`,
+    ];
+}
+function createAction$d(parent) {
+    return (inputs) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const proxyType = getValue(inputs.find(i => i.label === 'type'));
+        const type = proxyType === 'ERS' ? 'DIS' : proxyType;
+        const element = createElement(parent.ownerDocument, 'ConductingEquipment', {
+            name,
+            type,
+            desc,
+        });
+        const action = {
+            parent,
+            node: element,
+            reference: getReference(parent, 'ConductingEquipment'),
+        };
+        if (proxyType !== 'ERS')
+            return [action];
+        const groundNode = (_a = parent
+            .closest('VoltageLevel')) === null || _a === void 0 ? void 0 : _a.querySelector('ConnectivityNode[name="grounded"]');
+        const substationName = groundNode
+            ? (_c = (_b = groundNode.closest('Substation')) === null || _b === void 0 ? void 0 : _b.getAttribute('name')) !== null && _c !== void 0 ? _c : null
+            : (_e = (_d = parent.closest('Substation')) === null || _d === void 0 ? void 0 : _d.getAttribute('name')) !== null && _e !== void 0 ? _e : null;
+        const voltageLevelName = groundNode
+            ? (_g = (_f = groundNode.closest('VoltageLevel')) === null || _f === void 0 ? void 0 : _f.getAttribute('name')) !== null && _g !== void 0 ? _g : null
+            : (_j = (_h = parent.closest('VoltageLevel')) === null || _h === void 0 ? void 0 : _h.getAttribute('name')) !== null && _j !== void 0 ? _j : null;
+        const bayName = groundNode
+            ? (_l = (_k = groundNode.closest('Bay')) === null || _k === void 0 ? void 0 : _k.getAttribute('name')) !== null && _l !== void 0 ? _l : null
+            : (_o = (_m = parent.closest('Bay')) === null || _m === void 0 ? void 0 : _m.getAttribute('name')) !== null && _o !== void 0 ? _o : null;
+        const connectivityNode = bayName && voltageLevelName && substationName
+            ? `${substationName}/${voltageLevelName}/${bayName}/grounded`
+            : null;
+        const groundTerminal = createElement(parent.ownerDocument, 'Terminal', {
+            name: 'T1',
+            cNodeName: 'grounded',
+            substationName,
+            voltageLevelName,
+            bayName,
+            connectivityNode,
+        });
+        const terminalAction = {
+            parent: element,
+            node: groundTerminal,
+            reference: getReference(element, 'Terminal'),
+        };
+        if (groundNode)
+            return [action, terminalAction];
+        const cNodeElement = createElement(parent.ownerDocument, 'ConnectivityNode', {
+            name: 'grounded',
+            pathName: connectivityNode,
+        });
+        const cNodeAction = {
+            parent,
+            node: cNodeElement,
+            reference: getReference(parent, 'ConnectivityNode'),
+        };
+        return [action, terminalAction, cNodeAction];
+    };
+}
+function reservedNamesConductingEquipment(parent, currentName) {
+    return Array.from(parent.querySelectorAll('ConductingEquipment'))
+        .filter(isPublic)
+        .map(condEq => { var _a; return (_a = condEq.getAttribute('name')) !== null && _a !== void 0 ? _a : ''; })
+        .filter(name => currentName && name !== currentName);
+}
+function createConductingEquipmentWizard(parent) {
+    const reservedNames = reservedNamesConductingEquipment(parent);
+    return [
+        {
+            title: 'Add ConductingEquipment',
+            primary: {
+                icon: 'add',
+                label: 'add',
+                action: createAction$d(parent),
+            },
+            content: renderConductingEquipmentWizard('', '', 'create', '', reservedNames),
+        },
+    ];
+}
+function updateAction$h(element) {
+    return (inputs) => {
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc')) {
+            return [];
+        }
+        return [{ element, attributes: { name, desc } }];
+    };
+}
+function editConductingEquipmentWizard(element) {
+    const reservedNames = reservedNamesConductingEquipment(element.parentNode, element.getAttribute('name'));
+    return [
+        {
+            title: 'Edit ConductingEquipment',
+            primary: {
+                icon: 'edit',
+                label: 'save',
+                action: updateAction$h(element),
+            },
+            content: renderConductingEquipmentWizard(element.getAttribute('name'), element.getAttribute('desc'), 'edit', typeName(element), reservedNames),
+        },
+    ];
+}
 
 /**
  * @license
@@ -40837,7 +41490,7 @@ function createConnectedApWizard(element) {
         },
     ];
 }
-function updateAction$f(element) {
+function updateAction$g(element) {
     return (inputs, wizard) => {
         var _a, _b, _c;
         const typeRestriction = (_c = (_b = (_a = wizard.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('#typeRestriction')) === null || _b === void 0 ? void 0 : _b.checked) !== null && _c !== void 0 ? _c : false;
@@ -40858,9 +41511,443 @@ function editConnectedApWizard(element) {
             primary: {
                 icon: 'save',
                 label: 'save',
-                action: updateAction$f(element),
+                action: updateAction$g(element),
             },
             content: [...contentAddress({ element, types: getTypes(element) })],
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function renderAdditionalDaContent(fc, dchg, qchg, dupd) {
+    return [
+        x `<oscd-select label="fc" .maybeValue=${fc} required fixedMenuPosition
+      >${functionalConstraintEnum.map(fcOption => x `<mwc-list-item value="${fcOption}">${fcOption}</mwc-list-item>`)}</oscd-select
+    >`,
+        x `<oscd-checkbox
+      label="dchg"
+      .maybeValue=${dchg}
+      nullable
+    ></oscd-checkbox>`,
+        x `<oscd-checkbox
+      label="qchg"
+      .maybeValue=${qchg}
+      nullable
+    ></oscd-checkbox>`,
+        x `<oscd-checkbox
+      label="dupd"
+      .maybeValue=${dupd}
+      nullable
+    ></oscd-checkbox>`,
+    ];
+}
+function createDaAction(parent) {
+    return (inputs) => {
+        var _a;
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const bType = getValue(inputs.find(i => i.label === 'bType'));
+        const type = bType === 'Enum' || bType === 'Struct'
+            ? getValue(inputs.find(i => i.label === 'type'))
+            : null;
+        const sAddr = getValue(inputs.find(i => i.label === 'sAddr'));
+        const valKind = getValue(inputs.find(i => i.label === 'valKind'));
+        const valImport = getValue(inputs.find(i => i.label === 'valImport'));
+        const valField = inputs.find(i => i.label === 'Val' && i.style.display !== 'none');
+        const Val = valField ? getValue(valField) : null;
+        const fc = (_a = getValue(inputs.find(i => i.label === 'fc'))) !== null && _a !== void 0 ? _a : '';
+        const dchg = getValue(inputs.find(i => i.label === 'dchg'));
+        const qchg = getValue(inputs.find(i => i.label === 'qchg'));
+        const dupd = getValue(inputs.find(i => i.label === 'dupd'));
+        const actions = [];
+        const element = createElement(parent.ownerDocument, 'DA', {
+            name,
+            desc,
+            bType,
+            type,
+            sAddr,
+            valKind,
+            valImport,
+            fc,
+            dchg,
+            qchg,
+            dupd,
+        });
+        if (Val !== null) {
+            const valElement = createElement(parent.ownerDocument, 'Val', {});
+            valElement.textContent = Val;
+            element.appendChild(valElement);
+        }
+        actions.push({
+            parent,
+            node: element,
+            reference: getReference(parent, 'DA'),
+        });
+        return actions;
+    };
+}
+function createDaWizard(element) {
+    const doc = element.ownerDocument;
+    const name = '';
+    const desc = null;
+    const bType = '';
+    const type = null;
+    const sAddr = null;
+    const Val = null;
+    const valKind = null;
+    const valImport = null;
+    const fc = '';
+    const dchg = null;
+    const qchg = null;
+    const dupd = null;
+    const doTypes = Array.from(doc.querySelectorAll('DAType, EnumType'))
+        .filter(isPublic)
+        .filter(doType => doType.getAttribute('id'));
+    const data = element.closest('DataTypeTemplates');
+    return [
+        {
+            title: 'Add DA',
+            primary: {
+                icon: '',
+                label: 'save',
+                action: createDaAction(element),
+            },
+            content: [
+                ...renderAbstractDataAttributeContent(name, desc, bType, doTypes, type, sAddr, valKind, valImport, Val, data),
+                ...renderAdditionalDaContent(fc, dchg, qchg, dupd),
+            ],
+        },
+    ];
+}
+function updateDaAction(element) {
+    return (inputs) => {
+        var _a, _b, _c, _d, _e;
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const bType = getValue(inputs.find(i => i.label === 'bType'));
+        const type = bType === 'Enum' || bType === 'Struct'
+            ? getValue(inputs.find(i => i.label === 'type'))
+            : null;
+        const sAddr = getValue(inputs.find(i => i.label === 'sAddr'));
+        const valKind = getValue(inputs.find(i => i.label === 'valKind'));
+        const valImport = getValue(inputs.find(i => i.label === 'valImport'));
+        const valField = inputs.find(i => i.label === 'Val' && i.style.display !== 'none');
+        const Val = valField ? getValue(valField) : null;
+        const fc = (_a = getValue(inputs.find(i => i.label === 'fc'))) !== null && _a !== void 0 ? _a : '';
+        const dchg = getValue(inputs.find(i => i.label === 'dchg'));
+        const qchg = getValue(inputs.find(i => i.label === 'qchg'));
+        const dupd = getValue(inputs.find(i => i.label === 'dupd'));
+        let daAction;
+        const valAction = [];
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc') &&
+            bType === element.getAttribute('bType') &&
+            type === element.getAttribute('type') &&
+            sAddr === element.getAttribute('sAddr') &&
+            valKind === element.getAttribute('valKind') &&
+            valImport === element.getAttribute('valImprot') &&
+            fc === element.getAttribute('fc') &&
+            dchg === element.getAttribute('dchg') &&
+            qchg === element.getAttribute('qchg') &&
+            dupd === element.getAttribute('dupd')) {
+            daAction = null;
+        }
+        else {
+            daAction = {
+                element,
+                attributes: {
+                    name,
+                    desc,
+                    bType,
+                    type,
+                    sAddr,
+                    valKind,
+                    valImport,
+                    fc,
+                    dchg,
+                    qchg,
+                    dupd,
+                },
+            };
+        }
+        if (Val !== ((_d = (_c = (_b = element.querySelector('Val')) === null || _b === void 0 ? void 0 : _b.textContent) === null || _c === void 0 ? void 0 : _c.trim()) !== null && _d !== void 0 ? _d : null)) {
+            valAction.push(getValAction(element.querySelector('Val'), Val, (_e = daAction === null || daAction === void 0 ? void 0 : daAction.element) !== null && _e !== void 0 ? _e : element));
+        }
+        const actions = [];
+        if (daAction)
+            actions.push(daAction);
+        if (valAction)
+            actions.push(...valAction);
+        return actions;
+    };
+}
+function editDAWizard(element) {
+    var _a, _b, _c, _d;
+    const doc = element.ownerDocument;
+    const name = element.getAttribute('name');
+    const desc = element.getAttribute('desc');
+    const bType = (_a = element.getAttribute('bType')) !== null && _a !== void 0 ? _a : '';
+    const type = element.getAttribute('type');
+    const sAddr = element.getAttribute('sAddr');
+    const Val = (_c = (_b = element.querySelector('Val')) === null || _b === void 0 ? void 0 : _b.innerHTML.trim()) !== null && _c !== void 0 ? _c : null;
+    const valKind = element.getAttribute('valKind');
+    const valImport = element.getAttribute('valImport');
+    const fc = (_d = element.getAttribute('fc')) !== null && _d !== void 0 ? _d : '';
+    const dchg = element.getAttribute('dchg');
+    const qchg = element.getAttribute('qchg');
+    const dupd = element.getAttribute('dupd');
+    const doTypes = Array.from(doc.querySelectorAll('DAType, EnumType'))
+        .filter(isPublic)
+        .filter(doType => doType.getAttribute('id'));
+    const data = element.closest('DataTypeTemplates');
+    return [
+        {
+            title: 'Edit DA',
+            primary: {
+                icon: '',
+                label: 'save',
+                action: updateDaAction(element),
+            },
+            content: [
+                ...renderAbstractDataAttributeContent(name, desc, bType, doTypes, type, sAddr, valKind, valImport, Val, data),
+                ...renderAdditionalDaContent(fc, dchg, qchg, dupd),
+            ],
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function renderContent$3(content) {
+    return [
+        x `<oscd-textfield
+      label="name"
+      .maybeValue=${content.name}
+      required
+      pattern="${patterns.alphanumericFirstUpperCase}"
+      dialogInitialFocus
+    ></oscd-textfield>`,
+        x `<oscd-textfield
+      label="desc"
+      .maybeValue=${content.desc}
+      nullable
+      pattern="${patterns.normalizedString}"
+    ></oscd-textfield>`,
+        x `<oscd-select fixedMenuPosition label="type" required
+      >${content.doTypes.map(dataType => x `<mwc-list-item
+            value=${dataType.id}
+            ?selected=${dataType.id === content.type}
+            >${dataType.id}</mwc-list-item
+          >`)}</oscd-select
+    >`,
+        x `<oscd-textfield
+      label="accessControl"
+      .maybeValue=${content.accessControl}
+      nullable
+      pattern="${patterns.normalizedString}"
+    ></oscd-textfield>`,
+        x `<oscd-checkbox
+      label="transient"
+      .maybeValue="${content.transient}"
+      nullable
+    ></oscd-checkbox>`,
+    ];
+}
+function createDoAction(parent) {
+    return (inputs) => {
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const type = getValue(inputs.find(i => i.label === 'type'));
+        const accessControl = getValue(inputs.find(i => i.label === 'accessControl'));
+        const transient = getValue(inputs.find(i => i.label === 'transient')) !== ''
+            ? getValue(inputs.find(i => i.label === 'transient'))
+            : null;
+        const actions = [];
+        const element = createElement(parent.ownerDocument, 'DO', {
+            name,
+            desc,
+            type,
+            accessControl,
+            transient,
+        });
+        actions.push({
+            parent,
+            node: element,
+            reference: getReference(parent, 'DO'),
+        });
+        return actions;
+    };
+}
+function createDoWizard(parent) {
+    const [type, name, desc, accessControl, transient] = [
+        null,
+        '',
+        null,
+        null,
+        null,
+    ];
+    const doTypes = Array.from(parent.ownerDocument.querySelectorAll('DOType')).filter(doType => doType.getAttribute('id'));
+    return [
+        {
+            title: 'Add DO',
+            primary: { icon: '', label: 'save', action: createDoAction(parent) },
+            content: renderContent$3({
+                name,
+                desc,
+                transient,
+                accessControl,
+                type,
+                doTypes,
+            }),
+        },
+    ];
+}
+function updateDoAction(element) {
+    return (inputs) => {
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const type = getValue(inputs.find(i => i.label === 'type'));
+        const accessControl = getValue(inputs.find(i => i.label === 'accessControl'));
+        const transient = getValue(inputs.find(i => i.label === 'transient')) !== ''
+            ? getValue(inputs.find(i => i.label === 'transient'))
+            : null;
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc') &&
+            type === element.getAttribute('type') &&
+            accessControl === element.getAttribute('accessControl') &&
+            transient === element.getAttribute('transient')) {
+            return [];
+        }
+        return [
+            { element, attributes: { name, desc, type, accessControl, transient } },
+        ];
+    };
+}
+function editDoWizard(element) {
+    const [type, name, desc, accessControl, transient] = [
+        element.getAttribute('type'),
+        element.getAttribute('name'),
+        element.getAttribute('desc'),
+        element.getAttribute('accessControl'),
+        element.getAttribute('transient'),
+    ];
+    const doTypes = Array.from(element.ownerDocument.querySelectorAll('DOType')).filter(doType => doType.getAttribute('id'));
+    return [
+        {
+            title: 'Edit DO',
+            primary: { icon: '', label: 'save', action: updateDoAction(element) },
+            content: renderContent$3({
+                name,
+                desc,
+                transient,
+                accessControl,
+                type,
+                doTypes,
+            }),
+        },
+    ];
+}
+
+function renderContent$2(content) {
+    return [
+        x `<oscd-textfield
+      label="ord"
+      .maybeValue=${content.ord}
+      required
+      type="number"
+    ></oscd-textfield>`,
+        x `<oscd-textfield
+      label="value"
+      .maybeValue=${content.value}
+      pattern="${patterns.normalizedString}"
+      dialogInitialFocus
+    ></oscd-textfield>`,
+        x `<oscd-textfield
+      id="evDesc"
+      label="desc"
+      .maybeValue=${content.desc}
+      nullable
+      pattern="${patterns.normalizedString}"
+    ></oscd-textfield>`,
+    ];
+}
+function nextOrd(parent) {
+    const maxOrd = Math.max(...Array.from(parent.children).map(child => { var _a; return parseInt((_a = child.getAttribute('ord')) !== null && _a !== void 0 ? _a : '-2', 10); }));
+    // eslint-disable-next-line no-restricted-globals
+    return isFinite(maxOrd) ? (maxOrd + 1).toString(10) : '0';
+}
+function createAction$c(parent) {
+    return (inputs) => {
+        const value = getValue(inputs.find(i => i.label === 'value'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const ord = getValue(inputs.find(i => i.label === 'ord')) || nextOrd(parent);
+        const element = createElement(parent.ownerDocument, 'EnumVal', {
+            ord,
+            desc,
+        });
+        element.textContent = value;
+        const action = [
+            {
+                parent,
+                node: element,
+                reference: getReference(parent, 'EnumVal'),
+            },
+        ];
+        return [action];
+    };
+}
+function createEnumValWizard(parent) {
+    const [ord, desc, value] = [nextOrd(parent), null, ''];
+    return [
+        {
+            title: 'Add EnumVal',
+            primary: {
+                icon: '',
+                label: 'Save',
+                action: createAction$c(parent),
+            },
+            content: renderContent$2({ ord, desc, value }),
+        },
+    ];
+}
+function updateAction$f(element) {
+    return (inputs) => {
+        var _a;
+        const value = (_a = getValue(inputs.find(i => i.label === 'value'))) !== null && _a !== void 0 ? _a : '';
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const ord = getValue(inputs.find(i => i.label === 'ord')) ||
+            element.getAttribute('ord') ||
+            nextOrd(element.parentElement);
+        if (value === element.textContent &&
+            desc === element.getAttribute('desc') &&
+            ord === element.getAttribute('ord'))
+            return [];
+        const newElement = cloneElement(element, { desc, ord });
+        newElement.textContent = value;
+        return [
+            {
+                parent: element.parentElement,
+                node: newElement,
+                reference: getReference(element.parentElement, 'EnumVal'),
+            },
+            { node: element },
+        ];
+    };
+}
+function editEnumValWizard(element) {
+    const [ord, desc, value] = [
+        element.getAttribute('ord'),
+        element.getAttribute('desc'),
+        element.textContent,
+    ];
+    return [
+        {
+            title: 'Edit EnumVal',
+            primary: {
+                icon: '',
+                label: 'Save',
+                action: updateAction$f(element),
+            },
+            content: renderContent$2({ ord, desc, value }),
         },
     ];
 }
@@ -41126,160 +42213,6 @@ function editEqSubFunctionWizard(element) {
     ];
 }
 
-/** A potentially `nullable` labelled checkbox. */
-let OscdCheckbox = class OscdCheckbox extends s$1 {
-    constructor() {
-        super(...arguments);
-        this.label = '';
-        /** Parenthetical information rendered after the label: `label (helper)` */
-        this.helper = '';
-        /** Whether [[`maybeValue`]] may be `null` */
-        this.nullable = false;
-        /** The default `checked` state while [[`maybeValue`]] is `null`. */
-        this.defaultChecked = false;
-        /** Disables component including null switch */
-        this.disabled = false;
-        this.isNull = false;
-        this.initChecked = false;
-        this.deactivateCheckbox = false;
-        this.nulled = null;
-    }
-    /** Is `"true"` when checked, `"false"` un-checked, `null` if [[`nullable`]]. */
-    get maybeValue() {
-        // eslint-disable-next-line no-nested-ternary
-        return this.null ? null : this.checked ? 'true' : 'false';
-    }
-    set maybeValue(check) {
-        if (check === null)
-            this.null = true;
-        else {
-            this.null = false;
-            this.checked = check === 'true';
-        }
-    }
-    get null() {
-        return this.nullable && this.isNull;
-    }
-    set null(value) {
-        if (!this.nullable || value === this.isNull)
-            return;
-        this.isNull = value;
-        if (this.null)
-            this.disable();
-        else
-            this.enable();
-    }
-    get checked() {
-        var _a, _b;
-        return (_b = (_a = this.checkbox) === null || _a === void 0 ? void 0 : _a.checked) !== null && _b !== void 0 ? _b : this.initChecked;
-    }
-    set checked(value) {
-        if (this.checkbox)
-            this.checkbox.checked = value;
-        else
-            this.initChecked = value;
-    }
-    get formfieldLabel() {
-        return this.helper ? `${this.helper} (${this.label})` : this.label;
-    }
-    // eslint-disable-next-line class-methods-use-this
-    checkValidity() {
-        return true;
-    }
-    enable() {
-        if (this.nulled === null)
-            return;
-        this.checked = this.nulled;
-        this.nulled = null;
-        this.deactivateCheckbox = false;
-    }
-    disable() {
-        if (this.nulled !== null)
-            return;
-        this.nulled = this.checked;
-        this.checked = this.defaultChecked;
-        this.deactivateCheckbox = true;
-    }
-    firstUpdated() {
-        this.requestUpdate();
-    }
-    renderSwitch() {
-        if (this.nullable) {
-            return x `<mwc-switch
-        style="margin-left: 12px;"
-        ?selected=${!this.null}
-        ?disabled=${this.disabled}
-        @click=${() => {
-                this.null = !this.nullSwitch.selected;
-                this.dispatchEvent(new Event('input'));
-            }}
-      ></mwc-switch>`;
-        }
-        return x ``;
-    }
-    render() {
-        return x `
-      <div style="display: flex; flex-direction: row;">
-        <div style="flex: auto;">
-          <mwc-formfield
-            label="${this.formfieldLabel}"
-            style="${this.deactivateCheckbox || this.disabled
-            ? `--mdc-theme-text-primary-on-background:rgba(0, 0, 0, 0.38)`
-            : ``}"
-            ><mwc-checkbox
-              ?checked=${this.initChecked}
-              ?disabled=${this.deactivateCheckbox || this.disabled}
-              @change=${() => this.dispatchEvent(new Event('input'))}
-            ></mwc-checkbox
-          ></mwc-formfield>
-        </div>
-        <div style="display: flex; align-items: center;">
-          ${this.renderSwitch()}
-        </div>
-      </div>
-    `;
-    }
-};
-__decorate$1([
-    e$6({ type: String })
-], OscdCheckbox.prototype, "label", void 0);
-__decorate$1([
-    e$6({ type: String })
-], OscdCheckbox.prototype, "helper", void 0);
-__decorate$1([
-    e$6({ type: Boolean })
-], OscdCheckbox.prototype, "nullable", void 0);
-__decorate$1([
-    e$6({ type: Boolean })
-], OscdCheckbox.prototype, "defaultChecked", void 0);
-__decorate$1([
-    e$6({ type: String })
-], OscdCheckbox.prototype, "maybeValue", null);
-__decorate$1([
-    e$6({ type: Boolean })
-], OscdCheckbox.prototype, "disabled", void 0);
-__decorate$1([
-    t$1()
-], OscdCheckbox.prototype, "null", null);
-__decorate$1([
-    t$1()
-], OscdCheckbox.prototype, "checked", null);
-__decorate$1([
-    t$1()
-], OscdCheckbox.prototype, "deactivateCheckbox", void 0);
-__decorate$1([
-    t$1()
-], OscdCheckbox.prototype, "formfieldLabel", null);
-__decorate$1([
-    i$2('mwc-switch')
-], OscdCheckbox.prototype, "nullSwitch", void 0);
-__decorate$1([
-    i$2('mwc-checkbox')
-], OscdCheckbox.prototype, "checkbox", void 0);
-OscdCheckbox = __decorate$1([
-    e$7('oscd-checkbox')
-], OscdCheckbox);
-
 /* eslint-disable import/no-extraneous-dependencies */
 function contentGeneralEquipmentWizard(content) {
     return [
@@ -41419,12 +42352,12 @@ function mxxTimeUpdateAction(gse, oldMxxTime, newTimeValue, option) {
     const newMxxTime = oldMxxTime.cloneNode(false);
     newMxxTime.textContent = newTimeValue;
     return [
-        { node: oldMxxTime },
         {
             parent: gse,
             node: newMxxTime,
             reference: oldMxxTime.nextSibling,
         },
+        { node: oldMxxTime },
     ];
 }
 function updateAction$b(element) {
@@ -41488,30 +42421,8 @@ function editGseWizard(element) {
     ];
 }
 
-const nameStartChar = '[:_A-Za-z]|[\u00C0-\u00D6]|[\u00D8-\u00F6]|[\u00F8-\u02FF]|[\u0370-\u037D]' +
-    '|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]' +
-    '|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]';
-const nameChar = `${nameStartChar}|[.0-9\\-]|\u00B7|[\u0300-\u036F]|[\u203F-\u2040]`;
-const name = `${nameStartChar}(${nameChar})*`;
-const nmToken = `(${nameChar})+`;
-const patterns = {
-    string: '([\u0009-\u000A]|[\u000D]|[\u0020-\u007E]|[\u0085]|[\u00A0-\uD7FF]' +
-        '|[\uE000-\uFFFD])*',
-    normalizedString: '([\u0020-\u007E]|[\u0085]|[\u00A0-\uD7FF]|[\uE000-\uFFFD])*',
-    name,
-    nmToken,
-    names: `${name}( ${name})*`,
-    nmTokens: `${nmToken}( ${nmToken})*`,
-    decimal: '[+\\-]?[0-9]+(([.][0-9]*)?|([.][0-9]+))',
-    unsigned: '[+]?[0-9]+(([.][0-9]*)?|([.][0-9]+))',
-    integer: '[+\\-]?[0-9]+([0-9]*)',
-    alphanumericFirstUpperCase: '[A-Z][0-9,A-Z,a-z]*',
-    alphanumericFirstLowerCase: '[a-z][0-9,A-Z,a-z]*',
-    lnClass: '(LLN0)|[A-Z]{4,4}',
-};
-
 /* eslint-disable import/no-extraneous-dependencies */
-function renderContent(name, desc, type, nomFreq, numPhases) {
+function renderContent$1(name, desc, type, nomFreq, numPhases) {
     return [
         x `<oscd-textfield
       label="name"
@@ -41572,7 +42483,7 @@ function createLineWizard(parent) {
                 label: 'save',
                 action: createAction$9(parent),
             },
-            content: [...renderContent(name, desc, type, nomFreq, numPhases)],
+            content: [...renderContent$1(name, desc, type, nomFreq, numPhases)],
         },
     ];
 }
@@ -41599,7 +42510,7 @@ function editLineWizard(element) {
                 label: 'save',
                 action: updateAction$a(element),
             },
-            content: renderContent((_a = element.getAttribute('name')) !== null && _a !== void 0 ? _a : '', element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('nomFreq'), element.getAttribute('numPhases')),
+            content: renderContent$1((_a = element.getAttribute('name')) !== null && _a !== void 0 ? _a : '', element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('nomFreq'), element.getAttribute('numPhases')),
         },
     ];
 }
@@ -41791,6 +42702,102 @@ function editProcessWizard(element) {
     ];
 }
 
+/* eslint-disable import/no-extraneous-dependencies */
+function renderContent(content) {
+    return [
+        x `<oscd-textfield
+      label="name"
+      .maybeValue=${content.name}
+      required
+      pattern="${patterns.alphanumericFirstLowerCase}"
+      dialogInitialFocus
+    >
+      ></oscd-textfield
+    >`,
+        x `<oscd-textfield
+      label="desc"
+      .maybeValue=${content.desc}
+      nullable
+      pattern="${patterns.normalizedString}"
+    ></oscd-textfield>`,
+        x `<oscd-select fixedMenuPosition label="type" required
+      >${content.doTypes.map(dataType => x `<mwc-list-item
+            value=${dataType.id}
+            ?selected=${dataType.id === content.type}
+            >${dataType.id}</mwc-list-item
+          >`)}</oscd-select
+    >`,
+    ];
+}
+function createSDoAction(parent) {
+    return (inputs) => {
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const type = getValue(inputs.find(i => i.label === 'type'));
+        const actions = [];
+        const element = createElement(parent.ownerDocument, 'SDO', {
+            name,
+            desc,
+            type,
+        });
+        actions.push({
+            parent,
+            node: element,
+            reference: getReference(parent, 'SDO'),
+        });
+        return actions;
+    };
+}
+function createSDoWizard(parent) {
+    const [type, name, desc] = [null, '', null];
+    const doTypes = Array.from(parent.ownerDocument.querySelectorAll('DOType')).filter(doType => doType.getAttribute('id'));
+    return [
+        {
+            title: 'Add SDO',
+            primary: { icon: '', label: 'save', action: createSDoAction(parent) },
+            content: renderContent({
+                name,
+                desc,
+                type,
+                doTypes,
+            }),
+        },
+    ];
+}
+function updateSDoAction(element) {
+    return (inputs) => {
+        const name = getValue(inputs.find(i => i.label === 'name'));
+        const desc = getValue(inputs.find(i => i.label === 'desc'));
+        const type = getValue(inputs.find(i => i.label === 'type'));
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc') &&
+            type === element.getAttribute('type')) {
+            return [];
+        }
+        return [{ element, attributes: { name, desc, type } }];
+    };
+}
+function editSDoWizard(element) {
+    const [type, name, desc] = [
+        element.getAttribute('type'),
+        element.getAttribute('name'),
+        element.getAttribute('desc'),
+    ];
+    const doTypes = Array.from(element.ownerDocument.querySelectorAll('DOType')).filter(doType => doType.getAttribute('id'));
+    return [
+        {
+            title: 'Edit SDO',
+            primary: { icon: '', label: 'save', action: updateSDoAction(element) },
+            content: renderContent({
+                name,
+                desc,
+                type,
+                doTypes,
+            }),
+        },
+    ];
+}
+
 function updateAction$7(element) {
     return (inputs, wizard) => {
         var _a, _b;
@@ -41825,119 +42832,6 @@ function editSMvWizard(element) {
     ];
 }
 
-/** A potentially `nullable` `Select`.
- *
- * NB: Use `maybeValue: string | null` instead of `value` if `nullable`! */
-let OscdSelect = class OscdSelect extends Select {
-    get null() {
-        return this.nullable && this.isNull;
-    }
-    set null(value) {
-        if (!this.nullable || value === this.isNull)
-            return;
-        this.isNull = value;
-        if (this.null)
-            this.disable();
-        else
-            this.enable();
-    }
-    /** Replacement for `value`, can only be `null` if [[`nullable`]]. */
-    get maybeValue() {
-        return this.null ? null : this.value;
-    }
-    set maybeValue(value) {
-        if (value === null)
-            this.null = true;
-        else {
-            this.null = false;
-            this.value = value;
-        }
-    }
-    enable() {
-        if (this.nulled === null)
-            return;
-        this.value = this.nulled;
-        this.nulled = null;
-        this.disabled = false;
-    }
-    disable() {
-        if (this.nulled !== null)
-            return;
-        this.nulled = this.value;
-        this.value = this.defaultValue;
-        this.disabled = true;
-    }
-    async firstUpdated() {
-        await super.firstUpdated();
-    }
-    checkValidity() {
-        var _a;
-        if (this.nullable && !((_a = this.nullSwitch) === null || _a === void 0 ? void 0 : _a.selected))
-            return true;
-        return super.checkValidity();
-    }
-    constructor() {
-        super();
-        /** Whether [[`maybeValue`]] may be `null` */
-        this.nullable = false;
-        this.isNull = false;
-        /** The default `value` displayed if [[`maybeValue`]] is `null`. */
-        this.defaultValue = '';
-        /** Additional values that cause validation to fail. */
-        this.reservedValues = [];
-        // FIXME: workaround to allow disable of the whole component - need basic refactor
-        this.disabledSwitch = false;
-        this.nulled = null;
-        // eslint-disable-next-line wc/no-constructor-attributes
-        this.disabledSwitch = this.hasAttribute('disabled');
-    }
-    renderSwitch() {
-        if (this.nullable) {
-            return x `<mwc-switch
-        style="margin-left: 12px;"
-        ?selected=${!this.null}
-        ?disabled=${this.disabledSwitch}
-        @click=${() => {
-                this.null = !this.nullSwitch.selected;
-                this.dispatchEvent(new Event('selected'));
-            }}
-      ></mwc-switch>`;
-        }
-        return x ``;
-    }
-    render() {
-        return x `
-      <div style="display: flex; flex-direction: row;">
-        <div style="flex: auto;">${super.render()}</div>
-        <div style="display: flex; align-items: center; height: 56px;">
-          ${this.renderSwitch()}
-        </div>
-      </div>
-    `;
-    }
-};
-__decorate$1([
-    e$6({ type: Boolean })
-], OscdSelect.prototype, "nullable", void 0);
-__decorate$1([
-    t$1()
-], OscdSelect.prototype, "null", null);
-__decorate$1([
-    e$6({ type: String })
-], OscdSelect.prototype, "maybeValue", null);
-__decorate$1([
-    e$6({ type: String })
-], OscdSelect.prototype, "defaultValue", void 0);
-__decorate$1([
-    e$6({ type: Array })
-], OscdSelect.prototype, "reservedValues", void 0);
-__decorate$1([
-    i$2('mwc-switch')
-], OscdSelect.prototype, "nullSwitch", void 0);
-OscdSelect = __decorate$1([
-    e$7('oscd-select')
-], OscdSelect);
-
 function contentSubEquipmentWizard(content) {
     return [
         x `<oscd-textfield
@@ -41962,11 +42856,11 @@ function contentSubEquipmentWizard(content) {
             ${value.charAt(0).toUpperCase() + value.slice(1)}
           </mwc-list-item>`)}
     </oscd-select> `,
-        x `<wizard-checkbox
+        x `<oscd-checkbox
       label="virtual"
       .maybeValue=${content.virtual}
       nullable
-    ></wizard-checkbox>`,
+    ></oscd-checkbox>`,
     ];
 }
 function createAction$6(parent) {
@@ -42243,12 +43137,12 @@ function getBitRateAction(oldBitRate, BitRate, multiplier, SubNetwork) {
     const newBitRate = cloneElement(oldBitRate, { multiplier });
     newBitRate.textContent = BitRate;
     return [
-        { node: oldBitRate },
         {
             parent: oldBitRate.parentElement,
             node: newBitRate,
             reference: getReference(oldBitRate.parentElement, 'BitRate'),
         },
+        { node: oldBitRate },
     ];
 }
 function updateAction$4(element) {
@@ -42398,11 +43292,11 @@ function contentTapChangerWizard(content) {
       .maybeValue=${content.type}
       disabled
     ></oscd-textfield>`,
-        x `<wizard-checkbox
+        x `<oscd-checkbox
       label="virtual"
       .maybeValue=${content.virtual}
       nullable
-    ></wizard-checkbox>`,
+    ></oscd-checkbox>`,
     ];
 }
 function createAction$2(parent) {
@@ -42725,12 +43619,12 @@ function getVoltageAction(oldVoltage, Voltage, multiplier, voltageLevel) {
     const newVoltage = cloneElement(oldVoltage, { multiplier });
     newVoltage.textContent = Voltage;
     return [
-        { node: oldVoltage },
         {
             parent: voltageLevel,
             node: newVoltage,
             reference: oldVoltage.nextElementSibling,
         },
+        { node: oldVoltage },
     ];
 }
 function updateAction(element) {
@@ -42819,8 +43713,8 @@ const wizards = {
         create: createBayWizard,
     },
     BDA: {
-        edit: emptyWizard,
-        create: emptyWizard,
+        edit: editBDaWizard,
+        create: createBDaWizard,
     },
     BitRate: {
         edit: emptyWizard,
@@ -42878,13 +43772,17 @@ const wizards = {
         edit: editConnectedApWizard,
         create: createConnectedApWizard,
     },
+    DA: {
+        edit: editDAWizard,
+        create: createDaWizard,
+    },
     DAType: {
         edit: emptyWizard,
         create: emptyWizard,
     },
     DO: {
-        edit: emptyWizard,
-        create: emptyWizard,
+        edit: editDoWizard,
+        create: createDoWizard,
     },
     DOI: {
         edit: emptyWizard,
@@ -42923,8 +43821,8 @@ const wizards = {
         create: emptyWizard,
     },
     EnumVal: {
-        edit: emptyWizard,
-        create: emptyWizard,
+        edit: editEnumValWizard,
+        create: createEnumValWizard,
     },
     EqFunction: {
         edit: editEqFunctionWizard,
@@ -43131,8 +44029,8 @@ const wizards = {
         create: emptyWizard,
     },
     SDO: {
-        edit: emptyWizard,
-        create: emptyWizard,
+        edit: editSDoWizard,
+        create: createSDoWizard,
     },
     Server: {
         edit: emptyWizard,

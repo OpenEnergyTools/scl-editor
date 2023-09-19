@@ -11,4 +11,12 @@ export declare const patterns: {
     alphanumericFirstUpperCase: string;
     alphanumericFirstLowerCase: string;
     lnClass: string;
+    abstractDataAttributeName: string;
 };
+export declare const maxLength: {
+    cbName: number;
+    abstracDaName: number;
+};
+export declare const predefinedBasicTypeEnum: string[];
+export declare const valKindEnum: string[];
+export declare const functionalConstraintEnum: string[];

@@ -3399,6 +3399,7 @@ OscdCommunicationPlugin.styles = i$5 `
       --oscd-action-pane-theme-on-surface: var(--oscd-theme-base00);
       --oscd-action-pane-theme-on-primary: var(--oscd-theme-base2);
       --oscd-action-pane-theme-font: 'Roboto';
+      --oscd-action-icon-theme-font: 'Roboto';
 
       --oscd-action-icon-theme-on-surface: var(--oscd-theme-base00);
       --oscd-action-icon-theme-on-primary: var(--oscd-theme-base2);

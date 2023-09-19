@@ -11673,7 +11673,7 @@ class TemplatesPlugin extends s$1 {
                     ><mwc-icon
                       ><span class="material-symbols-outlined">
                         ${dAorBda.getAttribute('type')
-                ? 'expand_circle_right'
+                ? 'navigate_next'
                 : 'last_page'}
                       </span></mwc-icon
                     >
@@ -11783,7 +11783,7 @@ class TemplatesPlugin extends s$1 {
                     ><mwc-icon
                       ><span class="material-symbols-outlined">
                         ${sDOorDa.getAttribute('type')
-                ? 'expand_circle_right'
+                ? 'navigate_next'
                 : 'last_page'}
                       </span></mwc-icon
                     ></mwc-list-item
@@ -11882,7 +11882,7 @@ class TemplatesPlugin extends s$1 {
                     @request-selected="${() => this.selectReferencedChild(dO)}"
                     ><mwc-icon
                       ><span class="material-symbols-outlined">
-                        expand_circle_right
+                        navigate_next
                       </span></mwc-icon
                     ></mwc-list-item
                   >`)}

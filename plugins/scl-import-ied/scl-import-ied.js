@@ -893,6 +893,7 @@ const tagSet = new Set(sCLTags);
 function isSCLTag(tag) {
     return tagSet.has(tag);
 }
+
 /**
  * Helper function for to determine schema valid `reference` for OpenSCD
  * core Insert event.
@@ -935,23 +936,33 @@ function addCommunicationElements(newIed, scl) {
             node: communication,
             reference: getReference(scl, "Communication"),
         });
-    const connectedAP = newIed.ownerDocument.querySelector(`:root > Communication > SubNetwork > ConnectedAP[iedName="${newIed.getAttribute("name")}"]`);
-    if (!connectedAP)
-        return actions;
-    const newSubNetwork = connectedAP.parentElement;
-    const oldSubNetworkMatch = communication.querySelector(`:root > Communication > SubNetwork[name="${newSubNetwork.getAttribute("name")}"]`);
-    const subNetwork = oldSubNetworkMatch ? oldSubNetworkMatch : newSubNetwork;
-    const newConnectedAP = connectedAP.cloneNode(true);
-    if (!oldSubNetworkMatch)
-        actions.push({
-            parent: communication,
-            node: subNetwork,
-            reference: getReference(communication, "SubNetwork"),
-        });
-    actions.push({
-        parent: subNetwork,
-        node: newConnectedAP,
-        reference: getReference(subNetwork, "ConnectedAP"),
+    const newSubNetworks = Array.from(newIed.ownerDocument.querySelectorAll(`:root > Communication > SubNetwork`));
+    newSubNetworks.forEach((newSubNetwork) => {
+        const subNetworkName = newSubNetwork.getAttribute("name");
+        // check if subnetwork already exists
+        const existingSubNetwork = communication.querySelector(`:root > Communication > SubNetwork[name="${subNetworkName}"]`);
+        if (!existingSubNetwork) {
+            // subnetwork is new and can be copied as is
+            const subNetwork = newSubNetwork.cloneNode(true);
+            actions.push({
+                parent: communication,
+                node: subNetwork,
+                reference: getReference(communication, "SubNetwork"),
+            });
+        }
+        else {
+            // subnetwork exists and individual ConnectedAP are copied
+            const newConnectedAPs = newIed.ownerDocument.querySelectorAll(`:root > Communication > SubNetwork[name="${subNetworkName}"] 
+        > ConnectedAP[iedName="${newIed.getAttribute("name")}"]`);
+            newConnectedAPs.forEach((newConnectedAP) => {
+                const connectedAP = newConnectedAP.cloneNode(true);
+                actions.push({
+                    parent: existingSubNetwork,
+                    node: connectedAP,
+                    reference: getReference(existingSubNetwork, "ConnectedAP"),
+                });
+            });
+        }
     });
     return actions;
 }
@@ -1105,18 +1116,19 @@ function isSCL(node) {
  * @returns An array containing diff objects representing an import IED action
  * section */
 function insertIed(scl, ied, options = { addCommunicationSection: true }) {
-    const inserts = [];
     if (!isSCL(scl) || !isIED(ied) || isNameUnique(scl, ied))
         return [];
-    inserts.push(...addDataTypeTemplates(ied, scl));
+    const insertCommunication = [];
     if (options.addCommunicationSection)
-        inserts.push(...addCommunicationElements(ied, scl));
+        insertCommunication.push(...addCommunicationElements(ied, scl));
+    const insertDataTypes = [];
+    insertDataTypes.push(...addDataTypeTemplates(ied, scl));
     const insertIed = {
         parent: scl,
         node: ied,
         reference: getReference(scl, "IED"),
     };
-    return [insertIed].concat(inserts);
+    return [...insertCommunication, insertIed, ...insertDataTypes];
 }
 
 const maxGseMacAddress = 0x010ccd0101ff;

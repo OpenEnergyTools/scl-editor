@@ -85,6 +85,13 @@
       "src": "plugins/oscd-communication/oscd-communication.js"
     },
     {
+      "name": "IED browser",
+      "icon": "developer_board",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/scl-ied-browser/scl-ied-browser.js"
+    },
+    {
       "name": "Substation",
       "icon": "margin",
       "active": true,

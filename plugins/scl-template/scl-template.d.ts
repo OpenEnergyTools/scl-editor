@@ -2,6 +2,7 @@ import { LitElement, TemplateResult } from 'lit';
 import '@material/mwc-list';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-icon-button';
+import '@material/mwc-button';
 import '@openscd/oscd-filtered-list';
 import './foundation/components/oscd-textfield.js';
 import './foundation/components/action-filtered-list.js';
@@ -16,6 +17,7 @@ export default class TemplatesPlugin extends LitElement {
     selectedEnumType: Element | null | undefined;
     onEscape(e: KeyboardEvent): void;
     dispatchEditEvent(event: Event): void;
+    dispatchCreateEvent(parent: Element, child: string): void;
     private openEnumTypeWizard;
     private openDATypeWizard;
     private openDOTypeWizard;

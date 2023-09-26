@@ -6,6 +6,7 @@ import '@material/mwc-button';
 import '@openscd/oscd-filtered-list';
 import './foundation/components/oscd-textfield.js';
 import './foundation/components/action-filtered-list.js';
+import type { OscdTextfield } from './foundation/components/oscd-textfield.js';
 /** An editor [[`plugin`]] for editing the `DataTypeTemplates` section. */
 export default class TemplatesPlugin extends LitElement {
     /** The document being edited as provided to plugins by [[`OpenSCD`]]. */
@@ -15,9 +16,24 @@ export default class TemplatesPlugin extends LitElement {
     selectedDOType: Element | null | undefined;
     selectedDAType: Element | null | undefined;
     selectedEnumType: Element | null | undefined;
-    onEscape(e: KeyboardEvent): void;
-    dispatchEditEvent(event: Event): void;
-    dispatchCreateEvent(parent: Element, child: string): void;
+    lNodeTypeDiff: boolean;
+    lNodeTypeInputs?: OscdTextfield[];
+    doTypeDiff: boolean;
+    doTypeInputs?: OscdTextfield[];
+    daTypeDiff: boolean;
+    daTypeInputs?: OscdTextfield[];
+    enumTypeDiff: boolean;
+    enumTypeInputs?: OscdTextfield[];
+    private onLNodeTypeInputChange;
+    private onSaveLNodeType;
+    private onDOTypeInputChange;
+    private onSaveDOType;
+    private onDATypeInputChange;
+    private onSaveDAType;
+    private onEnumTypeInputChange;
+    private onSaveEnumType;
+    private dispatchEditEvent;
+    private dispatchCreateEvent;
     private openEnumTypeWizard;
     private openDATypeWizard;
     private openDOTypeWizard;
@@ -31,7 +47,6 @@ export default class TemplatesPlugin extends LitElement {
     private renderDOTypeList;
     private renderLNodeTypeChildrenList;
     private renderLNodeTypeList;
-    constructor();
     render(): TemplateResult;
     static styles: import("lit").CSSResult;
 }

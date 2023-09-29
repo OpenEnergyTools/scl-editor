@@ -925,13 +925,13 @@ function getReference(parent, tag) {
 }
 
 function addCommunicationElements(newIed, scl) {
-    const actions = [];
+    const edits = [];
     const existingCommunication = scl.querySelector(":root > Communication");
     const communication = existingCommunication
         ? existingCommunication
         : createElement(scl.ownerDocument, "Communication", {});
     if (!existingCommunication)
-        actions.push({
+        edits.push({
             parent: scl,
             node: communication,
             reference: getReference(scl, "Communication"),
@@ -944,7 +944,7 @@ function addCommunicationElements(newIed, scl) {
         if (!existingSubNetwork) {
             // subnetwork is new and can be copied as is
             const subNetwork = newSubNetwork.cloneNode(true);
-            actions.push({
+            edits.push({
                 parent: communication,
                 node: subNetwork,
                 reference: getReference(communication, "SubNetwork"),
@@ -956,7 +956,7 @@ function addCommunicationElements(newIed, scl) {
         > ConnectedAP[iedName="${newIed.getAttribute("name")}"]`);
             newConnectedAPs.forEach((newConnectedAP) => {
                 const connectedAP = newConnectedAP.cloneNode(true);
-                actions.push({
+                edits.push({
                     parent: existingSubNetwork,
                     node: connectedAP,
                     reference: getReference(existingSubNetwork, "ConnectedAP"),
@@ -964,7 +964,7 @@ function addCommunicationElements(newIed, scl) {
             });
         }
     });
-    return actions;
+    return edits;
 }
 function isDataTypeConnectionToIed(dataType, newIed) {
     const dataTypeTemplates = dataType.parentElement;
@@ -1001,7 +1001,7 @@ function addEnumType(newIed, newEnumType, oldDataTypeTemplates) {
     return {
         parent: oldDataTypeTemplates,
         node: newEnumType,
-        reference: getReference(oldDataTypeTemplates, "LNodeType"),
+        reference: getReference(oldDataTypeTemplates, "EnumType"),
     };
 }
 function addDAType(newIed, newDAType, oldDataTypeTemplates) {
@@ -1063,7 +1063,7 @@ function addLNodeType(newIed, newLNodeType, oldDataTypeTemplates) {
         const idNew = newIed.getAttribute("name").concat(idOld);
         newLNodeType.setAttribute("id", idNew);
         Array.from(newIed.querySelectorAll(`LN0[lnType="${idOld}"],LN[lnType="${idOld}"]`))
-            .filter((anyLn) => anyLn.closest("Private"))
+            .filter((anyLn) => !anyLn.closest("Private"))
             .forEach((ln) => ln.setAttribute("lnType", idNew));
     }
     return {
@@ -1073,30 +1073,31 @@ function addLNodeType(newIed, newLNodeType, oldDataTypeTemplates) {
     };
 }
 function addDataTypeTemplates(newIed, scl) {
-    const actions = [];
+    const dataTypeEdit = [];
     const dataTypeTemplates = scl.querySelector(":root > DataTypeTemplates")
         ? scl.querySelector(":root > DataTypeTemplates")
         : createElement(scl.ownerDocument, "DataTypeTemplates", {});
     if (!dataTypeTemplates.parentElement) {
-        actions.push({
+        dataTypeEdit.push({
             parent: scl,
             node: dataTypeTemplates,
             reference: getReference(scl, "DataTypeTemplates"),
         });
     }
-    newIed.ownerDocument
-        .querySelectorAll(":root > DataTypeTemplates > LNodeType")
-        .forEach((lNodeType) => actions.push(addLNodeType(newIed, lNodeType, dataTypeTemplates)));
-    newIed.ownerDocument
-        .querySelectorAll(":root > DataTypeTemplates > DOType")
-        .forEach((doType) => actions.push(addDOType(newIed, doType, dataTypeTemplates)));
-    newIed.ownerDocument
-        .querySelectorAll(":root > DataTypeTemplates > DAType")
-        .forEach((daType) => actions.push(addDAType(newIed, daType, dataTypeTemplates)));
+    const typeEdits = [];
     newIed.ownerDocument
         .querySelectorAll(":root > DataTypeTemplates > EnumType")
-        .forEach((enumType) => actions.push(addEnumType(newIed, enumType, dataTypeTemplates)));
-    return actions.filter((item) => item !== undefined);
+        .forEach((enumType) => typeEdits.push(addEnumType(newIed, enumType, dataTypeTemplates)));
+    newIed.ownerDocument
+        .querySelectorAll(":root > DataTypeTemplates > DAType")
+        .forEach((daType) => typeEdits.push(addDAType(newIed, daType, dataTypeTemplates)));
+    newIed.ownerDocument
+        .querySelectorAll(":root > DataTypeTemplates > DOType")
+        .forEach((doType) => typeEdits.push(addDOType(newIed, doType, dataTypeTemplates)));
+    newIed.ownerDocument
+        .querySelectorAll(":root > DataTypeTemplates > LNodeType")
+        .forEach((lNodeType) => typeEdits.push(addLNodeType(newIed, lNodeType, dataTypeTemplates)));
+    return dataTypeEdit.concat(typeEdits.reverse().filter((item) => item !== undefined));
 }
 function isNameUnique(scl, ied) {
     return !!scl.querySelector(`IED[name="${ied.getAttribute("name")}"]`);
@@ -1113,7 +1114,7 @@ function isSCL(node) {
  * @param scl - the parent SCL element to insert the IED to
  * @param ied - the new IED to be added to the project (SCL)
  * @param options
- * @returns An array containing diff objects representing an import IED action
+ * @returns An array containing diff objects representing an import IED edit
  * section */
 function insertIed(scl, ied, options = { addCommunicationSection: true }) {
     if (!isSCL(scl) || !isIED(ied) || isNameUnique(scl, ied))

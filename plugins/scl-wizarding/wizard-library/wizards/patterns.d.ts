@@ -12,6 +12,7 @@ export declare const patterns: {
     alphanumericFirstLowerCase: string;
     lnClass: string;
     abstractDataAttributeName: string;
+    cdc: string;
 };
 export declare const maxLength: {
     cbName: number;

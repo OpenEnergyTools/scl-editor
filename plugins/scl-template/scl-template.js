@@ -13615,6 +13615,9 @@ class TemplatesPlugin extends s$1 {
         this.daTypeDiff = false;
         this.enumTypeDiff = false;
     }
+    get dataTypeTemplate() {
+        return this.doc.querySelector('DataTypeTemplates');
+    }
     onLNodeTypeInputChange() {
         var _a, _b, _c;
         const lNodeType = this.selectedLNodeType;
@@ -13892,7 +13895,13 @@ class TemplatesPlugin extends s$1 {
           EnumType
           <nav>
             <abbr title="add">
-              <mwc-icon-button icon="playlist_add"></mwc-icon-button>
+              <mwc-icon-button
+                icon="playlist_add"
+                @click="${() => {
+            if (this.dataTypeTemplate)
+                this.dispatchCreateEvent(this.dataTypeTemplate, 'EnumType');
+        }}"
+              ></mwc-icon-button>
             </abbr>
           </nav>
         </h1>
@@ -14019,7 +14028,13 @@ class TemplatesPlugin extends s$1 {
           DAType
           <nav>
             <abbr title="add">
-              <mwc-icon-button icon="playlist_add"></mwc-icon-button>
+              <mwc-icon-button
+                icon="playlist_add"
+                @click="${() => {
+            if (this.dataTypeTemplate)
+                this.dispatchCreateEvent(this.dataTypeTemplate, 'DAType');
+        }}"
+              ></mwc-icon-button>
             </abbr>
           </nav>
         </h1>
@@ -14160,7 +14175,13 @@ class TemplatesPlugin extends s$1 {
           DOType
           <nav>
             <abbr title="add">
-              <mwc-icon-button icon="playlist_add"></mwc-icon-button>
+              <mwc-icon-button
+                icon="playlist_add"
+                @click="${() => {
+            if (this.dataTypeTemplate)
+                this.dispatchCreateEvent(this.dataTypeTemplate, 'DOType');
+        }}"
+              ></mwc-icon-button>
             </abbr>
           </nav>
         </h1>
@@ -14282,7 +14303,13 @@ class TemplatesPlugin extends s$1 {
           LNodeType
           <nav>
             <abbr title="add">
-              <mwc-icon-button icon="playlist_add"></mwc-icon-button>
+              <mwc-icon-button
+                icon="playlist_add"
+                @click="${() => {
+            if (this.dataTypeTemplate)
+                this.dispatchCreateEvent(this.dataTypeTemplate, 'LNodeType');
+        }}"
+              ></mwc-icon-button>
             </abbr>
           </nav>
         </h1>
@@ -14393,6 +14420,9 @@ __decorate([
 __decorate([
     t$1()
 ], TemplatesPlugin.prototype, "selectedEnumType", void 0);
+__decorate([
+    t$1()
+], TemplatesPlugin.prototype, "dataTypeTemplate", null);
 __decorate([
     t$1()
 ], TemplatesPlugin.prototype, "lNodeTypeDiff", void 0);

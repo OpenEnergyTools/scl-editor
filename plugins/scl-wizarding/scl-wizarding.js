@@ -26374,7 +26374,7 @@ const tAbstractEqFuncSubFuncSequence$1 = [
     "GeneralEquipment",
     "EqSubFunction",
 ];
-({
+const tags$1 = {
     AccessControl: {
         parents: ["LDevice"],
         children: [],
@@ -26991,7 +26991,40 @@ const tAbstractEqFuncSubFuncSequence$1 = [
         parents: ["Substation"],
         children: [...tEquipmentContainerSequence$1, "Voltage", "Bay", "Function"],
     },
-});
+};
+const tagSet$1 = new Set(sCLTags$1);
+function isSCLTag$1(tag) {
+    return tagSet$1.has(tag);
+}
+/**
+ * Helper function for to determine schema valid `reference` for OpenSCD
+ * core Insert event.
+ * !! only valid with Edition 2.1 projects (2007B4)
+ * @param parent - The parent element the new child shall be added to
+ * @param tag - The `tagName` of the new child
+ * @returns Reference for new [[`tag`]] child within [[`parent`]]  or `null`
+ */
+function getReference$1(parent, tag) {
+    if (!isSCLTag$1(tag))
+        return null;
+    const parentTag = parent.tagName;
+    const children = Array.from(parent.children);
+    if (parentTag === "Services" ||
+        parentTag === "SettingGroups" ||
+        !isSCLTag$1(parentTag))
+        return children.find((child) => child.tagName === tag) ?? null;
+    const sequence = tags$1[parentTag].children;
+    let index = sequence.findIndex((element) => element === tag);
+    if (index < 0)
+        return null;
+    let nextSibling;
+    while (index < sequence.length && !nextSibling) {
+        // eslint-disable-next-line no-loop-func
+        nextSibling = children.find((child) => child.tagName === sequence[index]);
+        index += 1;
+    }
+    return nextSibling ?? null;
+}
 
 const maxGseMacAddress = 0x010ccd0101ff;
 const minGseMacAddress = 0x010ccd010000;
@@ -36351,6 +36384,10 @@ const patterns = {
     alphanumericFirstLowerCase: '[a-z][0-9,A-Z,a-z]*',
     lnClass: '(LLN0)|[A-Z]{4,4}',
     abstractDataAttributeName: '((T)|(Test)|(Check)|(SIUnit)|(Oper)|(SBO)|(SBOw)|(Cancel)|[a-z][0-9A-Za-z]*)',
+    cdc: '(SPS)|(DPS)|(INS)|(ENS)|(ACT)|(ACD)|(SEC)|(BCR)|(HST)|(VSS)|(MV)|(CMV)|(SAV)|' +
+        '(WYE)|(DEL)|(SEQ)|(HMV)|(HWYE)|(HDEL)|(SPC)|(DPC)|(INC)|(ENC)|(BSC)|(ISC)|(APC)|(BAC)|' +
+        '(SPG)|(ING)|(ENG)|(ORG)|(TSG)|(CUG)|(VSG)|(ASG)|(CURVE)|(CSG)|(DPL)|(LPL)|(CSD)|(CST)|' +
+        '(BTS)|(UTS)|(LTS)|(GTS)|(MTS)|(NTS)|(STS)|(CTS)|(OTS)|(VSD)',
 };
 const maxLength = {
     cbName: 32,
@@ -41717,6 +41754,49 @@ function editDAWizard(element) {
 }
 
 /* eslint-disable import/no-extraneous-dependencies */
+function createDATypeAction(parent) {
+    return (inputs) => {
+        const daTypeAttrs = {};
+        const daTypeKeys = ['id', 'desc'];
+        daTypeKeys.forEach(key => {
+            daTypeAttrs[key] = getValue(inputs.find(i => i.label === key));
+        });
+        const daType = createElement(parent.ownerDocument, 'DAType', daTypeAttrs);
+        return [
+            { parent, node: daType, reference: getReference$1(parent, 'DAType') },
+        ];
+    };
+}
+function createDATypeWizard(parent) {
+    return [
+        {
+            title: 'Add DAType',
+            primary: {
+                icon: 'Save',
+                label: 'Save',
+                action: createDATypeAction(parent),
+            },
+            content: [
+                x `<oscd-textfield
+          label="id"
+          .maybeValue=${''}
+          required
+          maxlength="127"
+          minlength="1"
+          pattern="${patterns.nmToken}"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="desc"
+          .maybeValue=${null}
+          nullable
+          pattern="${patterns.normalizedString}"
+        ></oscd-textfield>`,
+            ],
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
 function renderContent$3(content) {
     return [
         x `<oscd-textfield
@@ -41843,6 +41923,97 @@ function editDoWizard(element) {
                 type,
                 doTypes,
             }),
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function createDOTypeAction(parent) {
+    return (inputs) => {
+        const doTypeAttrs = {};
+        const doTypeKeys = ['id', 'desc', 'cdc'];
+        doTypeKeys.forEach(key => {
+            doTypeAttrs[key] = getValue(inputs.find(i => i.label === key));
+        });
+        const doType = createElement(parent.ownerDocument, 'DOType', doTypeAttrs);
+        return [
+            { parent, node: doType, reference: getReference$1(parent, 'DOType') },
+        ];
+    };
+}
+function createDOTypeWizard(parent) {
+    return [
+        {
+            title: 'Add DOType',
+            primary: {
+                icon: 'save',
+                label: 'Save',
+                action: createDOTypeAction(parent),
+            },
+            content: [
+                x `<oscd-textfield
+          label="id"
+          .maybeValue=${''}
+          required
+          maxlength="127"
+          minlength="1"
+          pattern="${patterns.nmToken}"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="desc"
+          .maybeValue=${null}
+          nullable
+          pattern="${patterns.normalizedString}"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="cdc"
+          .maybeValue=${'ENS'}
+          pattern="${patterns.cdc}"
+        ></oscd-textfield>`,
+            ],
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function createEnumTypeAction(parent) {
+    return (inputs) => {
+        const enumTypeAttrs = {};
+        const enumTypeKeys = ['id', 'desc'];
+        enumTypeKeys.forEach(key => {
+            enumTypeAttrs[key] = getValue(inputs.find(i => i.label === key));
+        });
+        const enumType = createElement(parent.ownerDocument, 'EnumType', enumTypeAttrs);
+        return [
+            { parent, node: enumType, reference: getReference$1(parent, 'EnumType') },
+        ];
+    };
+}
+function createEnumTypeWizard(parent) {
+    return [
+        {
+            title: 'Add EnumType',
+            primary: {
+                icon: 'Save',
+                label: 'Save',
+                action: createEnumTypeAction(parent),
+            },
+            content: [
+                x `<oscd-textfield
+          label="id"
+          .maybeValue=${''}
+          required
+          maxlength="127"
+          minlength="1"
+          pattern="${patterns.nmToken}"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="desc"
+          .maybeValue=${null}
+          nullable
+          pattern="${patterns.normalizedString}"
+        ></oscd-textfield>`,
+            ],
         },
     ];
 }
@@ -42511,6 +42682,54 @@ function editLineWizard(element) {
                 action: updateAction$a(element),
             },
             content: renderContent$1((_a = element.getAttribute('name')) !== null && _a !== void 0 ? _a : '', element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('nomFreq'), element.getAttribute('numPhases')),
+        },
+    ];
+}
+
+/* eslint-disable import/no-extraneous-dependencies */
+function createLNodeTypeAction(parent) {
+    return (inputs) => {
+        const lNodeTypeAttrs = {};
+        const lNodeTypeKeys = ['id', 'desc', 'lnClass'];
+        lNodeTypeKeys.forEach(key => {
+            lNodeTypeAttrs[key] = getValue(inputs.find(i => i.label === key));
+        });
+        const lNodeType = createElement(parent.ownerDocument, 'LNodeType', lNodeTypeAttrs);
+        return [
+            { parent, node: lNodeType, reference: getReference$1(parent, 'LNodeType') },
+        ];
+    };
+}
+function createLNodeTypeWizard(parent) {
+    return [
+        {
+            title: 'Add LNodeType',
+            primary: {
+                icon: 'Save',
+                label: 'Save',
+                action: createLNodeTypeAction(parent),
+            },
+            content: [
+                x `<oscd-textfield
+          label="id"
+          .maybeValue=${''}
+          required
+          maxlength="127"
+          minlength="1"
+          pattern="${patterns.nmToken}"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="desc"
+          .maybeValue=${null}
+          nullable
+          pattern="${patterns.normalizedString}"
+        ></oscd-textfield>`,
+                x `<oscd-textfield
+          label="lnClass"
+          .maybeValue=${'LLN0'}
+          pattern="${patterns.lnClass}"
+        ></oscd-textfield>`,
+            ],
         },
     ];
 }
@@ -43778,7 +43997,7 @@ const wizards = {
     },
     DAType: {
         edit: emptyWizard,
-        create: emptyWizard,
+        create: createDATypeWizard,
     },
     DO: {
         edit: editDoWizard,
@@ -43790,7 +44009,7 @@ const wizards = {
     },
     DOType: {
         edit: emptyWizard,
-        create: emptyWizard,
+        create: createDOTypeWizard,
     },
     DataObjectDirectory: {
         edit: emptyWizard,
@@ -43818,7 +44037,7 @@ const wizards = {
     },
     EnumType: {
         edit: emptyWizard,
-        create: emptyWizard,
+        create: createEnumTypeWizard,
     },
     EnumVal: {
         edit: editEnumValWizard,
@@ -43930,7 +44149,7 @@ const wizards = {
     },
     LNodeType: {
         edit: emptyWizard,
-        create: emptyWizard,
+        create: createLNodeTypeWizard,
     },
     Line: {
         edit: editLineWizard,

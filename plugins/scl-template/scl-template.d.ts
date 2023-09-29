@@ -16,6 +16,7 @@ export default class TemplatesPlugin extends LitElement {
     selectedDOType: Element | null | undefined;
     selectedDAType: Element | null | undefined;
     selectedEnumType: Element | null | undefined;
+    get dataTypeTemplate(): Element | null;
     lNodeTypeDiff: boolean;
     lNodeTypeInputs?: OscdTextfield[];
     doTypeDiff: boolean;

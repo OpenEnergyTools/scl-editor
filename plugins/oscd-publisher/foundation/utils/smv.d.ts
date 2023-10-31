@@ -1,11 +1,11 @@
 import { Insert, Remove } from '@openscd/open-scd-core';
-declare type pTypes = {
+type pTypes = {
     'MAC-Address'?: string | null;
     APPID?: string | null;
     'VLAN-ID'?: string | null;
     'VLAN-PRIORITY'?: string | null;
 };
-declare type smvAttributes = {
+type smvAttributes = {
     pTypes: pTypes;
     instType?: boolean;
 };

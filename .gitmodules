@@ -50,3 +50,11 @@
 	path = plugins/scl-template
 	url = https://github.com/openenergytools/scl-template
 	branch = gh-pages
+[submodule "plugins/scl-ied-browser"]
+	path = plugins/scl-ied-browser
+	url = https://github.com/openenergytools/scl-ied-browser
+	branch = gh-pages
+[submodule "plugins/scl-ied-editor"]
+	path = plugins/scl-ied-editor
+	url = https://github.com/openenergytools/scl-ied-editor
+	branch = gh-pages

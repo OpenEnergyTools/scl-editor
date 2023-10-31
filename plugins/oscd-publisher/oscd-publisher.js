@@ -2975,7 +2975,7 @@ function newEditEvent(edit) {
 }
 
 /** Utility function to create element with `tagName` and its`attributes` */
-function createElement$4(doc, tag, attrs) {
+function createElement$1(doc, tag, attrs) {
     const element = doc.createElementNS(doc.documentElement.namespaceURI, tag);
     Object.entries(attrs)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -3803,7 +3803,7 @@ function isSCLTag$1(tag) {
  * @param tag - The `tagName` of the new child
  * @returns Reference for new [[`tag`]] child within [[`parent`]]  or `null`
  */
-function getReference$1(parent, tag) {
+function getReference(parent, tag) {
     if (!isSCLTag$1(tag))
         return null;
     const parentTag = parent.tagName;
@@ -3839,6 +3839,33 @@ function controlBlockObjRef(ctrlBlock) {
     return `${iedName}${ldInst}/${prefix}${lnClass}${lnInst}.${cbName}`;
 }
 
+const serviceType = {
+    GSEControl: "GOOSE",
+    SampledValueControl: "SMV",
+    ReportControl: "Report",
+};
+/** @returns Whether src... type ExtRef attributes match Control element*/
+function matchSrcAttributes(extRef, control) {
+    const cbName = control.getAttribute("name");
+    const srcLDInst = control.closest("LDevice")?.getAttribute("inst");
+    const srcPrefix = control.closest("LN0, LN")?.getAttribute("prefix") ?? "";
+    const srcLNClass = control.closest("LN0, LN")?.getAttribute("lnClass");
+    const srcLNInst = control.closest("LN0, LN")?.getAttribute("inst");
+    return (extRef.getAttribute("srcCBName") === cbName &&
+        extRef.getAttribute("srcLDInst") === srcLDInst &&
+        (extRef.getAttribute("srcPrefix") ?? "") === srcPrefix &&
+        (extRef.getAttribute("srcLNInst") ?? "") === srcLNInst &&
+        extRef.getAttribute("srcLNClass") === srcLNClass &&
+        extRef.getAttribute("serviceType") === serviceType[control.tagName]);
+}
+
+/** @returns all ExtRef element subscribed to a control block element */
+function findControlBlockSubscription(control) {
+    const doc = control.ownerDocument;
+    const iedName = control.closest("IED")?.getAttribute("name");
+    return Array.from(doc.querySelectorAll(`ExtRef[iedName="${iedName}"]`)).filter((extRef) => matchSrcAttributes(extRef, control));
+}
+
 /**
  * Looks up Communication section GSE or SMV addresses based on the control block
  * within the IED section (GSEControl or SampledValueControl).
@@ -3865,7 +3892,7 @@ function controlBlockGseOrSmv(ctrlBlock) {
 }
 
 /** @returns control blocks for a given data attribute or data set */
-function controlBlocks$1(fcdaOrDataSet) {
+function controlBlocks(fcdaOrDataSet) {
     const datSet = fcdaOrDataSet.closest("DataSet")?.getAttribute("name");
     const parentLn = fcdaOrDataSet.closest("LN0, LN");
     return Array.from(parentLn?.querySelectorAll(`:scope > ReportControl[datSet="${datSet}"],
@@ -3884,26 +3911,6 @@ function matchDataAttributes(extRef, fcda) {
         extRef.getAttribute("doName") === fcda.getAttribute("doName") &&
         (extRef.getAttribute("daName") ?? "") ===
             (fcda.getAttribute("daName") ?? ""));
-}
-
-const serviceType$1 = {
-    GSEControl: "GOOSE",
-    SampledValueControl: "SMV",
-    ReportControl: "Report",
-};
-/** @returns Whether src... type ExtRef attributes match Control element*/
-function matchSrcAttributes(extRef, control) {
-    const cbName = control.getAttribute("name");
-    const srcLDInst = control.closest("LDevice")?.getAttribute("inst");
-    const srcPrefix = control.closest("LN0, LN")?.getAttribute("prefix") ?? "";
-    const srcLNClass = control.closest("LN0, LN")?.getAttribute("lnClass");
-    const srcLNInst = control.closest("LN0, LN")?.getAttribute("inst");
-    return (extRef.getAttribute("srcCBName") === cbName &&
-        extRef.getAttribute("srcLDInst") === srcLDInst &&
-        (extRef.getAttribute("srcPrefix") ?? "") === srcPrefix &&
-        (extRef.getAttribute("srcLNInst") ?? "") === srcLNInst &&
-        extRef.getAttribute("srcLNClass") === srcLNClass &&
-        extRef.getAttribute("serviceType") === serviceType$1[control.tagName]);
 }
 
 function isInputLeaf(input, allInputs) {
@@ -3931,24 +3938,55 @@ function removeInputs(extRefs) {
     return extRefs.concat(removeInputs);
 }
 
-/** @returns control block or null for a given external reference */
+/**
+ * Locates control block from an ExtRef element.
+ * NOTE: Only supports > Edition 2 using the srcXXX attributes.
+ * @param extRef - SCL ExtRef element.
+ * @returns Either ReportControl/GSEControl/SampledValueControl or null
+ * if not found.
+ */
 function sourceControlBlock(extRef) {
-    const [iedName, srcLDInst, srcPrefix, srcLNClass, srcLNInst, srcCBName] = [
+    const [iedName, srcPrefix, srcLNInst, srcCBName] = [
         "iedName",
-        "srcLDInst",
         "srcPrefix",
-        "srcLNClass",
         "srcLNInst",
         "srcCBName",
-    ].map((attr) => extRef.getAttribute(attr) ?? "");
-    return (Array.from(extRef.ownerDocument.querySelectorAll(`IED[name="${iedName}"] ReportControl, 
-          IED[name="${iedName}"] GSEControl, 
-          IED[name="${iedName}"] SampledValueControl`)).find((cBlock) => cBlock.closest("LDevice").getAttribute("inst") === srcLDInst &&
-        (cBlock.closest("LN, LN0").getAttribute("prefix") ?? "") ===
-            srcPrefix &&
-        cBlock.closest("LN, LN0").getAttribute("lnClass") === srcLNClass &&
-        cBlock.closest("LN, LN0").getAttribute("inst") === srcLNInst &&
-        cBlock.getAttribute("name") === srcCBName) ?? null);
+    ].map((attr) => extRef.getAttribute(attr));
+    const doc = extRef.ownerDocument;
+    const srcLDInst = extRef.getAttribute("srcLDInst") ?? extRef.getAttribute("ldInst");
+    const srcLNClass = extRef.getAttribute("srcLNClass") ?? "LLN0";
+    const serviceType = extRef.getAttribute("serviceType") ?? extRef.getAttribute("pServT");
+    if (!iedName || !srcLDInst || !srcCBName || serviceType === "Poll")
+        return null;
+    const lDevice = `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${srcLDInst}"]`;
+    const maybeReport = !serviceType || serviceType === "Report";
+    const maybeGSE = !serviceType || serviceType === "GOOSE";
+    const maybeSMV = !serviceType || serviceType === "SMV";
+    const anyLN = srcLNClass === "LLN0" ? "LN0" : "LN";
+    const lnClass = `[lnClass="${srcLNClass}"]`;
+    let lnPrefixQualifiers;
+    if (anyLN === "LN") {
+        lnPrefixQualifiers =
+            srcPrefix && srcPrefix !== ""
+                ? [`[prefix="${srcPrefix}"]`]
+                : [":not([prefix])", '[prefix=""]'];
+    }
+    else {
+        lnPrefixQualifiers = [":not([prefix])"];
+    }
+    // On LN0 srcLNInst missing on the ExtRef means an inst=""
+    // On LN inst must be a non-empty string and so srcLNInst
+    // must also be a non-empty string and be present
+    const lnInst = anyLN !== "LN0" && srcLNInst ? `[inst="${srcLNInst}"]` : '[inst=""]';
+    const cbName = `[name="${srcCBName}"]`;
+    const cbTypes = [
+        maybeReport ? `ReportControl${cbName}` : null,
+        maybeGSE ? `GSEControl${cbName}` : null,
+        maybeSMV ? `SampledValueControl${cbName}` : null,
+    ].filter((s) => !!s);
+    return doc.querySelector(crossProduct$1([`${lDevice}>${anyLN}${lnClass}${lnInst}`], lnPrefixQualifiers, [">"], cbTypes)
+        .map((strings) => strings.join(""))
+        .join(","));
 }
 
 /** @returns Element to remove the subscription supervision */
@@ -4109,7 +4147,7 @@ function fCDAsSubscription(fcda) {
     if (isEd1)
         return Array.from(doc.querySelectorAll(`:root>IED>AccessPoint>Server>LDevice>LN0>Inputs>ExtRef[iedName="${iedName}"],
         :root>IED>AccessPoint>Server>LDevice>LN>Inputs>ExtRef[iedName="${iedName}"]`)).filter((extRef) => matchDataAttributes(extRef, fcda));
-    return controlBlocks$1(fcda).flatMap((controlBlock) => Array.from(doc.querySelectorAll(`:root>IED>AccessPoint>Server>LDevice>LN0>Inputs>ExtRef[iedName="${iedName}"],
+    return controlBlocks(fcda).flatMap((controlBlock) => Array.from(doc.querySelectorAll(`:root>IED>AccessPoint>Server>LDevice>LN0>Inputs>ExtRef[iedName="${iedName}"],
         :root>IED>AccessPoint>Server>LDevice>LN>Inputs>ExtRef[iedName="${iedName}"]`)).filter((extRef) => matchDataAttributes(extRef, fcda) &&
         matchSrcAttributes(extRef, controlBlock)));
 }
@@ -4143,18 +4181,11 @@ function removeDataSet(remove) {
     const extRefs = fCDAs.flatMap((fcda) => fCDAsSubscription(fcda));
     const extRefEdits = [];
     extRefEdits.push(...unsubscribe(extRefs));
-    const ctrlBlockUpdates = controlBlocks$1(dataSet).map((ctrlBlock) => ({
+    const ctrlBlockUpdates = controlBlocks(dataSet).map((ctrlBlock) => ({
         element: ctrlBlock,
         attributes: { datSet: null, confRev: "0" },
     }));
     return dataSetRemove.concat(extRefEdits, ctrlBlockUpdates);
-}
-
-/** @returns all ExtRef element subscribed to a control block element */
-function findControlBlockSubscription(control) {
-    const doc = control.ownerDocument;
-    const iedName = control.closest("IED")?.getAttribute("name");
-    return Array.from(doc.querySelectorAll(`ExtRef[iedName="${iedName}"]`)).filter((extRef) => matchSrcAttributes(extRef, control));
 }
 
 /**
@@ -4177,14 +4208,14 @@ function removeControlBlock(remove) {
     const dataSet = controlBlock.parentElement?.querySelector(`DataSet[name="${controlBlock.getAttribute("datSet")}"]`);
     if (!dataSet)
         return ctrlBlockRemoveAction;
-    const multiUseDataSet = controlBlocks$1(dataSet).length > 1;
+    const multiUseDataSet = controlBlocks(dataSet).length > 1;
     if (multiUseDataSet)
         return ctrlBlockRemoveAction.concat(unsubscribe(findControlBlockSubscription(controlBlock)));
     return ctrlBlockRemoveAction.concat(removeDataSet({ node: dataSet }));
 }
 
 /** @returns Updated confRev attribute of control block */
-function updatedConfRev$1(control) {
+function updatedConfRev(control) {
     const confRev = parseInt(control.getAttribute("confRev") ?? "0", 10);
     if (confRev === 0)
         return `${confRev + 1}`;
@@ -4199,7 +4230,7 @@ function updateReportControl(update) {
         return [];
     const reportControl = update.element;
     const attributes = update.attributes;
-    const confRev = updatedConfRev$1(reportControl); // +10000 for update
+    const confRev = updatedConfRev(reportControl); // +10000 for update
     const attrs = { ...attributes, confRev };
     const ctrlBlockUpdates = [
         { element: reportControl, attributes: attrs },
@@ -4286,7 +4317,7 @@ function uniqueElementName(parent, tagName) {
     return newName;
 }
 
-function invalid(anyLn, name, datSet) {
+function invalid$1(anyLn, name, datSet) {
     const uniqueName = name
         ? !anyLn.querySelector(`:scope > ReportControl[name="${name}"]`)
         : true;
@@ -4309,7 +4340,7 @@ function createReportControl(parent, options = { rpt: {}, trgOps: {}, optFields:
     if (!anyLn)
         return null;
     if (!options.skipCheck &&
-        invalid(anyLn, options.rpt?.name, options.rpt?.datSet))
+        invalid$1(anyLn, options.rpt?.name, options.rpt?.datSet))
         return null;
     const rptAttrs = { ...options.rpt };
     const trgOpsAttrs = { ...options.trgOps };
@@ -4335,20 +4366,20 @@ function createReportControl(parent, options = { rpt: {}, trgOps: {}, optFields:
         options.rpt?.intgPd !== "0" &&
         (!options.trgOps?.period || options.trgOps.period === "false"))
         trgOpsAttrs.period = "true";
-    const reportControl = createElement$4(anyLn.ownerDocument, "ReportControl", {
+    const reportControl = createElement$1(anyLn.ownerDocument, "ReportControl", {
         ...rptAttrs,
         confRev,
     });
     if (Object.keys(trgOpsAttrs).length) {
-        const trgOps = createElement$4(anyLn.ownerDocument, "TrgOps", trgOpsAttrs);
+        const trgOps = createElement$1(anyLn.ownerDocument, "TrgOps", trgOpsAttrs);
         reportControl.insertBefore(trgOps, null);
     }
     if (Object.keys(optFieldsAttrs).length) {
-        const optFields = createElement$4(anyLn.ownerDocument, "OptFields", optFieldsAttrs);
+        const optFields = createElement$1(anyLn.ownerDocument, "OptFields", optFieldsAttrs);
         reportControl.insertBefore(optFields, null);
     }
     if (options.instances) {
-        const rptEnabled = createElement$4(anyLn.ownerDocument, "RptEnabled", {
+        const rptEnabled = createElement$1(anyLn.ownerDocument, "RptEnabled", {
             max: options.instances,
         });
         reportControl.insertBefore(rptEnabled, null);
@@ -4403,21 +4434,21 @@ function canAddGSEControl(ln0) {
     return max > existingGseControls;
 }
 
-const maxGseMacAddress$1 = 0x010ccd0101ff;
-const minGseMacAddress$1 = 0x010ccd010000;
-const maxSmvMacAddress$1 = 0x010ccd0401ff;
-const minSmvMacAddress$1 = 0x010ccd040000;
-function convertToMac$1(mac) {
+const maxGseMacAddress = 0x010ccd0101ff;
+const minGseMacAddress = 0x010ccd010000;
+const maxSmvMacAddress = 0x010ccd0401ff;
+const minSmvMacAddress = 0x010ccd040000;
+function convertToMac(mac) {
     const str = 0 + mac.toString(16).toUpperCase();
     const arr = str.match(/.{1,2}/g);
     return arr.join("-");
 }
-const gseMacRange = Array(maxGseMacAddress$1 - minGseMacAddress$1)
+const gseMacRange = Array(maxGseMacAddress - minGseMacAddress)
     .fill(1)
-    .map((_, i) => convertToMac$1(minGseMacAddress$1 + i));
-const smvMacRange = Array(maxSmvMacAddress$1 - minSmvMacAddress$1)
+    .map((_, i) => convertToMac(minGseMacAddress + i));
+const smvMacRange = Array(maxSmvMacAddress - minSmvMacAddress)
     .fill(1)
-    .map((_, i) => convertToMac$1(minSmvMacAddress$1 + i));
+    .map((_, i) => convertToMac(minSmvMacAddress + i));
 /** Generator function returning `MAC-Address` within `doc`. Defined once it can
  * generate unique `MAC-address` without the need to update the `doc` in-between:
  * @example
@@ -4442,22 +4473,22 @@ function macAddressGenerator(doc, serviceType) {
     };
 }
 
-const maxGseAppId$1 = 0x3fff;
-const minGseAppId$1 = 0x0000;
+const maxGseAppId = 0x3fff;
+const minGseAppId = 0x0000;
 // APPID range for Type1A(Trip) GOOSE acc. IEC 61850-8-1
-const maxGseTripAppId$1 = 0xbfff;
-const minGseTripAppId$1 = 0x8000;
-const maxSmvAppId$1 = 0x7fff;
-const minSmvAppId$1 = 0x4000;
-const gseAppIdRange = Array(maxGseAppId$1 - minGseAppId$1)
+const maxGseTripAppId = 0xbfff;
+const minGseTripAppId = 0x8000;
+const maxSmvAppId = 0x7fff;
+const minSmvAppId = 0x4000;
+const gseAppIdRange = Array(maxGseAppId - minGseAppId)
     .fill(1)
-    .map((_, i) => (minGseAppId$1 + i).toString(16).toUpperCase().padStart(4, "0"));
-const gseTripAppIdRange = Array(maxGseTripAppId$1 - minGseTripAppId$1)
+    .map((_, i) => (minGseAppId + i).toString(16).toUpperCase().padStart(4, "0"));
+const gseTripAppIdRange = Array(maxGseTripAppId - minGseTripAppId)
     .fill(1)
-    .map((_, i) => (minGseTripAppId$1 + i).toString(16).toUpperCase().padStart(4, "0"));
-const smvAppIdRange = Array(maxSmvAppId$1 - minSmvAppId$1)
+    .map((_, i) => (minGseTripAppId + i).toString(16).toUpperCase().padStart(4, "0"));
+const smvAppIdRange = Array(maxSmvAppId - minSmvAppId)
     .fill(1)
-    .map((_, i) => (minSmvAppId$1 + i).toString(16).toUpperCase().padStart(4, "0"));
+    .map((_, i) => (minSmvAppId + i).toString(16).toUpperCase().padStart(4, "0"));
 /** Generator function returning unique `APPID` within `doc`. Defined once it
  * can generate unique `APPID`s without the need to update the `doc` in-between
  * ```md
@@ -4500,8 +4531,8 @@ function createGSE(parent, attributes, options = {}) {
     if (parent.tagName !== "ConnectedAP")
         return null;
     const doc = parent.ownerDocument;
-    const gSE = createElement$4(doc, "GSE", attributes);
-    const address = createElement$4(doc, "Address", {});
+    const gSE = createElement$1(doc, "GSE", attributes);
+    const address = createElement$1(doc, "Address", {});
     gSE.appendChild(address);
     const pTypes = {};
     pTypes["MAC-Address"] = options.mac ?? macAddressGenerator(doc, "GSE")();
@@ -4512,17 +4543,17 @@ function createGSE(parent, attributes, options = {}) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .filter(([_, value]) => value !== undefined)
         .forEach(([type, value]) => {
-        const child = createElement$4(doc, "P", { type });
+        const child = createElement$1(doc, "P", { type });
         child.textContent = value;
         address.appendChild(child);
     });
-    const newMinTime = createElement$4(doc, "MinTime", {
+    const newMinTime = createElement$1(doc, "MinTime", {
         unit: "s",
         multiplier: "m",
     });
     newMinTime.textContent = options.MinTime ?? "10";
     gSE.appendChild(newMinTime);
-    const newMaxTime = createElement$4(doc, "MaxTime", {
+    const newMaxTime = createElement$1(doc, "MaxTime", {
         unit: "s",
         multiplier: "m",
     });
@@ -4531,7 +4562,7 @@ function createGSE(parent, attributes, options = {}) {
     return {
         parent,
         node: gSE,
-        reference: getReference$1(parent, "GSE"),
+        reference: getReference(parent, "GSE"),
     };
 }
 
@@ -4571,12 +4602,12 @@ function createGSEControl(parent, options = { gseControl: {}, gse: {} }) {
     const generatedConfRev = options.gseControl?.datSet ? "1" : "0";
     const userConfRev = options.gseControl?.confRev;
     attributes.confRev = userConfRev ? userConfRev : generatedConfRev;
-    const gseControl = createElement$4(ln0.ownerDocument, "GSEControl", attributes);
+    const gseControl = createElement$1(ln0.ownerDocument, "GSEControl", attributes);
     const edits = [];
     edits.push({
         parent: ln0,
         node: gseControl,
-        reference: getReference$1(ln0, "GSEControl"),
+        reference: getReference(ln0, "GSEControl"),
     });
     const connAp = connectedAp(ln0, options.gse?.apName);
     if (!connAp)
@@ -4661,8 +4692,198 @@ function updateGSEControl(update) {
         else
             delete update.attributes.datSet; // remove datSet from the update to avoid schema invalidity
     }
-    update.attributes.confRev = updatedConfRev$1(update.element); // +10000 for update
+    update.attributes.confRev = updatedConfRev(update.element); // +10000 for update
     return [update, ...updates];
+}
+
+function changeGseOrSmvAddress(gseOrSmv, options) {
+    const edits = [];
+    const newAddress = createElement$1(gseOrSmv.ownerDocument, "Address", {});
+    const attributes = {};
+    if (options.mac)
+        attributes["MAC-Address"] = options.mac;
+    if (options.appId)
+        attributes.APPID = options.appId;
+    if (options.vlanId)
+        attributes["VLAN-ID"] = options.vlanId;
+    if (options.vlanPriority)
+        attributes["VLAN-PRIORITY"] = options.vlanPriority;
+    Object.entries(attributes)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .filter(([_, value]) => value !== null)
+        .forEach(([type, value]) => {
+        const child = createElement$1(gseOrSmv.ownerDocument, "P", { type });
+        if (options.instType === undefined) {
+            // take over old xsi:type
+            const existXsiType = gseOrSmv
+                .querySelector(`:scope > Address > P[type="${type}"]`)
+                ?.hasAttribute("xsi:type");
+            if (existXsiType)
+                child.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", `tP_${type}`);
+        }
+        else if (options.instType)
+            child.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", `tP_${type}`);
+        child.textContent = value;
+        newAddress.appendChild(child);
+    });
+    edits.push({
+        parent: gseOrSmv,
+        node: newAddress,
+        reference: getReference(gseOrSmv, "Address"),
+    });
+    const oldAddress = gseOrSmv.querySelector("Address");
+    if (oldAddress)
+        edits.push({ node: oldAddress });
+    return edits;
+}
+
+function changeGseTiming(gSE, options) {
+    const edits = [];
+    const oldMinTime = gSE.querySelector("MinTime");
+    const oldMaxTime = gSE.querySelector("MaxTime");
+    if (options.MinTime) {
+        const newMinTime = createElement$1(gSE.ownerDocument, "MinTime", {
+            unit: "s",
+            multiplier: "m",
+        });
+        newMinTime.textContent = options.MinTime;
+        edits.push({
+            parent: gSE,
+            node: newMinTime,
+            reference: getReference(gSE, "MinTime"),
+        });
+    }
+    if (oldMinTime)
+        edits.push({ node: oldMinTime });
+    if (options.MaxTime) {
+        const newMaxTime = createElement$1(gSE.ownerDocument, "MaxTime", {
+            unit: "s",
+            multiplier: "m",
+        });
+        newMaxTime.textContent = options.MaxTime;
+        edits.push({
+            parent: gSE,
+            node: newMaxTime,
+            reference: getReference(gSE, "MaxTime"),
+        });
+    }
+    if (oldMaxTime)
+        edits.push({ node: oldMaxTime });
+    return edits;
+}
+/** Utility function to change the content of the element `GSE`
+ * including the child `Address` and the children `MinTime`/`MaxTime`
+ * @param element - the element to be updated
+ * @param options - the requested changes
+ * @returns Edit array updating GSEs children Address, MinTine and MaxTime
+ * */
+function changeGSEContent(element, options) {
+    const addressEdits = options.address
+        ? changeGseOrSmvAddress(element, options.address)
+        : [];
+    const timeEdits = options.timing
+        ? changeGseTiming(element, options.timing)
+        : [];
+    return addressEdits.concat(timeEdits);
+}
+
+function changeSMVContent(element, options) {
+    return changeGseOrSmvAddress(element, options);
+}
+
+function maxDataSet(parent) {
+    {
+        const validInp = !!parent.closest("AccessPoint") || !!parent.closest("IED");
+        if (!validInp)
+            return { max: -1, scope: "IED" };
+        const selector = `:scope > Services > ConfDataSet`;
+        const apMaxAllowed = parent
+            .closest("AccessPoint")
+            ?.querySelector(selector)
+            ?.getAttribute("max");
+        if (apMaxAllowed)
+            return {
+                max: parseInt(apMaxAllowed, 10),
+                scope: "AccessPoint",
+            };
+        const iedMaxAllowed = parent
+            .closest("IED")
+            ?.querySelector(selector)
+            ?.getAttribute("max");
+        if (iedMaxAllowed)
+            return {
+                max: parseInt(iedMaxAllowed, 10),
+                scope: "IED",
+            };
+        const existing = parent
+            .closest("IED")
+            .querySelectorAll(":scope > AccessPoint > Server > LDevice DataSet").length;
+        return {
+            max: existing,
+            scope: "IED",
+        };
+    }
+}
+/** Checks Services>ConfDataSet AccessPoint or on IED if the first is not present
+ * @param parent - parent `LN0`
+ * @returns Whether new `DataSet` is exceeding ConfDataSet.max attribute */
+function canAddDataSet(ln0) {
+    const { max, scope } = maxDataSet(ln0);
+    const existingDataSets = Array.from(ln0
+        .closest(scope)
+        ?.querySelectorAll(":scope Server > LDevice > LN0 > DataSet, :scope Server > LDevice > LN > DataSet") ?? []).length;
+    return max > existingDataSets;
+}
+
+function invalid(anyLn, name) {
+    const uniqueName = name
+        ? !anyLn.querySelector(`:scope > DataSet[name="${name}"]`)
+        : true;
+    return !(uniqueName && canAddDataSet(anyLn));
+}
+function createDataSet(parent, options = { attributes: {} }) {
+    const anyLn = parent.tagName === "LN0" || parent.tagName === "LN"
+        ? parent
+        : parent.querySelector("LN0, LN");
+    if (!anyLn)
+        return null;
+    if (!options.skipCheck && invalid(anyLn, options.attributes.name))
+        return null;
+    const dataSetAttributes = {
+        ...options.attributes,
+    };
+    if (!options.attributes.name)
+        dataSetAttributes.name = uniqueElementName(anyLn, "DataSet");
+    const dataSet = createElement$1(anyLn.ownerDocument, "DataSet", {
+        ...dataSetAttributes,
+    });
+    return { parent, node: dataSet, reference: getReference(parent, "DataSet") };
+}
+
+/** Utility function to update `DataSet` element and the `datSet` attribute of
+ * all referenced control blocks
+ * @param update - Update edit for the `DataSet` element
+ * @returns Update actions for `DataSet`s attributes and its `datSet` references
+ * */
+function updateDataSet(update) {
+    if (update.element.tagName !== "DataSet")
+        return [];
+    const dataSet = update.element;
+    const parent = dataSet.parentElement;
+    if (!parent)
+        return [];
+    const dataSetUpdate = {
+        element: dataSet,
+        attributes: update.attributes,
+    };
+    const newName = update.attributes.name;
+    if (!newName)
+        return [dataSetUpdate];
+    const controlBlockUpdates = controlBlocks(dataSet).map((element) => ({
+        element,
+        attributes: { datSet: newName, confRev: updatedConfRev(element) },
+    }));
+    return [dataSetUpdate].concat(controlBlockUpdates);
 }
 
 /** maximum value for `lnInst` attribute */
@@ -4671,7 +4892,7 @@ Array(maxLnInst)
     .fill(1)
     .map((_, i) => `${i + 1}`);
 
-await fetch(new URL("../foundation/nsd.json", import.meta.url)).then((res) => res.json());
+await fetch(new URL(new URL('assets/nsd-0a370a57.json', import.meta.url).href, import.meta.url)).then((res) => res.json());
 
 /**
  * @license
@@ -13826,27 +14047,6 @@ const relatives = {
         children: [...tEquipmentContainerSequence, 'Voltage', 'Bay', 'Function'],
     },
 };
-function getReference(parent, tag) {
-    var _a, _b, _c;
-    const parentTag = parent.tagName;
-    const children = Array.from(parent.children);
-    if (parentTag === 'Services' ||
-        parentTag === 'SettingGroups' ||
-        !isSCLTag(parentTag))
-        return (_a = children.find(child => child.tagName === tag)) !== null && _a !== void 0 ? _a : null;
-    const sequence = (_c = (_b = relatives[parentTag]) === null || _b === void 0 ? void 0 : _b.children) !== null && _c !== void 0 ? _c : [];
-    let index = sequence.findIndex(element => element === tag);
-    if (index < 0)
-        return null;
-    let nextSibling;
-    while (index < sequence.length && !nextSibling) {
-        // eslint-disable-next-line no-loop-func
-        nextSibling = children.find(child => child.tagName === sequence[index]);
-        // eslint-disable-next-line no-plusplus
-        index++;
-    }
-    return nextSibling !== null && nextSibling !== void 0 ? nextSibling : null;
-}
 
 const voidSelector = ':not(*)';
 function selector(tagName, identity) {
@@ -14917,114 +15117,6 @@ function idNamingIdentity(e) {
     return `#${e.id}`;
 }
 
-const serviceType = {
-    GSEControl: 'GOOSE',
-    SampledValueControl: 'SMV',
-    ReportControl: 'Report',
-};
-/** @returns Whether src... type ExtRef attributes match */
-function matchExtRefCtrlBlockAttr(extRef, ctrlBlock) {
-    var _a, _b, _c, _d, _e, _f, _g;
-    const cbName = ctrlBlock.getAttribute('name');
-    const srcLDInst = (_a = ctrlBlock.closest('LDevice')) === null || _a === void 0 ? void 0 : _a.getAttribute('inst');
-    const srcPrefix = (_c = (_b = ctrlBlock.closest('LN0, LN')) === null || _b === void 0 ? void 0 : _b.getAttribute('prefix')) !== null && _c !== void 0 ? _c : '';
-    const srcLNClass = (_d = ctrlBlock.closest('LN0, LN')) === null || _d === void 0 ? void 0 : _d.getAttribute('lnClass');
-    const srcLNInst = (_e = ctrlBlock.closest('LN0, LN')) === null || _e === void 0 ? void 0 : _e.getAttribute('inst');
-    return (extRef.getAttribute('srcCBName') === cbName &&
-        extRef.getAttribute('srcLDInst') === srcLDInst &&
-        ((_f = extRef.getAttribute('srcPrefix')) !== null && _f !== void 0 ? _f : '') === srcPrefix &&
-        ((_g = extRef.getAttribute('srcLNInst')) !== null && _g !== void 0 ? _g : '') === srcLNInst &&
-        extRef.getAttribute('srcLNClass') === srcLNClass &&
-        extRef.getAttribute('serviceType') === serviceType[ctrlBlock.tagName]);
-}
-
-/* eslint-disable import/no-extraneous-dependencies */
-/** @returns Updated confRev attribute for control block */
-function updatedConfRev(ctrlBlock) {
-    var _a;
-    return `${parseInt((_a = ctrlBlock.getAttribute('confRev')) !== null && _a !== void 0 ? _a : '0', 10) + 10000}`;
-}
-/** @returns all ExtRef element subscribed to a controlBlock */
-function findCtrlBlockSubscription(ctrlBlock) {
-    const doc = ctrlBlock.ownerDocument;
-    const iedName = ctrlBlock.closest('IED').getAttribute('name');
-    return Array.from(doc.querySelectorAll(`ExtRef[iedName="${iedName}"]`)).filter(extRef => matchExtRefCtrlBlockAttr(extRef, ctrlBlock));
-}
-/** @returns control blocks for a given data attribute or data set */
-function controlBlocks(fcdaOrDataSet) {
-    var _a, _b;
-    const datSet = (_a = fcdaOrDataSet.closest('DataSet')) === null || _a === void 0 ? void 0 : _a.getAttribute('name');
-    const parentLn = fcdaOrDataSet.closest('LN0, LN');
-    return Array.from((_b = parentLn === null || parentLn === void 0 ? void 0 : parentLn.querySelectorAll(`:scope > ReportControl[datSet="${datSet}"],
-             :scope > GSEControl[datSet="${datSet}"],
-             :scope > SampledValueControl[datSet="${datSet}"]`)) !== null && _b !== void 0 ? _b : []);
-}
-
-function createElement$3(doc, tag, attrs) {
-    const element = doc.createElementNS(doc.documentElement.namespaceURI, tag);
-    Object.entries(attrs)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .filter(([_, value]) => value !== null)
-        .forEach(([name, value]) => element.setAttribute(name, value));
-    return element;
-}
-/** @returns Update actions for `DataSet`s attributes and its `datSet` references */
-function updateDateSetName(dataSet, attr) {
-    const parent = dataSet.parentElement;
-    if (!parent)
-        return [];
-    const dataSetUpdate = {
-        element: dataSet,
-        attributes: attr,
-    };
-    const newName = attr.name;
-    if (!newName)
-        return [dataSetUpdate];
-    const controlBlockUpdates = controlBlocks(dataSet).map(element => ({
-        element,
-        attributes: { datSet: newName, confRev: updatedConfRev(element) },
-    }));
-    return [dataSetUpdate].concat(controlBlockUpdates);
-}
-function uniqueDataSetName(anyLn) {
-    const nameCore = 'newDataSet';
-    const siblingNames = Array.from(anyLn.querySelectorAll('DataSet')).map(child => { var _a; return (_a = child.getAttribute('name')) !== null && _a !== void 0 ? _a : child.tagName; });
-    if (!siblingNames.length)
-        return `${nameCore}_001`;
-    let newName = '';
-    // eslint-disable-next-line no-plusplus
-    let i = 1;
-    newName = `${nameCore}_${i.toString().padStart(3, '0')}`;
-    while (i < siblingNames.length + 1) {
-        if (!siblingNames.includes(newName))
-            break;
-        i += 1;
-        newName = `${nameCore}_${i.toString().padStart(3, '0')}`;
-    }
-    return newName;
-}
-/**
- * @parent Parent element such as `LN0`, `LN`, `LDevice`, `AccessPoint` and `IED`
- * @attributes DataSet element attributes. Required but missing attributes
- *             will be added automatically.
- ** @returns Action inserting new `DataSet` to [[`parent`]] element */
-function addDataSet(parent, attributes = {}) {
-    const anyLn = parent.tagName === 'LN' || parent.tagName === 'LN0'
-        ? parent
-        : parent.querySelector('LN0, LN');
-    if (!anyLn)
-        return null;
-    // eslint-disable-next-line no-param-reassign
-    if (!attributes.name)
-        attributes.name = uniqueDataSetName(anyLn);
-    const dataSet = createElement$3(anyLn.ownerDocument, 'DataSet', attributes);
-    return {
-        parent: anyLn,
-        node: dataSet,
-        reference: getReference(anyLn, 'DataSet'),
-    };
-}
-
 /* eslint-disable import/no-extraneous-dependencies */
 function findFcda(dataSet, attr) {
     return Array.from(dataSet.children).find(fcda => {
@@ -15089,7 +15181,7 @@ function addFCDAs(dataSet, paths) {
             continue;
         actions.push({
             parent: dataSet,
-            node: createElement$4(dataSet.ownerDocument, 'FCDA', fcdaAttrs),
+            node: createElement$1(dataSet.ownerDocument, 'FCDA', fcdaAttrs),
             reference: null,
         });
     }
@@ -15137,7 +15229,7 @@ function addFCDOs(dataSet, fcPaths) {
             continue;
         actions.push({
             parent: dataSet,
-            node: createElement$4(dataSet.ownerDocument, 'FCDA', fcdaAttrs),
+            node: createElement$1(dataSet.ownerDocument, 'FCDA', fcdaAttrs),
             reference: null,
         });
     }
@@ -15412,7 +15504,7 @@ let DataSetElementEditor = class DataSetElementEditor extends s$2 {
         for (const input of (_a = this.inputs) !== null && _a !== void 0 ? _a : [])
             if (this.element.getAttribute(input.label) !== input.maybeValue)
                 attributes[input.label] = input.maybeValue;
-        this.dispatchEvent(newEditEvent(updateDateSetName(this.element, attributes)));
+        this.dispatchEvent(newEditEvent(updateDataSet({ element: this.element, attributes })));
         this.onInputChange();
     }
     saveDataObjects() {
@@ -17849,7 +17941,7 @@ const maxLength = {
     abstracDaName: 60,
 };
 
-function createElement$2(doc, tag, attrs) {
+function createElement(doc, tag, attrs) {
     const element = doc.createElementNS(doc.documentElement.namespaceURI, tag);
     Object.entries(attrs)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17865,11 +17957,11 @@ function updateMaxClients(reportControl, max) {
     if (!rptEnabled && !max)
         return null;
     if (!rptEnabled && max) {
-        const newRptEnabled = createElement$2(reportControl.ownerDocument, 'RptEnabled', { max });
+        const newRptEnabled = createElement(reportControl.ownerDocument, 'RptEnabled', { max });
         return {
             parent: reportControl,
             node: newRptEnabled,
-            reference: getReference$1(reportControl, 'RptEnabled'),
+            reference: getReference(reportControl, 'RptEnabled'),
         };
     }
     return { element: rptEnabled, attributes: { max } };
@@ -18666,7 +18758,7 @@ let ReportControlEditor = class ReportControlEditor extends s$2 {
             <mwc-icon-button
               slot="change"
               icon="swap_vert"
-              ?disabled=${!!findCtrlBlockSubscription(this.selectedReportControl).length}
+              ?disabled=${!!findControlBlockSubscription(this.selectedReportControl).length}
               @click=${() => this.selectDataSetDialog.show()}
             ></mwc-icon-button
           ></data-set-element-editor>
@@ -18816,38 +18908,6 @@ ReportControlEditor = __decorate([
     e$7('report-control-editor')
 ], ReportControlEditor);
 
-const maxGseMacAddress = 0x010ccd0101ff;
-const minGseMacAddress = 0x010ccd010000;
-const maxSmvMacAddress = 0x010ccd0401ff;
-const minSmvMacAddress = 0x010ccd040000;
-function convertToMac(mac) {
-    const str = 0 + mac.toString(16).toUpperCase();
-    const arr = str.match(/.{1,2}/g);
-    return arr.join('-');
-}
-Array(maxGseMacAddress - minGseMacAddress)
-    .fill(1)
-    .map((_, i) => convertToMac(minGseMacAddress + i));
-Array(maxSmvMacAddress - minSmvMacAddress)
-    .fill(1)
-    .map((_, i) => convertToMac(minSmvMacAddress + i));
-const maxGseAppId = 0x3fff;
-const minGseAppId = 0x0000;
-// APPID range for Type1A(Trip) GOOSE acc. IEC 61850-8-1
-const maxGseTripAppId = 0xbfff;
-const minGseTripAppId = 0x8000;
-const maxSmvAppId = 0x7fff;
-const minSmvAppId = 0x4000;
-Array(maxGseAppId - minGseAppId)
-    .fill(1)
-    .map((_, i) => (minGseAppId + i).toString(16).toUpperCase().padStart(4, '0'));
-Array(maxGseTripAppId - minGseTripAppId)
-    .fill(1)
-    .map((_, i) => (minGseTripAppId + i).toString(16).toUpperCase().padStart(4, '0'));
-Array(maxSmvAppId - minSmvAppId)
-    .fill(1)
-    .map((_, i) => (minSmvAppId + i).toString(16).toUpperCase().padStart(4, '0'));
-
 const gSEselectors = {
     MinTime: ':scope > MinTime',
     MaxTime: ':scope > MaxTime',
@@ -18870,105 +18930,6 @@ function checkGSEDiff(gSE, attrs, instType) {
             return oldValue !== value;
         return oldValue !== value || instType !== oldInstType;
     });
-}
-function checkTimeMinMaxTimeDiff(gSE, attrs) {
-    const timeAttrs = {};
-    timeAttrs.MinTime = attrs.MinTime;
-    timeAttrs.MaxTime = attrs.MaxTime;
-    return checkGSEDiff(gSE, timeAttrs);
-}
-function checkTimeAddressDiff(gSE, attrs, instType) {
-    const timeAttrs = {};
-    timeAttrs['MAC-Address'] = attrs['MAC-Address'];
-    timeAttrs.APPID = attrs.APPID;
-    timeAttrs['VLAN-ID'] = attrs['VLAN-ID'];
-    timeAttrs['VLAN-PRIORITY'] = attrs['VLAN-PRIORITY'];
-    return checkGSEDiff(gSE, timeAttrs, instType);
-}
-/** @returns a new [[`tag`]] element owned by [[`doc`]]. */
-function createElement$1(doc, tag, attrs) {
-    const element = doc.createElementNS(doc.documentElement.namespaceURI, tag);
-    Object.entries(attrs)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .filter(([_, value]) => value !== null)
-        .forEach(([name, value]) => element.setAttribute(name, value));
-    return element;
-}
-function updateGseTimes(gSE, attr) {
-    const actions = [];
-    if (attr.MinTime !== undefined) {
-        if (attr.MinTime !== null) {
-            const newMinTime = createElement$1(gSE.ownerDocument, 'MinTime', {
-                unit: 's',
-                multiplier: 'm',
-            });
-            newMinTime.textContent = attr.MinTime;
-            actions.push({
-                parent: gSE,
-                node: newMinTime,
-                reference: getReference(gSE, 'MinTime'),
-            });
-        }
-        const oldMinTime = gSE.querySelector('MinTime');
-        if (oldMinTime)
-            actions.push({ node: oldMinTime });
-    }
-    if (attr.MaxTime !== undefined) {
-        if (attr.MaxTime !== null) {
-            const newMaxTime = createElement$1(gSE.ownerDocument, 'MaxTime', {
-                unit: 's',
-                multiplier: 'm',
-            });
-            newMaxTime.textContent = attr.MaxTime;
-            actions.push({
-                parent: gSE,
-                node: newMaxTime,
-                reference: getReference(gSE, 'MaxTime'),
-            });
-        }
-        const oldMaxTime = gSE.querySelector('MaxTime');
-        if (oldMaxTime)
-            actions.push({ node: oldMaxTime });
-    }
-    return actions;
-}
-function updateGseAddress(gSE, attrs, instType) {
-    const actions = [];
-    const newAddress = createElement$1(gSE.ownerDocument, 'Address', {});
-    Object.entries(attrs)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .filter(([_, value]) => value !== null)
-        .forEach(([type, value]) => {
-        const child = createElement$1(gSE.ownerDocument, 'P', { type });
-        if (instType)
-            child.setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', `tP_${type}`);
-        child.textContent = value;
-        newAddress.appendChild(child);
-    });
-    actions.push({
-        parent: gSE,
-        node: newAddress,
-        reference: getReference(gSE, 'Address'),
-    });
-    const oldAddress = gSE.querySelector('Address');
-    if (oldAddress)
-        actions.push({ node: oldAddress });
-    return actions;
-}
-/**
- * @param gSE - the element to be updated
- * @param attrs - input values containing potential changes
- * @param instType - Whether xsi:type attributes shall be set
- * @returns Action array updating GSEs children Address, MinTine and MaxTime
- * */
-function updateGSE(gSE, attrs, instType) {
-    const addressActions = checkTimeAddressDiff(gSE, attrs, instType)
-        ? updateGseAddress(gSE, attrs, instType)
-        : [];
-    const timeActions = checkTimeMinMaxTimeDiff(gSE, attrs)
-        ? updateGseTimes(gSE, attrs)
-        : [];
-    return addressActions.concat(timeActions);
 }
 
 let GseControlElementEditor = class GseControlElementEditor extends s$2 {
@@ -19026,13 +18987,29 @@ let GseControlElementEditor = class GseControlElementEditor extends s$2 {
         this.gSEdiff = checkGSEDiff(this.gSE, gSEAttrs, (_c = this.instType) === null || _c === void 0 ? void 0 : _c.checked);
     }
     saveGSEChanges() {
-        var _a, _b;
+        var _a, _b, _c;
         if (!this.gSE)
             return;
-        const gSEAttrs = {};
-        for (const input of (_a = this.gSEInputs) !== null && _a !== void 0 ? _a : [])
-            gSEAttrs[input.label] = input.maybeValue;
-        this.dispatchEvent(newEditEvent(updateGSE(this.gSE, gSEAttrs, (_b = this.instType) === null || _b === void 0 ? void 0 : _b.checked)));
+        const options = { address: {}, timing: {} };
+        for (const input of (_a = this.gSEInputs) !== null && _a !== void 0 ? _a : []) {
+            if (input.label === 'MAC-Address' && input.maybeValue)
+                options.address.mac = input.maybeValue;
+            if (input.label === 'APPID' && input.maybeValue)
+                options.address.appId = input.maybeValue;
+            if (input.label === 'VLAN-ID' && input.maybeValue)
+                options.address.vlanId = input.maybeValue;
+            if (input.label === 'VLAN-PRIORITY' && input.maybeValue)
+                options.address.vlanPriority = input.maybeValue;
+            if (input.label === 'MinTime' && input.maybeValue)
+                options.timing.MinTime = input.maybeValue;
+            if (input.label === 'MaxTime' && input.maybeValue)
+                options.timing.MaxTime = input.maybeValue;
+        }
+        if (((_b = this.instType) === null || _b === void 0 ? void 0 : _b.checked) === true)
+            options.address.instType = true;
+        else if (((_c = this.instType) === null || _c === void 0 ? void 0 : _c.checked) === false)
+            options.address.instType = false;
+        this.dispatchEvent(newEditEvent(changeGSEContent(this.gSE, options)));
         this.onGSEInputChange();
     }
     renderGseContent() {
@@ -19348,8 +19325,7 @@ let GseControlEditor = class GseControlEditor extends s$2 {
             <mwc-icon-button
               slot="change"
               icon="swap_vert"
-              ?disabled=${!!findCtrlBlockSubscription(this.selectedGseControl)
-                .length}
+              ?disabled=${!!findControlBlockSubscription(this.selectedGseControl).length}
               @click=${() => this.selectDataSetDialog.show()}
             ></mwc-icon-button
           ></data-set-element-editor>
@@ -19558,7 +19534,7 @@ let DataSetEditor = class DataSetEditor extends s$2 {
               slot="meta"
               icon="playlist_add"
               @click=${() => {
-                const insertDataSet = addDataSet(ied);
+                const insertDataSet = createDataSet(ied);
                 if (insertDataSet)
                     this.dispatchEvent(newEditEvent(insertDataSet));
                 this.requestUpdate();
@@ -19641,15 +19617,6 @@ const sMVselectors = {
     'VLAN-ID': ':scope > Address > P[type="VLAN-ID"]',
     'VLAN-PRIORITY': ':scope > Address > P[type="VLAN-PRIORITY"]',
 };
-/** @returns a new [[`tag`]] element owned by [[`doc`]]. */
-function createElement(doc, tag, attrs) {
-    const element = doc.createElementNS(doc.documentElement.namespaceURI, tag);
-    Object.entries(attrs)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .filter(([_, value]) => value !== null)
-        .forEach(([name, value]) => element.setAttribute(name, value));
-    return element;
-}
 /** @returns Whether the `sMV`s element attributes or instType has changed */
 function checkSMVDiff(sMV, attributes = { pTypes: {} }) {
     const pTypeDiff = Object.entries(attributes.pTypes).some(([key, value]) => { var _a, _b; return ((_b = (_a = sMV.querySelector(sMVselectors[key])) === null || _a === void 0 ? void 0 : _a.textContent) !== null && _b !== void 0 ? _b : null) !== value; });
@@ -19665,34 +19632,6 @@ function checkSMVDiff(sMV, attributes = { pTypes: {} }) {
         return hasInstType !== attributes.instType;
     });
     return instTypeDiff;
-}
-/** Update function for SMV element's Address field
- * @sMV the `SMV` element to update the address element of
- * @attributes pType values `MAC-Address`,`APPID`,`VLAN-ID` or `VLAN-PRIORITY`
- *           instType whether to add xsi:type attributes for better XML parsing
- * @return action array to update a `SMV`s `Address` child element
- */
-function updateSmvAddress(sMV, attributes = { pTypes: {}, instType: false }) {
-    const actions = [];
-    const newAddress = createElement(sMV.ownerDocument, 'Address', {});
-    Object.entries(attributes.pTypes)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .filter(([_, value]) => value !== null)
-        .forEach(([type, value]) => {
-        const child = createElement(sMV.ownerDocument, 'P', { type });
-        if (attributes.instType)
-            child.setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', `tP_${type}`);
-        child.textContent = value;
-        newAddress.appendChild(child);
-    });
-    actions.push({
-        parent: sMV,
-        node: newAddress,
-    });
-    const oldAddress = sMV.querySelector('Address');
-    if (oldAddress)
-        actions.push({ node: oldAddress });
-    return actions;
 }
 
 let SampledValueControlElementEditor = class SampledValueControlElementEditor extends s$2 {
@@ -19728,16 +19667,25 @@ let SampledValueControlElementEditor = class SampledValueControlElementEditor ex
         });
     }
     saveSMVChanges() {
-        var _a, _b;
+        var _a, _b, _c;
         if (!this.sMV)
             return;
-        const pTypes = {};
-        for (const input of (_a = this.sMVInputs) !== null && _a !== void 0 ? _a : [])
-            pTypes[input.label] = input.maybeValue;
-        this.dispatchEvent(newEditEvent(updateSmvAddress(this.sMV, {
-            pTypes,
-            instType: (_b = this.instType) === null || _b === void 0 ? void 0 : _b.checked,
-        })));
+        const options = {};
+        for (const input of (_a = this.sMVInputs) !== null && _a !== void 0 ? _a : []) {
+            if (input.label === 'MAC-Address' && input.maybeValue)
+                options.mac = input.maybeValue;
+            if (input.label === 'APPID' && input.maybeValue)
+                options.appId = input.maybeValue;
+            if (input.label === 'VLAN-ID' && input.maybeValue)
+                options.vlanId = input.maybeValue;
+            if (input.label === 'VLAN-PRIORITY' && input.maybeValue)
+                options.vlanPriority = input.maybeValue;
+        }
+        if (((_b = this.instType) === null || _b === void 0 ? void 0 : _b.checked) === true)
+            options.instType = true;
+        else if (((_c = this.instType) === null || _c === void 0 ? void 0 : _c.checked) === false)
+            options.instType = false;
+        this.dispatchEvent(newEditEvent(changeSMVContent(this.sMV, options)));
         this.onSMVInputChange();
     }
     onSmvOptsInputChange() {
@@ -20100,7 +20048,7 @@ let SampledValueControlEditor = class SampledValueControlEditor extends s$2 {
             <mwc-icon-button
               slot="change"
               icon="swap_vert"
-              ?disabled=${!!findCtrlBlockSubscription(this.selectedSampledValueControl).length}
+              ?disabled=${!!findControlBlockSubscription(this.selectedSampledValueControl).length}
               @click=${() => this.selectDataSetDialog.show()}
             ></mwc-icon-button
           ></data-set-element-editor>

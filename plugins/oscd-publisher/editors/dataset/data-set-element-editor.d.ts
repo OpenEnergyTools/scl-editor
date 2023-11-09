@@ -4,25 +4,29 @@ import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-dialog';
 import type { Dialog } from '@material/mwc-dialog';
 import '@openscd/oscd-tree-grid';
-import '../../foundation/components/oscd-textfield.js';
-import type { OscdTextfield } from '../../foundation/components/oscd-textfield.js';
+import '../../foundation/components/scl-textfield.js';
+import '../../foundation/components/action-filtered-list.js';
+import type { SclTextfield } from '../../foundation/components/scl-textfield.js';
 export declare class DataSetElementEditor extends LitElement {
     /** The document being edited as provided to plugins by [[`OpenSCD`]]. */
     doc: XMLDocument;
-    /** The element being edited as provided to plugins by [[`OpenSCD`]]. */
+    /** The element being edited */
     element: Element | null;
     /** SCL change indicator */
     editCount: number;
     private get name();
     private get desc();
-    private someInputDiff;
+    private someDiffOnInputs;
     private onInputChange;
     private saveChanges;
     private saveDataObjects;
     private saveDataAttributes;
-    inputs?: OscdTextfield[];
+    private onMoveFCDAUp;
+    private onMoveFCDADown;
+    inputs?: SclTextfield[];
     dataAttributePicker?: Dialog;
     dataObjectPicker?: Dialog;
+    updated(): void;
     private renderHeader;
     private renderDataObjectPicker;
     private renderDataAttributePicker;

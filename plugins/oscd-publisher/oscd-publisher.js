@@ -4206,12 +4206,16 @@ function removeControlBlock(remove) {
     const controlBlock = remove.node;
     const ctrlBlockRemoveAction = [{ node: controlBlock }];
     const dataSet = controlBlock.parentElement?.querySelector(`DataSet[name="${controlBlock.getAttribute("datSet")}"]`);
-    if (!dataSet)
-        return ctrlBlockRemoveAction;
-    const multiUseDataSet = controlBlocks(dataSet).length > 1;
-    if (multiUseDataSet)
-        return ctrlBlockRemoveAction.concat(unsubscribe(findControlBlockSubscription(controlBlock)));
-    return ctrlBlockRemoveAction.concat(removeDataSet({ node: dataSet }));
+    const dataSetRemove = [];
+    if (dataSet && controlBlocks(dataSet).length > 1) {
+        dataSetRemove.push(...unsubscribe(findControlBlockSubscription(controlBlock)));
+    }
+    else if (dataSet) {
+        dataSetRemove.push(...removeDataSet({ node: dataSet }));
+    }
+    const gse = controlBlockGseOrSmv(controlBlock);
+    const gseRemove = gse ? [{ node: gse }] : [];
+    return ctrlBlockRemoveAction.concat(dataSetRemove, gseRemove);
 }
 
 /** @returns Updated confRev attribute of control block */
@@ -4387,7 +4391,7 @@ function createReportControl(parent, options = { rpt: {}, trgOps: {}, optFields:
     return {
         parent: anyLn,
         node: reportControl,
-        reference: null,
+        reference: getReference(anyLn, "ReportControl"),
     };
 }
 
@@ -4950,6 +4954,48 @@ Array(maxLnInst)
     .map((_, i) => `${i + 1}`);
 
 await fetch(new URL(new URL('assets/nsd-0a370a57.json', import.meta.url).href, import.meta.url)).then((res) => res.json());
+
+/** @returns ConfDataSet.maxAttributes number as `max` and the scope. */
+function maxAttributes(fcda) {
+    {
+        const validRoot = !!fcda.closest("AccessPoint") || !!fcda.closest("IED");
+        if (!validRoot)
+            return { max: -1, scope: "IED" };
+        const selector = `:scope > Services > ConfDataSet`;
+        const apMaxAllowed = fcda
+            .closest("AccessPoint")
+            ?.querySelector(selector)
+            ?.getAttribute("maxAttributes");
+        if (apMaxAllowed)
+            return {
+                max: parseInt(apMaxAllowed, 10),
+                scope: "AccessPoint",
+            };
+        const iedMaxAllowed = fcda
+            .closest("IED")
+            ?.querySelector(selector)
+            ?.getAttribute("maxAttributes");
+        if (iedMaxAllowed)
+            return {
+                max: parseInt(iedMaxAllowed, 10),
+                scope: "IED",
+            };
+        const existing = fcda.querySelectorAll(":scope > FCDA").length;
+        return {
+            max: existing,
+            scope: "DataSet",
+        };
+    }
+}
+/** Checks Services>ConfDataSet.maxAttributes on AccessPoint or
+ * on IED if the first is not present.
+ * @param dataSet - parent [[`DataSet`]] element
+ * @returns Whether new `FCDA` is exceeding ConfDataSet.maxAttributes attribute */
+function canAddFCDA(dataSet) {
+    const { max } = maxAttributes(dataSet);
+    const existingDataSets = dataSet.querySelectorAll(":scope > FCDA").length;
+    return max > existingDataSets;
+}
 
 /** @returns Whether a given element is within a Private section */
 function isPublic(element) {
@@ -14740,9 +14786,13 @@ CheckListItem = __decorate([
     e$7('mwc-check-list-item')
 ], CheckListItem);
 
-function items(list) {
+function infoItems(list) {
     var _a, _b;
-    return (_b = (_a = list.querySelector('slot')) === null || _a === void 0 ? void 0 : _a.assignedElements()) !== null && _b !== void 0 ? _b : [];
+    return ((_b = (_a = list.querySelector('slot')) === null || _a === void 0 ? void 0 : _a.assignedElements()) !== null && _b !== void 0 ? _b : []).filter(item => item instanceof ListItemBase);
+}
+function actionItems(actionList) {
+    var _a, _b;
+    return ((_b = (_a = actionList.querySelector('slot')) === null || _a === void 0 ? void 0 : _a.assignedElements()) !== null && _b !== void 0 ? _b : []).filter(item => item.tagName !== 'LI');
 }
 function slotItem$1(item) {
     if (!item.closest('action-filtered-list') || !item.parentElement)
@@ -14751,7 +14801,7 @@ function slotItem$1(item) {
         return item;
     return slotItem$1(item.parentElement);
 }
-function hideFiltered$1(infoItem, searchText, actionItems) {
+function hideFiltered$1(infoItem, searchText, siblingActionItems) {
     const itemInnerText = `${infoItem.innerText}\n`;
     const childInnerText = Array.from(infoItem.children)
         .map(child => child.innerText)
@@ -14771,11 +14821,11 @@ function hideFiltered$1(infoItem, searchText, actionItems) {
         return reTerm.test(filterTarget);
     });
     if (isEmptyFilter || meetsFilter) {
-        actionItems.forEach(actionItem => slotItem$1(actionItem).classList.remove('hidden'));
+        siblingActionItems.forEach(actionItem => slotItem$1(actionItem).classList.remove('hidden'));
         slotItem$1(infoItem).classList.remove('hidden');
     }
     else {
-        actionItems.forEach(actionItem => slotItem$1(actionItem).classList.add('hidden'));
+        siblingActionItems.forEach(actionItem => slotItem$1(actionItem).classList.add('hidden'));
         slotItem$1(infoItem).classList.add('hidden');
     }
 }
@@ -14824,22 +14874,21 @@ let ActionFilteredList = class ActionFilteredList extends s$2 {
         });
     }
     onFilterInput() {
-        this.infoList.items.forEach(item => {
+        infoItems(this.infoList).forEach(item => {
             var _a, _b;
-            const index = this.infoList.items.indexOf(item);
-            const actionItems = [];
-            const primaryItem = (_a = items(this.listPrimary)[index]) !== null && _a !== void 0 ? _a : undefined;
+            const index = infoItems(this.infoList).indexOf(item);
+            const siblingActionItems = [];
+            const primaryItem = (_a = actionItems(this.listPrimary)[index]) !== null && _a !== void 0 ? _a : undefined;
             if (primaryItem)
-                actionItems.push(primaryItem);
-            const secondaryItem = (_b = items(this.listSecondary)[index]) !== null && _b !== void 0 ? _b : undefined;
+                siblingActionItems.push(primaryItem);
+            const secondaryItem = (_b = actionItems(this.listSecondary)[index]) !== null && _b !== void 0 ? _b : undefined;
             if (secondaryItem)
-                actionItems.push(secondaryItem);
-            hideFiltered$1(item, this.searchField.value, actionItems);
+                siblingActionItems.push(secondaryItem);
+            hideFiltered$1(item, this.searchField.value, siblingActionItems);
         });
     }
     firstUpdated() {
-        var _a, _b;
-        this.items = (_b = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('slot')) === null || _b === void 0 ? void 0 : _b.assignedElements({ flatten: true });
+        this.items = this.infoList.items;
     }
     constructor() {
         super();
@@ -15102,7 +15151,7 @@ function dataAttributeObject(da) {
     Array.from(daType.querySelectorAll('BDA')).forEach(bda => {
         var _a;
         const bdaName = (_a = bda.getAttribute('name')) !== null && _a !== void 0 ? _a : 'UNKNOWN_BDA';
-        const id = `BDA:${identity(bda)}`;
+        const id = `BDA: ${identity(bda)}`;
         if (bda.getAttribute('bType') === 'Struct') {
             children[id] = dataAttributeObject(bda);
             children[id].text = bdaName;
@@ -15336,18 +15385,40 @@ function functionalConstraintPaths(doc, paths) {
     }
     return fcPaths;
 }
+function loadIcon(percent) {
+    if (percent < 0.1)
+        return 'circle';
+    if (percent < 0.2)
+        return 'clock_loader_10';
+    if (percent < 0.4)
+        return 'clock_loader_20';
+    if (percent < 0.6)
+        return 'clock_loader_40';
+    if (percent < 0.8)
+        return 'clock_loader_60';
+    if (percent < 0.9)
+        return 'clock_loader_80';
+    if (percent < 1)
+        return 'clock_loader_90';
+    return 'stroke_full';
+}
 let DataSetElementEditor = class DataSetElementEditor extends s$2 {
     constructor() {
         super(...arguments);
+        /** The element being edited */
+        this.element = null;
         /** SCL change indicator */
         this.editCount = -1;
         this.someDiffOnInputs = false;
     }
     get name() {
-        return this.element ? this.element.getAttribute('name') : 'UNDEFINED';
+        return this.element.getAttribute('name');
     }
     get desc() {
-        return this.element ? this.element.getAttribute('desc') : 'UNDEFINED';
+        return this.element.getAttribute('desc');
+    }
+    get fcdaCount() {
+        return this.element.querySelectorAll('FCDA').length;
     }
     onInputChange() {
         var _a;
@@ -15365,20 +15436,16 @@ let DataSetElementEditor = class DataSetElementEditor extends s$2 {
         this.onInputChange();
     }
     saveDataObjects() {
-        var _a, _b, _c;
-        const finder = (_a = this.dataObjectPicker) === null || _a === void 0 ? void 0 : _a.querySelector('oscd-tree-grid');
-        const paths = (_b = finder === null || finder === void 0 ? void 0 : finder.paths) !== null && _b !== void 0 ? _b : [];
+        const { paths } = this.doPicker;
         const actions = addFCDOs(this.element, functionalConstraintPaths(this.element.ownerDocument, paths));
         this.dispatchEvent(newEditEvent(actions));
-        (_c = this.dataObjectPicker) === null || _c === void 0 ? void 0 : _c.close();
+        this.doPickerDialog.close();
     }
     saveDataAttributes() {
-        var _a, _b, _c;
-        const finder = (_a = this.dataAttributePicker) === null || _a === void 0 ? void 0 : _a.querySelector('oscd-tree-grid');
-        const paths = (_b = finder === null || finder === void 0 ? void 0 : finder.paths) !== null && _b !== void 0 ? _b : [];
+        const { paths } = this.daPicker;
         const actions = addFCDAs(this.element, dataAttributePaths(this.element.ownerDocument, paths));
         this.dispatchEvent(newEditEvent(actions));
-        (_c = this.dataAttributePicker) === null || _c === void 0 ? void 0 : _c.close();
+        this.daPickerDialog.close();
     }
     onMoveFCDAUp(fcda) {
         const remove = { node: fcda };
@@ -15406,99 +15473,9 @@ let DataSetElementEditor = class DataSetElementEditor extends s$2 {
             menu.anchor = menu.previousElementSibling;
         });
     }
-    // eslint-disable-next-line class-methods-use-this
-    renderHeader(subtitle) {
-        return x `<h2>
-      <div style="display:flex; flex-direction:row;">
-        <div style="flex:auto;">
-          <div>DataSet</div>
-          <div class="headersubtitle">${subtitle}</div>
-        </div>
-        <slot name="change"></slot>
-        <slot name="new"></slot>
-      </div>
-    </h2>`;
-    }
-    renderDataObjectPicker() {
-        var _a;
-        const server = (_a = this.element) === null || _a === void 0 ? void 0 : _a.closest('Server');
-        return x ` <mwc-button
-        label="Add data object"
-        icon="playlist_add"
-        @click=${() => { var _a; return (_a = this.dataObjectPicker) === null || _a === void 0 ? void 0 : _a.show(); }}
-      ></mwc-button
-      ><mwc-dialog id="dopicker" heading="Add Data Attributes">
-        <oscd-tree-grid .tree=${dataObjectTree(server)}></oscd-tree-grid>
-        <mwc-button
-          slot="secondaryAction"
-          label="close"
-          @click=${() => { var _a; return (_a = this.dataObjectPicker) === null || _a === void 0 ? void 0 : _a.close(); }}
-        ></mwc-button>
-        <mwc-button
-          slot="primaryAction"
-          label="save"
-          icon="save"
-          @click=${this.saveDataObjects}
-        ></mwc-button>
-      </mwc-dialog>`;
-    }
-    renderDataAttributePicker() {
-        var _a;
-        const server = (_a = this.element) === null || _a === void 0 ? void 0 : _a.closest('Server');
-        return x ` <mwc-button
-        label="Add data attribute"
-        icon="playlist_add"
-        @click=${() => { var _a; return (_a = this.dataAttributePicker) === null || _a === void 0 ? void 0 : _a.show(); }}
-      ></mwc-button
-      ><mwc-dialog id="dapicker" heading="Add Data Attributes"
-        ><oscd-tree-grid .tree="${dataAttributeTree(server)}"></oscd-tree-grid>
-        <mwc-button
-          slot="secondaryAction"
-          label="close"
-          @click=${() => { var _a; return (_a = this.dataAttributePicker) === null || _a === void 0 ? void 0 : _a.close(); }}
-        ></mwc-button>
-        <mwc-button
-          slot="primaryAction"
-          label="save"
-          icon="save"
-          @click=${this.saveDataAttributes}
-        ></mwc-button>
-      </mwc-dialog>`;
-    }
-    renderContent() {
-        var _a, _b;
-        return x `<scl-textfield
-        id="${identity(this.element)}"
-        tag="${(_b = (_a = this.element) === null || _a === void 0 ? void 0 : _a.tagName) !== null && _b !== void 0 ? _b : ''}"
-        label="name"
-        .maybeValue=${this.name}
-        helper="DataSet name"
-        required
-        @input=${() => this.onInputChange()}
-      >
-      </scl-textfield>
-      <scl-textfield
-        id="${identity(this.element)}"
-        label="desc"
-        .maybeValue=${this.desc}
-        helper="DateSet Description"
-        nullable
-        @input=${() => this.onInputChange()}
-      >
-      </scl-textfield>
-      <mwc-button
-        class="save"
-        label="save"
-        icon="save"
-        ?disabled=${!this.someDiffOnInputs}
-        @click=${() => this.saveChanges()}
-      ></mwc-button>
-      <hr color="lightgrey" />
-      <div style="display: flex; flex-direction:row;align-self: center;">
-        ${this.renderDataAttributePicker()} ${this.renderDataObjectPicker()}
-      </div>
-      <action-filtered-list style="position:relative"
-        >${Array.from(this.element.querySelectorAll('FCDA')).map(fcda => {
+    renderFCDAList() {
+        return x ` <action-filtered-list style="position:relative"
+      >${Array.from(this.element.querySelectorAll('FCDA')).map(fcda => {
             const [ldInst, prefix, lnClass, lnInst, doName, daName, fc] = [
                 'ldInst',
                 'prefix',
@@ -15563,16 +15540,128 @@ let DataSetElementEditor = class DataSetElementEditor extends s$2 {
           </div>
           `;
         })}</action-filtered-list
-      >`;
+    >`;
+    }
+    renderDataObjectPicker() {
+        var _a;
+        const server = (_a = this.element) === null || _a === void 0 ? void 0 : _a.closest('Server');
+        return x ` <mwc-button
+        id="doPickerButton"
+        label="Add data object"
+        icon="playlist_add"
+        ?disabled=${!canAddFCDA(this.element)}
+        @click=${() => { var _a; return (_a = this.doPickerDialog) === null || _a === void 0 ? void 0 : _a.show(); }}
+      ></mwc-button
+      ><mwc-dialog id="dopicker" heading="Add Data Attributes">
+        <oscd-tree-grid .tree=${dataObjectTree(server)}></oscd-tree-grid>
+        <mwc-button
+          slot="secondaryAction"
+          label="close"
+          @click=${() => { var _a; return (_a = this.doPickerDialog) === null || _a === void 0 ? void 0 : _a.close(); }}
+        ></mwc-button>
+        <mwc-button
+          slot="primaryAction"
+          label="save"
+          icon="save"
+          @click=${this.saveDataObjects}
+        ></mwc-button>
+      </mwc-dialog>`;
+    }
+    renderDataAttributePicker() {
+        var _a;
+        const server = (_a = this.element) === null || _a === void 0 ? void 0 : _a.closest('Server');
+        return x ` <mwc-button
+        id="daPickerButton"
+        label="Add data attribute"
+        icon="playlist_add"
+        ?disabled=${!canAddFCDA(this.element)}
+        @click=${() => this.daPickerDialog.show()}
+      ></mwc-button
+      ><mwc-dialog id="dapicker" heading="Add Data Attributes"
+        ><oscd-tree-grid .tree="${dataAttributeTree(server)}"></oscd-tree-grid>
+        <mwc-button
+          slot="secondaryAction"
+          label="close"
+          @click=${() => { var _a; return (_a = this.daPickerDialog) === null || _a === void 0 ? void 0 : _a.close(); }}
+        ></mwc-button>
+        <mwc-button
+          slot="primaryAction"
+          label="save"
+          icon="save"
+          @click=${this.saveDataAttributes}
+        ></mwc-button>
+      </mwc-dialog>`;
+    }
+    renderDataPickers() {
+        return x `
+      <div style="display: flex; flex-direction:row;align-self: center;">
+        ${this.renderDataAttributePicker()} ${this.renderDataObjectPicker()}
+      </div>
+    `;
+    }
+    renderLimits() {
+        if (!this.element)
+            return x ``;
+        const { max } = maxAttributes(this.element);
+        const is = this.fcdaCount;
+        return x `<h3
+      style="display: flex; flex-direction:row;align-self: center;"
+    >
+      Entries: <mwc-icon>${loadIcon(is / max)}</mwc-icon> ${is}/${max}
+    </h3>`;
+    }
+    renderDataSetAttributes() {
+        var _a, _b;
+        return x `<scl-textfield
+        id="${identity(this.element)}"
+        tag="${(_b = (_a = this.element) === null || _a === void 0 ? void 0 : _a.tagName) !== null && _b !== void 0 ? _b : ''}"
+        label="name"
+        .maybeValue=${this.name}
+        helper="DataSet name"
+        required
+        @input=${() => this.onInputChange()}
+      >
+      </scl-textfield>
+      <scl-textfield
+        id="${identity(this.element)}"
+        label="desc"
+        .maybeValue=${this.desc}
+        helper="DateSet Description"
+        nullable
+        @input=${() => this.onInputChange()}
+      >
+      </scl-textfield>
+      <mwc-button
+        class="save"
+        label="save"
+        icon="save"
+        ?disabled=${!this.someDiffOnInputs}
+        @click=${() => this.saveChanges()}
+      ></mwc-button>
+      <hr color="lightgrey" />`;
+    }
+    renderHeader() {
+        const subtitle = this.element
+            ? identity(this.element)
+            : 'No DataSet connected';
+        return x `<h2>
+      <div style="display:flex; flex-direction:row;">
+        <div style="flex:auto;">
+          <div>DataSet</div>
+          <div class="headersubtitle">${subtitle}</div>
+        </div>
+        <slot name="change"></slot>
+        <slot name="new"></slot>
+      </div>
+    </h2>`;
     }
     render() {
         if (this.element)
             return x `<div class="content">
-        ${this.renderHeader(identity(this.element))}${this.renderContent()}
+        ${this.renderHeader()}${this.renderDataSetAttributes()}
+        ${this.renderLimits()}${this.renderDataPickers()}${this.renderFCDAList()}
       </div>`;
-        return x `<div class="content">
-      ${this.renderHeader('No DataSet connected')}
-    </div>`;
+        return x `<div class="content">${this.renderHeader()}</div>`;
     }
 };
 DataSetElementEditor.styles = i$5 `
@@ -15592,7 +15681,8 @@ DataSetElementEditor.styles = i$5 `
       align-self: flex-end;
     }
 
-    h2 {
+    h2,
+    h3 {
       color: var(--mdc-theme-on-surface);
       font-family: 'Roboto', sans-serif;
       font-weight: 300;
@@ -15608,6 +15698,10 @@ DataSetElementEditor.styles = i$5 `
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+
+    mwc-dialog {
+      --mdc-dialog-max-width: 92vw;
     }
 
     mwc-list-item {
@@ -15639,16 +15733,31 @@ __decorate([
 ], DataSetElementEditor.prototype, "desc", null);
 __decorate([
     t$1()
+], DataSetElementEditor.prototype, "fcdaCount", null);
+__decorate([
+    t$1()
 ], DataSetElementEditor.prototype, "someDiffOnInputs", void 0);
 __decorate([
     e$4('scl-textfield')
 ], DataSetElementEditor.prototype, "inputs", void 0);
 __decorate([
+    i$2('#dapickerbutton')
+], DataSetElementEditor.prototype, "daPickerButton", void 0);
+__decorate([
     i$2('#dapicker')
-], DataSetElementEditor.prototype, "dataAttributePicker", void 0);
+], DataSetElementEditor.prototype, "daPickerDialog", void 0);
+__decorate([
+    i$2('#dapicker > oscd-tree-grid')
+], DataSetElementEditor.prototype, "daPicker", void 0);
+__decorate([
+    i$2('#dopickerbutton')
+], DataSetElementEditor.prototype, "doPickerButton", void 0);
 __decorate([
     i$2('#dopicker')
-], DataSetElementEditor.prototype, "dataObjectPicker", void 0);
+], DataSetElementEditor.prototype, "doPickerDialog", void 0);
+__decorate([
+    i$2('#dopicker > oscd-tree-grid')
+], DataSetElementEditor.prototype, "doPicker", void 0);
 DataSetElementEditor = __decorate([
     e$7('data-set-element-editor')
 ], DataSetElementEditor);
@@ -19128,11 +19237,23 @@ GseControlEditor = __decorate([
     e$7('gse-control-editor')
 ], GseControlEditor);
 
+function dataSetPath(dataSet) {
+    const id = identity(dataSet);
+    if (Number.isNaN(id))
+        return 'UNDEFINED';
+    const paths = id.split('>');
+    paths.pop();
+    return paths.join('>');
+}
 let DataSetEditor = class DataSetEditor extends s$2 {
     constructor() {
         super(...arguments);
         /** SCL change indicator */
         this.editCount = 0;
+    }
+    get childCount() {
+        var _a, _b;
+        return (_b = (_a = this.selectedDataSet) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > FCDA').length) !== null && _b !== void 0 ? _b : 0;
     }
     /** Resets selected GOOSE, if not existing in new doc */
     update(props) {
@@ -19164,13 +19285,12 @@ let DataSetEditor = class DataSetEditor extends s$2 {
         return x ``;
     }
     renderSelectionList() {
-        return x `<scl-filtered-list
+        return x `<action-filtered-list
       activatable
       @action=${this.selectDataSet}
       class="selectionlist"
       >${Array.from(this.doc.querySelectorAll('IED')).flatMap(ied => {
             const ieditem = x `<mwc-list-item
-            hasMeta
             class="listitem header"
             noninteractive
             graphic="icon"
@@ -19183,33 +19303,40 @@ let DataSetEditor = class DataSetEditor extends s$2 {
           >
             <span>${ied.getAttribute('name')}</span>
             <mwc-icon slot="graphic">developer_board</mwc-icon>
-            <mwc-icon-button
-              slot="meta"
-              icon="playlist_add"
-              @click=${() => {
+          </mwc-list-item>
+          <li divider role="separator"></li>
+          <mwc-list-item
+            slot="primaryAction"
+            style="height:56px;"
+            @request-selected="${(evt) => {
+                evt.stopPropagation();
                 const insertDataSet = createDataSet(ied);
                 if (insertDataSet)
                     this.dispatchEvent(newEditEvent(insertDataSet));
-                this.requestUpdate();
-            }}
-            ></mwc-icon-button>
-          </mwc-list-item>
-          <li divider role="separator"></li>`;
-            const dataSets = Array.from(ied.querySelectorAll('DataSet')).map(dataSet => x `<mwc-list-item hasMeta twoline value="${identity(dataSet)}"
-              ><span>${dataSet.getAttribute('name')}</span
-              ><span slot="secondary">${identity(dataSet)}</span>
-              <span slot="meta"
-                ><mwc-icon-button
-                  icon="delete"
-                  @click=${() => {
+            }}"
+            ><mwc-icon>playlist_add</mwc-icon></mwc-list-item
+          >
+          <li slot="primaryAction" divider role="separator"></li>`;
+            const dataSets = Array.from(ied.querySelectorAll('DataSet')).map(dataSet => x `<mwc-list-item twoline value="${identity(dataSet)}"
+                ><span>${dataSet.getAttribute('name')}</span
+                ><span slot="secondary">${dataSetPath(dataSet)}</span>
+                <span slot="meta"
+                  ><mwc-icon-button icon="delete"></mwc-icon-button>
+                </span>
+              </mwc-list-item>
+              <mwc-list-item
+                style="height:72px;"
+                slot="primaryAction"
+                @request-selected="${(evt) => {
+                evt.stopPropagation();
                 this.dispatchEvent(newEditEvent(removeDataSet({ node: dataSet })));
-                this.requestUpdate();
-            }}
-                ></mwc-icon-button>
-              </span>
-            </mwc-list-item>`);
+                // this.requestUpdate();
+            }}"
+              >
+                <mwc-icon>delete</mwc-icon>
+              </mwc-list-item>`);
             return [ieditem, ...dataSets];
-        })}</scl-filtered-list
+        })}</action-filtered-list
     >`;
     }
     renderToggleButton() {
@@ -19254,6 +19381,9 @@ __decorate([
 __decorate([
     t$1()
 ], DataSetEditor.prototype, "selectedDataSet", void 0);
+__decorate([
+    t$1()
+], DataSetEditor.prototype, "childCount", null);
 __decorate([
     i$2('.selectionlist')
 ], DataSetEditor.prototype, "selectionList", void 0);

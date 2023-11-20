@@ -25363,14 +25363,6 @@ Dialog = __decorate$1([
     e$7('mwc-dialog')
 ], Dialog);
 
-function newEditEvent(edit) {
-    return new CustomEvent('oscd-edit', {
-        composed: true,
-        bubbles: true,
-        detail: edit,
-    });
-}
-
 /**
  * @license
  * Copyright 2021 Google LLC
@@ -25593,6 +25585,14 @@ Button.styles = [styles$c];
 Button = __decorate$1([
     e$7('mwc-button')
 ], Button);
+
+function newEditEvent(edit) {
+    return new CustomEvent('oscd-edit', {
+        composed: true,
+        bubbles: true,
+        detail: edit,
+    });
+}
 
 /** Throws an error bearing `message`, never returning. */
 /** @returns the cartesian product of `arrays` */
@@ -25838,7 +25838,7 @@ function dialogValid(dialog) {
 }
 /** A wizard style dialog consisting of several pages commiting some
  * [[`EditorAction`]] on completion and aborting on dismissal. */
-let WizardDialog = class WizardDialog extends s$1 {
+let SclWizardDialog = class SclWizardDialog extends s$1 {
     /** The `Dialog` showing the active [[`WizardPage`]]. */
     get dialog() {
         return this.dialogs[this.pageIndex];
@@ -25981,7 +25981,7 @@ let WizardDialog = class WizardDialog extends s$1 {
         return x `${this.wizard.map(this.renderPage)}`;
     }
 };
-WizardDialog.styles = i$5 `
+SclWizardDialog.styles = i$5 `
     mwc-dialog {
       --mdc-dialog-max-width: 92vw;
     }
@@ -26009,22 +26009,106 @@ WizardDialog.styles = i$5 `
   `;
 __decorate$1([
     e$6({ type: Array })
-], WizardDialog.prototype, "wizard", void 0);
+], SclWizardDialog.prototype, "wizard", void 0);
 __decorate$1([
     e$6({ attribute: false })
-], WizardDialog.prototype, "wizardRequest", void 0);
+], SclWizardDialog.prototype, "wizardRequest", void 0);
+__decorate$1([
+    e$6({ attribute: false })
+], SclWizardDialog.prototype, "element", void 0);
 __decorate$1([
     t$1()
-], WizardDialog.prototype, "pageIndex", void 0);
+], SclWizardDialog.prototype, "pageIndex", void 0);
 __decorate$1([
     e$4('mwc-dialog')
-], WizardDialog.prototype, "dialogs", void 0);
+], SclWizardDialog.prototype, "dialogs", void 0);
 __decorate$1([
     e$4(wizardInputSelector)
-], WizardDialog.prototype, "inputs", void 0);
-WizardDialog = __decorate$1([
-    e$7('wizard-dialog')
-], WizardDialog);
+], SclWizardDialog.prototype, "inputs", void 0);
+SclWizardDialog = __decorate$1([
+    e$7('scl-wizard-dialog')
+], SclWizardDialog);
+
+function formatXml(xml, tab = '\t') {
+    let formatted = '';
+    let indent = '';
+    xml.split(/>\s*</).forEach(node => {
+        if (node.match(/^\/\w/))
+            indent = indent.substring(tab.length);
+        formatted += `${indent}<${node}>\r\n`;
+        if (node.match(/^<?\w[^>]*[^/]$/))
+            indent += tab;
+    });
+    return formatted.substring(1, formatted.length - 3);
+}
+function codeEdits(oldElement, newElementText) {
+    const parent = oldElement.parentElement;
+    if (!parent)
+        return [];
+    const remove = { node: oldElement };
+    const insert = {
+        parent: oldElement.parentElement,
+        node: new DOMParser().parseFromString(newElementText, 'application/xml')
+            .documentElement,
+        reference: oldElement.nextSibling,
+    };
+    return [remove, insert];
+}
+/**  */
+let CodeDialog = class CodeDialog extends s$1 {
+    save(element) {
+        const text = this.editor.value;
+        if (!text)
+            return;
+        const edits = codeEdits(element, text);
+        if (!edits.length)
+            return;
+        this.dispatchEvent(newEditEvent(edits));
+    }
+    onClosed(ae) {
+        if (ae.detail.action === 'save')
+            this.save(this.element);
+        this.dispatchEvent(new CustomEvent('closed'));
+    }
+    render() {
+        if (!this.element)
+            return x `No SCL Element`;
+        return x `<mwc-dialog
+      heading="Edit ${this.element.tagName}"
+      open
+      @closed=${this.onClosed}
+    >
+      <ace-editor
+        wrap
+        soft-tabs
+        mode="ace/mode/xml"
+        theme="ace/theme/solarized_light"
+        value="${formatXml(new XMLSerializer().serializeToString(this.element))}"
+      ></ace-editor>
+      <mwc-button slot="secondaryAction" dialogAction="close"
+        >Cancel</mwc-button
+      >
+      <mwc-button slot="primaryAction" icon="save" dialogAction="save"
+        >Save</mwc-button
+      >
+    </mwc-dialog>`;
+    }
+};
+CodeDialog.styles = i$5 `
+    mwc-dialog {
+      --mdc-dialog-min-width: 85vw;
+      --mdc-dialog-max-height: calc(100vh - 200px);
+    }
+  `;
+__decorate$1([
+    e$6({ attribute: false })
+], CodeDialog.prototype, "element", void 0);
+__decorate$1([
+    i$2('ace-editor')
+], CodeDialog.prototype, "editor", void 0);
+CodeDialog = __decorate$1([
+    e$7('code-dialog')
+], CodeDialog);
 
 function updateConnectivityNodes$2(element, names) {
     const cNodes = Array.from(element.getElementsByTagName("ConnectivityNode"));
@@ -46334,24 +46418,6 @@ const wizards = {
     },
 };
 
-/**
- * Format xml string in "pretty print" style and return as a string
- * @param xml - xml document as a string
- * @param tab - character to use as a tab
- * @returns string with pretty print formatting
- */
-function formatXml(xml, tab = '\t') {
-    let formatted = '';
-    let indent = '';
-    xml.split(/>\s*</).forEach(node => {
-        if (node.match(/^\/\w/))
-            indent = indent.substring(tab.length);
-        formatted += `${indent}<${node}>\r\n`;
-        if (node.match(/^<?\w[^>]*[^/]$/))
-            indent += tab;
-    });
-    return formatted.substring(1, formatted.length - 3);
-}
 let WizardCodeForm = class WizardCodeForm extends s$1 {
     constructor() {
         super(...arguments);
@@ -46366,56 +46432,8 @@ let WizardCodeForm = class WizardCodeForm extends s$1 {
         const request = this.wizardRequest;
         return (_b = wizards[request.element.tagName]) === null || _b === void 0 ? void 0 : _b.edit(request.element);
     }
-    save() {
-        const text = this.editor.value;
-        if (!this.wizardRequest)
-            return;
-        const element = isCreateRequest(this.wizardRequest)
-            ? this.wizardRequest.parent
-            : this.wizardRequest.element;
-        if (!text || !element.parentElement)
-            return;
-        const remove = {
-            node: element,
-        };
-        const insert = {
-            parent: element.parentElement,
-            node: new DOMParser().parseFromString(text, 'application/xml')
-                .documentElement,
-            reference: element.nextSibling,
-        };
-        this.dispatchEvent(newEditEvent([remove, insert]));
-    }
-    onClosed(ae) {
-        if (ae.detail.action === 'save')
-            this.save();
+    onClosed() {
         this.dispatchEvent(newCloseWizardEvent(this.wizardRequest));
-    }
-    renderCodeWizard(element) {
-        return x `<mwc-dialog
-      heading="Edit ${element.tagName}"
-      open
-      @closed=${this.onClosed}
-    >
-      <ace-editor
-        base-path="public/ace"
-        wrap
-        soft-tabs
-        mode="ace/mode/xml"
-        theme="ace/theme/solarized_light"
-        value="${formatXml(new XMLSerializer().serializeToString(element))}"
-      ></ace-editor>
-      <mwc-button slot="secondaryAction" dialogAction="close"
-        >Cancel</mwc-button
-      >
-      <mwc-button slot="primaryAction" icon="save" dialogAction="save"
-        >Save</mwc-button
-      >
-    </mwc-dialog>`;
-    }
-    // eslint-disable-next-line class-methods-use-this,
-    renderFormWizard(wizard) {
-        return x `<wizard-dialog .wizard="${wizard}"></wizard-dialog>`;
     }
     render() {
         if (!this.wizardRequest)
@@ -46425,8 +46443,14 @@ let WizardCodeForm = class WizardCodeForm extends s$1 {
             : this.wizardRequest.element;
         const wizard = this.wizard();
         if (!wizard)
-            return this.renderCodeWizard(element);
-        return this.renderFormWizard(wizard);
+            return x `<code-dialog
+        .element=${element}
+        @closed="${this.onClosed}"
+      ></code-dialog>`;
+        return x `<scl-wizard-dialog
+      .wizard=${wizard}
+      .element=${element}
+    ></scl-wizard-dialog> `;
     }
 };
 WizardCodeForm.styles = i$5 `

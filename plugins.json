@@ -82,7 +82,7 @@
       "icon": "settings_ethernet",
       "active": true,
       "requireDoc": true,
-      "src": "plugins/oscd-communication/oscd-communication.js"
+      "src": "plugins/oscd-communication/scl-communication.js"
     },
     {
       "name": "IED browser",

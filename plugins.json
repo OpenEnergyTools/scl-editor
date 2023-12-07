@@ -61,9 +61,9 @@
       "src": "plugins/scl-editor-landing/scl-editor-landing.js"
     },
     {
-      "name": "Designer",
+      "name": "SLD Designer",
       "translations": {
-        "de": "Designer"
+        "de": "SLD Designer"
       },
       "icon": "add_box",
       "active": true,

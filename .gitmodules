@@ -58,3 +58,7 @@
 	path = plugins/scl-ied-editor
 	url = https://github.com/openenergytools/scl-ied-editor
 	branch = gh-pages
+[submodule "plugins/oscd-designer"]
+	path = plugins/oscd-designer
+	url = https://github.com/ca-d/oscd-designer
+	branch = gh-pages

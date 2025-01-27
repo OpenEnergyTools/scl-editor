@@ -5,10 +5,9 @@
   "author": "Jakob Vogelsang",
   "version": "0.0.0",
   "scripts": {
-    "preinstall": "git submodule update --init --recursive && git submodule foreach git pull origin gh-pages",
     "build": "rimraf dist && rollup -c rollup.config.js",
-    "deploy": "npm run preinstall && npm run build && gh-pages -d dist",
-    "deploy:nobuild": "gh-pages -d dist",
+    "deploy": "npm run build && gh-pages --dist 'dist' --branch 'deploy'",
+    "deploy:nobuild": "gh-pages -d dist -b deploy",
     "start:build": "web-dev-server --root-dir dist --app-index index.html --open",
     "start": "web-dev-server"
   },

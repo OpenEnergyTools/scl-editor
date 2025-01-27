@@ -33,7 +33,7 @@
 [submodule "plugins/oscd-template-generator"]
 	path = plugins/oscd-template-generator
 	url = https://github.com/OpenEnergyTools/oscd-template-generator
-	branch = gh-pages
+	branch = deploy
 [submodule "plugins/scl-substation-editor"]
 	path = plugins/scl-substation-editor
 	url = https://github.com/OpenEnergyTools/scl-substation-editor

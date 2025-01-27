@@ -135,6 +135,13 @@
       "active": true,
       "requireDoc": true,
       "src": "plugins/oscd-template-generator/oscd-template-generator.js"
+    },
+    {
+      "name": "Template Update",
+      "icon": "copy_all",
+      "active": true,
+      "requireDoc": true,
+      "src": "plugins/template-update/scl-template-update.js"
     }
   ]
 }

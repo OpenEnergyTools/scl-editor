@@ -66,3 +66,7 @@
 	path = plugins/scl-communication-editor
 	url = https://github.com/OpenEnergyTools/scl-communication-editor
 	branch = gh-pages
+[submodule "plugins/template-update"]
+	path = plugins/template-update
+	url = https://github.com/openscd/scl-template-update
+	branch = deploy
